@@ -161,15 +161,6 @@ const EtapesTypesSections = {
       ],
     },
   ],
-  [ETAPES_TYPES.notificationAuPrefet]: [
-    {
-      id: 'nppx',
-      nom: 'Note au préfet',
-      elements: [
-        { id: 'info', nom: 'Informations complémentaires', type: 'textarea', optionnel: true, description: 'Informations complémentaires accompagnant la notification de la décision au préfet' },
-      ],
-    },
-  ],
   [ETAPES_TYPES.notificationAuDemandeur]: suiviDeLaDemarche,
   [ETAPES_TYPES.notificationAuDemandeur_AjournementDeLaCARM_]: [
     { id: 'suivi', nom: 'Suivi de la démarche', elements: [{ id: 'dateReception', nom: 'Date de réception', type: 'date', optionnel: true, description: 'Date de réception de la notification' }] },

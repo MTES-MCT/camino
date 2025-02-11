@@ -1,9 +1,11 @@
+import { DEMARCHES_TYPES_IDS } from '../demarchesTypes'
 import { ETAPES_TYPES } from '../etapesTypes'
+import { TITRES_TYPES_IDS } from '../titresTypes'
 import { getDocuments, toDocuments } from './documents'
 import { test, expect } from 'vitest'
 
 test('toDocuments', () => {
-  expect(toDocuments()).toHaveLength(211)
+  expect(toDocuments()).toHaveLength(212)
 })
 
 test('getDocuments erreurs', () => {
@@ -51,6 +53,23 @@ test("la lettre des saisines est obligatoire pour l'avis des services et commiss
       {
         "id": "lcm",
         "nom": "Lettre de saisine des services civils et militaires",
+        "optionnel": false,
+      },
+      {
+        "id": "aut",
+        "nom": "Autre document",
+        "optionnel": true,
+      },
+    ]
+  `)
+})
+
+test("le courrier de notification au préfet est obligatoire pour l'information du préfet et des collectivités", () => {
+  expect(getDocuments(TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX, DEMARCHES_TYPES_IDS.Octroi, ETAPES_TYPES.informationDuPrefetEtDesCollectivites)).toMatchInlineSnapshot(`
+    [
+      {
+        "id": "cnp",
+        "nom": "Courrier de notification au préfet",
         "optionnel": false,
       },
       {

@@ -95,7 +95,7 @@ test('getAdministrationTitresTypesEtapesTypes', () => {
       },
       {
         "creationInterdit": true,
-        "etapeTypeId": "npp",
+        "etapeTypeId": "ipc",
         "lectureInterdit": false,
         "modificationInterdit": true,
         "titreTypeId": "cxm",
@@ -235,7 +235,7 @@ test('getAdministrationTitresTypesEtapesTypes', () => {
       },
       {
         "creationInterdit": true,
-        "etapeTypeId": "npp",
+        "etapeTypeId": "ipc",
         "lectureInterdit": false,
         "modificationInterdit": true,
         "titreTypeId": "prm",

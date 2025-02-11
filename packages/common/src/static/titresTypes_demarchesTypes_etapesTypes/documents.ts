@@ -309,6 +309,7 @@ const EtapesTypesDocumentsTypes = {
   ],
   [ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true }],
   [ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesCivilsEtMilitaires, optionnel: false }],
+  [ETAPES_TYPES.informationDuPrefetEtDesCollectivites]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.courrierDeNotificationAuPrefet, optionnel: false }],
 } as const satisfies { [key in EtapeTypeId]?: (DocumentTypeId | { documentTypeId: DocumentTypeId; optionnel: boolean })[] }
 
 const isEtapesTypesEtapesTypesDocumentsTypes = (etapeTypeId?: EtapeTypeId): etapeTypeId is keyof typeof EtapesTypesDocumentsTypes => {

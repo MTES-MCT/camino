@@ -35,7 +35,7 @@ export type PerimetreUploadType = z.infer<typeof perimetreFileUploadTypeValidato
 export type FileUploadType = z.infer<typeof fileUploadTypeValidator>
 
 // prettier-ignore
-const IDS_WITHOUT_AUTRE = ["aac","acd","acg","acr","adr","aep","apd","apf","apu","arm","arp","arr","atf","avc","ave","avi","bil","cam","car","cco","cdc","cnr","cnt","cod","con","cou","csp","cur","dcl","deb","dec","dei","dep","doe","dom","dos","erd","fac","fic","fip","for","idm","jac","jcf","jct","jeg","jid","jpa","kbi","lac","lce","lcg","lcm","ldc","lem","let","lis","lpf","mes","met","mot","nas","ndd","nip","nir","noi","not","odr","ord","prg","pro","pub","pvr","rac","rad","rce","rcr","rdr","rec","ree","ref","rfe","rgr","rie","rse","sch","sir" ] as const
+const IDS_WITHOUT_AUTRE = ["aac","acd","acg","acr","adr","aep","apd","apf","apu","arm","arp","arr","atf","avc","ave","avi","bil","cam","car","cco","cdc","cnp","cnr","cnt","cod","con","cou","csp","cur","dcl","deb","dec","dei","dep","doe","dom","dos","erd","fac","fic","fip","for","idm","jac","jcf","jct","jeg","jid","jpa","kbi","lac","lce","lcg","lcm","ldc","lem","let","lis","lpf","mes","met","mot","nas","ndd","nip","nir","noi","not","odr","ord","prg","pro","pub","pvr","rac","rad","rce","rcr","rdr","rec","ree","ref","rfe","rgr","rie","rse","sch","sir" ] as const
 
 const AUTRE_IDS = ['aut'] as const
 const IDS = [...IDS_WITHOUT_AUTRE, ...AUTRE_IDS] as const
@@ -62,6 +62,7 @@ export const DOCUMENTS_TYPES_IDS = {
   documentsCartographiques: 'car',
   courrierDeDemandeDeComplements: 'cco',
   cahierDesCharges: 'cdc',
+  courrierDeNotificationAuPrefet: 'cnp',
   courrierDeNotificationDeLaRecevabilite: 'cnr',
   contrat: 'cnt',
   complementsAuDossierDeDemande: 'cod',
@@ -190,6 +191,7 @@ export const DocumentsTypes: { [key in DocumentTypeId | AutreDocumentTypeId]: Do
   car: { id: 'car', nom: 'Documents cartographiques' },
   cco: { id: 'cco', nom: 'Courrier de demande de compléments' },
   cdc: { id: 'cdc', nom: 'Cahier des charges' },
+  cnp: { id: 'cnp', nom: 'Courrier de notification au préfet' },
   cnr: { id: 'cnr', nom: 'Courrier de notification de la recevabilité' },
   cnt: { id: 'cnt', nom: 'Contrat' },
   cod: { id: 'cod', nom: 'Compléments au dossier de demande' },

@@ -5,13 +5,13 @@ import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
 
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","npp","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","cim","css","dae","ddc","des","dma", "ede","edm","epu","esb","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -68,7 +68,6 @@ export const ETAPES_TYPES = {
   notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_: 'mnv',
   modificationDeLaDemande: 'mod',
   notificationDesCollectivitesLocales: 'ncl',
-  notificationAuPrefet: 'npp',
   paiementDesFraisDeDossierComplementaires: 'pfc',
   paiementDesFraisDeDossier: 'pfd',
   participationDuPublic: 'ppu',
@@ -787,16 +786,6 @@ export const EtapesTypes = {
     nom: "avis du Conseil d'Etat",
     description:
       "Le conseil d'État donne au premier ministre et au ministre chargé des mines un avis sur la demande et sur son instruction. Cet avis n'est pas conforme mais si la décision s'écarte de l'avis donné, elle doit être validée en conseil des ministres.",
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
-  npp: {
-    id: 'npp',
-    nom: 'notification au préfet',
-    description: "Note au préfet demandant de notifier la décision à l'intéressé et de prendre les mesures de publicité nécessaires.",
     fondamentale: false,
     unique: false,
     date_fin: null,

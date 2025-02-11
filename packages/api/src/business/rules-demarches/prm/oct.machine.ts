@@ -64,7 +64,7 @@ type XStateEvent =
   | { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTE' }
   | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE' }
   | { type: 'FAIRE_PUBLICATION_AU_JORF' }
-  | { type: 'NOTIFIER_PREFET' }
+  | { type: 'RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES' }
   | { type: 'NOTIFIER_DEMANDEUR' }
   | { type: 'PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS' }
   | { type: 'PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL' }
@@ -114,7 +114,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_DECISION_ADMINISTRATION_ACCEPTE: { db: { ACCEPTE: EtapesTypesEtapesStatuts.decisionDeLAutoriteAdministrative.ACCEPTE }, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_REJETE: { db: { REJETE: EtapesTypesEtapesStatuts.decisionDeLAutoriteAdministrative.REJETE }, mainStep: true },
   FAIRE_PUBLICATION_AU_JORF: { db: EtapesTypesEtapesStatuts.publicationDeDecisionAuJORF, mainStep: true },
-  NOTIFIER_PREFET: { db: EtapesTypesEtapesStatuts.notificationAuPrefet, mainStep: true },
+  RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES: { db: EtapesTypesEtapesStatuts.informationDuPrefetEtDesCollectivites, mainStep: true },
   NOTIFIER_DEMANDEUR: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur, mainStep: true },
   PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS: { db: EtapesTypesEtapesStatuts.publicationDeDecisionAuRecueilDesActesAdministratifs, mainStep: true },
   PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL: { db: EtapesTypesEtapesStatuts.publicationDansUnJournalLocalOuNational, mainStep: true },
@@ -481,23 +481,23 @@ const prmOctMachine = createMachine({
     publicationAuJORFAFaire: {
       on: {
         FAIRE_PUBLICATION_AU_JORF: {
-          target: 'notificationsAFaire',
+          target: 'notificationsEtInformationsAFaire',
           actions: assign({
             demarcheStatut: DemarchesStatutsIds.Accepte,
           }),
         },
       },
     },
-    notificationsAFaire: {
+    notificationsEtInformationsAFaire: {
       type: 'parallel',
       states: {
-        notificationDuPrefetMachine: {
-          initial: 'notificationDuPrefetAFaire',
+        informationDuPrefetEtDesCollectivitesMachine: {
+          initial: 'informationDuPrefetEtDesCollectivitesAFaire',
           states: {
-            notificationDuPrefetAFaire: {
-              on: { NOTIFIER_PREFET: 'notificationDuPrefetFaite' },
+            informationDuPrefetEtDesCollectivitesAFaire: {
+              on: { RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES: 'informationDuPrefetEtDesCollectivitesFaite' },
             },
-            notificationDuPrefetFaite: { type: 'final' },
+            informationDuPrefetEtDesCollectivitesFaite: { type: 'final' },
           },
         },
         notificationDuDemandeurMachine: {
@@ -551,10 +551,10 @@ const prmOctMachine = createMachine({
       type: 'parallel',
       states: {
         notificationsMachine: {
-          initial: 'notificationDuPrefetAFaire',
+          initial: 'informationDuPrefetEtDesCollectivitesAFaire',
           states: {
-            notificationDuPrefetAFaire: {
-              on: { NOTIFIER_PREFET: 'notificationDuDemandeurAFaire' },
+            informationDuPrefetEtDesCollectivitesAFaire: {
+              on: { RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES: 'notificationDuDemandeurAFaire' },
             },
             notificationDuDemandeurAFaire: {
               on: { NOTIFIER_DEMANDEUR: 'notificationDuDemandeurFaite' },

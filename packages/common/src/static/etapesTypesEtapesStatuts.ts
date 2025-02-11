@@ -156,7 +156,6 @@ export const EtapesTypesEtapesStatuts = {
   notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_: { FAIT: { etapeTypeId: 'mnv', etapeStatutId: 'fai' } },
   modificationDeLaDemande: { FAIT: { etapeTypeId: 'mod', etapeStatutId: 'fai' } },
   notificationDesCollectivitesLocales: { FAIT: { etapeTypeId: 'ncl', etapeStatutId: 'fai' } },
-  notificationAuPrefet: { FAIT: { etapeTypeId: 'npp', etapeStatutId: 'fai' } },
   paiementDesFraisDeDossierComplementaires: { FAIT: { etapeTypeId: 'pfc', etapeStatutId: 'fai' } },
   paiementDesFraisDeDossier: { FAIT: { etapeTypeId: 'pfd', etapeStatutId: 'fai' } },
   participationDuPublic: {

@@ -29,7 +29,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,
       ETES.publicationDansUnJournalLocalOuNational.FAIT,
       ETES.notificationAuDemandeur.FAIT,
-      ETES.notificationAuPrefet.FAIT,
+      ETES.informationDuPrefetEtDesCollectivites.FAIT,
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -48,12 +48,12 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
         "RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES      (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_AUTORITE_SIGNATAIRE,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
         "FAIRE_SAISINE_AUTORITE_SIGNATAIRE                 (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS,RENDRE_DECISION_ADMINISTRATION_ACCEPTE,RENDRE_DECISION_ADMINISTRATION_REJETE]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTE            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATIONS,DESISTER_PAR_LE_DEMANDEUR,FAIRE_PUBLICATION_AU_JORF,MODIFIER_DEMANDE,RECEVOIR_INFORMATIONS]",
-        "FAIRE_PUBLICATION_AU_JORF                         (publique      , accepté                ) -> [NOTIFIER_COLLECTIVITES_LOCALES,NOTIFIER_DEMANDEUR,NOTIFIER_PREFET,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS]",
-        "NOTIFIER_COLLECTIVITES_LOCALES                    (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,NOTIFIER_PREFET,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS]",
-        "PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS    (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,NOTIFIER_PREFET,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL]",
-        "PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL         (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,NOTIFIER_PREFET]",
-        "NOTIFIER_DEMANDEUR                                (publique      , accepté                ) -> [NOTIFIER_PREFET]",
-        "NOTIFIER_PREFET                                   (publique      , accepté                ) -> []",
+        "FAIRE_PUBLICATION_AU_JORF                         (publique      , accepté                ) -> [NOTIFIER_COLLECTIVITES_LOCALES,NOTIFIER_DEMANDEUR,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "NOTIFIER_COLLECTIVITES_LOCALES                    (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS    (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "PUBLIER_DANS_UN_JOURNAL_LOCAL_OU_NATIONAL         (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "NOTIFIER_DEMANDEUR                                (publique      , accepté                ) -> [RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (publique      , accepté                ) -> []",
       ]
     `)
   })
@@ -227,13 +227,13 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
       ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAVORABLE,
       ETES.saisineDeLautoriteSignataire.FAIT,
       ETES.decisionDeLAutoriteAdministrative.REJETE,
-      ETES.notificationAuPrefet.FAIT,
+      ETES.informationDuPrefetEtDesCollectivites.FAIT,
       ETES.notificationAuDemandeur.FAIT,
       ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,
     ]
 
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-05-30"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter","asc_fai","ppu_ter","apd_fav","app_fav","scg_fai","rcg_fav","acg_fav","sas_fai","dex_rej","npp_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS","date":"2022-05-30","status":"fai"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-05-30"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter","asc_fai","ppu_ter","apd_fav","app_fav","scg_fai","rcg_fav","acg_fav","sas_fai","dex_rej","ipc_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS","date":"2022-05-30","status":"fai"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
     )
   })
 
