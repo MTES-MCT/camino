@@ -26,7 +26,7 @@ export const Alert: FunctionalComponent<Props> = props => {
   } else {
     return (
       <div class={[fr.cx('fr-alert'), fr.cx(`fr-alert--${props.type}`)]} role={props.role}>
-        <h3 class={[fr.cx('fr-alert__title')]}>{typeof props.title === 'string' ? capitalize(props.title) : props.title}</h3>
+        <p class={[fr.cx('fr-alert__title'), fr.cx('fr-h4')]}>{typeof props.title === 'string' ? capitalize(props.title) : props.title}</p>
         {props.description !== undefined ? props.description : null}
       </div>
     )

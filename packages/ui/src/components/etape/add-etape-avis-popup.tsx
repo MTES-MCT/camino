@@ -64,10 +64,10 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         <fieldset class="fr-fieldset" id="text">
           <div class="fr-fieldset__element">
             <div class="fr-select-group">
-              <label class="fr-label" for="type">
+              <label class="fr-label" for="avis_type">
                 Type d'avis
               </label>
-              <TypeaheadSmartSingle possibleValues={props.avisTypeIds.map(id => ({ id: id, nom: getAvisNom(id) }))} valueIdSelected={updateAvisTypeId} />
+              <TypeaheadSmartSingle id="avis_type" possibleValues={props.avisTypeIds.map(id => ({ id: id, nom: getAvisNom(id) }))} valueIdSelected={updateAvisTypeId} />
             </div>
           </div>
         </fieldset>

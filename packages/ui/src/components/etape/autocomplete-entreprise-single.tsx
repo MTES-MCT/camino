@@ -8,7 +8,7 @@ interface Props {
   initialValue?: EntrepriseId | null
   items: Entreprise[]
   onUpdate: (entreprise: EntrepriseId | null) => void
-  id?: string
+  id: string
 }
 
 export const AutocompleteEntrepriseSingle = defineComponent<Props>(props => {

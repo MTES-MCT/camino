@@ -45,6 +45,7 @@ export const TitreReferenceSelect = defineComponent<Props>(props => {
       {references.value.map((reference, index) => (
         <div key={index} class="fr-grid-row fr-grid-row--middle fr-mb-3v">
           <DsfrSelect
+            id="references"
             class="fr-col fr-mb-0"
             required={true}
             legend={{ main: '', visible: false }}
@@ -54,6 +55,7 @@ export const TitreReferenceSelect = defineComponent<Props>(props => {
           />
           <DsfrInput
             required={true}
+            id="references"
             class="fr-col fr-ml-2v fr-mb-0"
             type={{ type: 'text' }}
             legend={{ main: '', visible: false }}

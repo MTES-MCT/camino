@@ -4,6 +4,7 @@ import { GeoSysteme, GeoSystemes, GeoSystemeId, sortedGeoSystemes } from 'camino
 import { capitalize } from 'camino-common/src/strings'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
+import { random } from '@/utils/vue-tsx-utils'
 // https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino/issues/917
 const mainGeoSystemeIds = ['4326', '2154', '5490', '2972', '2975', '4471', '4467'] as const satisfies readonly GeoSystemeId[]
 
@@ -40,6 +41,7 @@ const sortedByUs = [...sortedGeoSystemes].sort((a, b) => {
   return a.nom.localeCompare(b.nom)
 })
 export const GeoSystemeTypeahead = defineComponent<Props>(props => {
+  const id = `typeahead_geosysteme_${(random() * 1000).toFixed()}`
   const geoSystemSelected = ref<GeoSysteme<GeoSystemeId> | undefined>(GeoSystemes[4326])
   const geoSystemUpdate = async (geoSysteme: GeoSysteme<GeoSystemeId> | undefined) => {
     geoSystemSelected.value = geoSysteme
@@ -67,21 +69,28 @@ export const GeoSystemeTypeahead = defineComponent<Props>(props => {
   }
 
   return () => (
-    <TypeAheadSingle
-      overrideItem={defaultGeoSysteme}
-      props={{
-        items: geoSystemeFiltered.value,
-        itemChipLabel: item => `${item.nom} - (${item.id})`,
-        itemKey: 'id',
-        placeholder: '',
-        minInputLength: 1,
-        alwaysOpen: props.alwaysOpen,
-        onSelectItem: geoSystemUpdate,
-        onInput: geoSystemeOnInput,
-        displayItemInList: display,
-      }}
-      disabled={props.disabled}
-    />
+    <div class="fr-select-group">
+      <label class="fr-label" for={id}>
+        Système géographique
+      </label>
+
+      <TypeAheadSingle
+        overrideItem={defaultGeoSysteme}
+        props={{
+          id,
+          items: geoSystemeFiltered.value,
+          itemChipLabel: item => `${item.nom} - (${item.id})`,
+          itemKey: 'id',
+          placeholder: '',
+          minInputLength: 1,
+          alwaysOpen: props.alwaysOpen,
+          onSelectItem: geoSystemUpdate,
+          onInput: geoSystemeOnInput,
+          displayItemInList: display,
+        }}
+        disabled={props.disabled}
+      />
+    </div>
   )
 })
 

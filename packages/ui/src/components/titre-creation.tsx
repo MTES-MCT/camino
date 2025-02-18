@@ -216,8 +216,12 @@ export const PureTitreCreation = defineComponent<Props>(props => {
 
         {isNotNullNorUndefined(titreDemande.value.titreTypeId) && isNotNullNorUndefined(linkConfig.value) ? (
           <div class="fr-mt-3w">
-            <label class="fr-label fr-mb-1w">Titre {linkConfig.value.count === 'multiple' ? 's' : ''} à l’origine de cette nouvelle demande</label>
-            <TitresLink config={titreLinkConfig.value} loadLinkableTitres={loadLinkableTitresByTypeId.value} onSelectTitres={onSelectTitres} />
+            <TitresLink
+              label={`Titre${linkConfig.value.count === 'multiple' ? 's' : ''} à l’origine de cette nouvelle demande`}
+              config={titreLinkConfig.value}
+              loadLinkableTitres={loadLinkableTitresByTypeId.value}
+              onSelectTitres={onSelectTitres}
+            />
           </div>
         ) : null}
 

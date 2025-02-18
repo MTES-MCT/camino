@@ -76,10 +76,10 @@ export const AddEtapeDocumentPopup = defineComponent<Props>(props => {
         <fieldset class="fr-fieldset" id="text">
           <div class="fr-fieldset__element">
             <div class="fr-select-group">
-              <label class="fr-label" for="type">
+              <label class="fr-label" for="document_type">
                 Type de document
               </label>
-              <TypeaheadSmartSingle possibleValues={props.documentTypeIds.map(id => DocumentsTypes[id])} valueIdSelected={updateDocumentTypeId} />
+              <TypeaheadSmartSingle id="document_type" possibleValues={props.documentTypeIds.map(id => DocumentsTypes[id])} valueIdSelected={updateDocumentTypeId} />
             </div>
           </div>
         </fieldset>

@@ -49,12 +49,7 @@ export const PerimetreImportPopup = defineComponent<Props>(props => {
     <form>
       <fieldset class="fr-fieldset fr-mt-2w" id="geographic">
         <div class="fr-fieldset__element">
-          <div class="fr-select-group">
-            <label class="fr-label" for="type">
-              Système géographique
-            </label>
-            <GeoSystemeTypeahead geoSystemeSelected={onSelectGeographicSystem} disabled={false} />
-          </div>
+          <GeoSystemeTypeahead geoSystemeSelected={onSelectGeographicSystem} disabled={false} />
         </div>
       </fieldset>
       <DsfrInputRadio

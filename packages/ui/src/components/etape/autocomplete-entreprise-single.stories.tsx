@@ -11,10 +11,11 @@ const meta: Meta = {
 export default meta
 
 const onUpdate = action('onEntreprisesUpdate')
-export const Default: StoryFn = () => <AutocompleteEntrepriseSingle items={[{ id: newEntrepriseId('optionId1'), nom: 'optionNom1', legal_siren: null }]} onUpdate={onUpdate} />
+export const Default: StoryFn = () => <AutocompleteEntrepriseSingle id="default" items={[{ id: newEntrepriseId('optionId1'), nom: 'optionNom1', legal_siren: null }]} onUpdate={onUpdate} />
 
 export const WithInitialValue: StoryFn = () => (
   <AutocompleteEntrepriseSingle
+    id="withInitialValue"
     initialValue={entrepriseIdValidator.parse('optionId2')}
     items={[
       { id: newEntrepriseId('optionId1'), nom: 'optionNom1', legal_siren: null },

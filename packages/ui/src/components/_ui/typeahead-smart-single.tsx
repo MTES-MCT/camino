@@ -3,6 +3,7 @@ import { TypeAheadSingle } from './typeahead-single'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 type Props<T extends string> = {
+  id: string
   alwaysOpen?: boolean
   possibleValues: TypeaheadValue<T>[]
   initialValue?: NoInfer<T>
@@ -35,6 +36,7 @@ export const TypeaheadSmartSingle = defineComponent(<T extends string>(props: Pr
     <TypeAheadSingle
       overrideItem={valueTypeSelected.value}
       props={{
+        id: props.id,
         alwaysOpen: props.alwaysOpen,
         items: valuesFiltered.value,
         itemChipLabel: item => item.nom,
@@ -49,4 +51,4 @@ export const TypeaheadSmartSingle = defineComponent(<T extends string>(props: Pr
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TypeaheadSmartSingle.props = ['valueIdSelected', 'possibleValues', 'alwaysOpen', 'initialValue']
+TypeaheadSmartSingle.props = ['id', 'valueIdSelected', 'possibleValues', 'alwaysOpen', 'initialValue']

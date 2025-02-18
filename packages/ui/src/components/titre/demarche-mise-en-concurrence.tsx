@@ -176,14 +176,16 @@ const DemarcheMiseEnConcurrenceLoaded: FunctionalComponent<{ demarches: GetDemar
       {demarches.length === 0 ? (
         <span>Aucune demande n'est actuellement en concurrence avec cette demande.</span>
       ) : (
-        <ul>
+        <>
           Les demandes suivantes sont en concurrence avec cette demande :
-          {demarches.map(demarche => (
-            <li>
-              <DsfrLink title={demarche.titreNom} disabled={false} icon={null} to={{ name: 'demarche', params: { demarcheId: demarche.demarcheId } }} />
-            </li>
-          ))}
-        </ul>
+          <ul>
+            {demarches.map(demarche => (
+              <li>
+                <DsfrLink title={demarche.titreNom} disabled={false} icon={null} to={{ name: 'demarche', params: { demarcheId: demarche.demarcheId } }} />
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </>
   )

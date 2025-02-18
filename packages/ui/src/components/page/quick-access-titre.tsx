@@ -42,7 +42,7 @@ export const QuickAccessTitre = defineComponent<{ id: string; onSelectTitre: () 
 QuickAccessTitre.props = ['id', 'onSelectTitre']
 
 interface Props {
-  id?: string
+  id: string
   titres: TitreForTitresRerchercherByNom[]
   onSelectedTitre: (titre: TitreForTitresRerchercherByNom | undefined) => void
   alwaysOpen?: boolean

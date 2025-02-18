@@ -28,7 +28,9 @@ const preview: Preview = {
       },
     },
   },
+
   decorators: decorators,
+  tags: []
 }
 
 export default preview

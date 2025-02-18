@@ -10,7 +10,7 @@ type TypeAheadRecord = Record<string | symbol | number, any>
 type Props<T extends TypeAheadRecord, K extends keyof T> = {
   overrideItems?: (Pick<T, K> & Partial<Omit<T, K>>)[]
   props: {
-    id?: string
+    id: string
     itemKey: K
     placeholder: string
     items: T[]

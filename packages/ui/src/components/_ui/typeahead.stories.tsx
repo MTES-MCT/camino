@@ -77,6 +77,7 @@ export const SingleWithInitialItem: StoryFn = () => (
 
 export const SmartSingle: StoryFn = () => (
   <TypeaheadSmartSingle
+    id="smartSingle"
     possibleValues={[
       { id: 'id1', nom: 'Nom' },
       { id: 'id2', nom: 'Autre nom' },
@@ -87,6 +88,7 @@ export const SmartSingle: StoryFn = () => (
 
 export const SmartSingleWithInitialValue: StoryFn = () => (
   <TypeaheadSmartSingle
+    id="SmartSingleWithInitialValue"
     possibleValues={[
       { id: 'car', nom: 'Document car' },
       { id: 'doe', nom: 'documentDoe' },

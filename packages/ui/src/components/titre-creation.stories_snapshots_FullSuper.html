@@ -37,7 +37,7 @@
     <div class="fr-input-group fr-mb-0 fr-mt-3w"><label class="fr-label fr-mb-1w" for="references">Références</label>
       <div class="fr-grid-row fr-grid-row--middle fr-mb-3v">
         <div class="fr-select-group fr-col fr-mb-0">
-          <!----><select class="fr-select" id="select_878" aria-label="" name="select_878" value="brg">
+          <!----><select class="fr-select" id="references" aria-label="" name="references" value="brg">
             <option selected="" value="brg">BRGM</option>
             <option value="dea">DEAL</option>
             <option value="deb">DEB</option>
@@ -52,28 +52,30 @@
           </select>
         </div>
         <div class="fr-input-group fr-col fr-ml-2v fr-mb-0" style="margin-bottom: 0px;">
-          <!----><input class="fr-input" name="input_967" id="input_967" required="" type="text" value="REF">
+          <!----><input class="fr-input" name="references" id="references" required="" type="text" value="REF">
           <!---->
         </div><button class="fr-btn fr-btn--tertiary fr-btn--md fr-icon-delete-bin-line fr-ml-2v" title="Supprimer la référence 1" aria-label="Supprimer la référence 1" type="button">
           <!---->
         </button>
       </div><button class="fr-btn fr-btn--icon-right fr-icon-add-line fr-btn--tertiary fr-btn--md" title="Ajouter une référence" aria-label="Ajouter une référence" type="button">Ajouter une référence</button>
     </div>
-    <div class="fr-mt-3w"><label class="fr-label fr-mb-1w">Titre à l’origine de cette nouvelle demande</label>
-      <div id="titre-link-typeahead_wrapper" class="_typeahead_8eddf1">
-        <div class="flex"><input id="titre-link-typeahead" type="text" title="Lier un titre" name="titre-link-typeahead" class="fr-input" placeholder="Lier un titre" autocomplete="off" role="combobox" aria-controls="titre-link-typeahead-control" aria-activedescendant="titre-link-typeahead-control" aria-expanded="false" aria-autocomplete="list" value="Affluent Crique Saint Bernard"></div>
-        <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="titre-link-typeahead-control" role="listbox">
-          <li class="_typeahead-list-item_8eddf1 _typeahead-list-item-active_8eddf1" aria-selected="false" id="titre-link-typeahead-control-0">
-            <div class="flex flex-center">
-              <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p><span class="bold ml-m">Abttis Coucou</span><span class="ml-m" style="margin-left: auto;">2016-10-28 - 2017-03-17</span>
-            </div>
-          </li>
-          <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="titre-link-typeahead-control-1">
-            <div class="flex flex-center">
-              <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p><span class="bold ml-m">Nouveau titre</span><span class="ml-m" style="margin-left: auto;">2008-11-30 - 2019-02-27</span>
-            </div>
-          </li>
-        </ul>
+    <div class="fr-mt-3w">
+      <div class="fr-select-group"><label class="fr-label fr-mb-1w" for="titre-link-typeahead">Titre à l’origine de cette nouvelle demande</label>
+        <div id="titre-link-typeahead_wrapper" class="_typeahead_8eddf1">
+          <div class="flex"><input id="titre-link-typeahead" type="text" title="Lier un titre" name="titre-link-typeahead" class="fr-input" placeholder="Lier un titre" autocomplete="off" role="combobox" aria-controls="titre-link-typeahead-control" aria-activedescendant="titre-link-typeahead-control" aria-expanded="false" aria-autocomplete="list" value="Affluent Crique Saint Bernard"></div>
+          <ul class="_typeahead-list_8eddf1 " tabindex="-1" id="titre-link-typeahead-control" role="listbox">
+            <li class="_typeahead-list-item_8eddf1 _typeahead-list-item-active_8eddf1" aria-selected="false" id="titre-link-typeahead-control-0">
+              <div class="flex flex-center">
+                <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p><span class="bold ml-m">Abttis Coucou</span><span class="ml-m" style="margin-left: auto;">2016-10-28 - 2017-03-17</span>
+              </div>
+            </li>
+            <li class="_typeahead-list-item_8eddf1 " aria-selected="false" id="titre-link-typeahead-control-1">
+              <div class="flex flex-center">
+                <p style="z-index: unset; margin-bottom: 0px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" class="fr-badge fr-badge--md fr-badge--beige-gris-galet" title="échu" aria-label="échu">échu</p><span class="bold ml-m">Nouveau titre</span><span class="ml-m" style="margin-left: auto;">2008-11-30 - 2019-02-27</span>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div style="display: flex; align-items: center;" class="fr-mt-3w"><button class="fr-btn fr-btn--primary fr-btn--md fr-mr-1w" title="Enregistrer" aria-label="Enregistrer" type="submit">Enregistrer</button>

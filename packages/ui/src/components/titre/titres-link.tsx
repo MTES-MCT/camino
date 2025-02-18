@@ -9,8 +9,10 @@ import { TypeAheadMultiple } from '../_ui/typeahead-multiple'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 import { capitalize } from 'camino-common/src/strings'
+import { fr } from '@codegouvfr/react-dsfr'
 
 interface Props {
+  label?: string
   config: TitresLinkConfig
   loadLinkableTitres: () => Promise<LinkableTitre[]>
   onSelectTitres: (titres: TitreLink[]) => void
@@ -101,7 +103,10 @@ export const TitresLink = defineComponent<Props>(props => {
     <LoadingElement
       data={data.value}
       renderItem={_item => (
-        <>
+        <div class={fr.cx('fr-select-group')}>
+          <label class={fr.cx('fr-label', 'fr-mb-1w')} for="titre-link-typeahead">
+            {isNotNullNorUndefined(props.label) ? props.label : props.config.type === 'single' ? 'Lier un titre' : 'Lier plusieurs titres'}
+          </label>
           {props.config.type === 'single' ? (
             <TypeAheadSingle
               overrideItem={selectedTitre.value}
@@ -133,11 +138,11 @@ export const TitresLink = defineComponent<Props>(props => {
               }}
             />
           )}
-        </>
+        </div>
       )}
     />
   )
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TitresLink.props = ['config', 'loadLinkableTitres', 'onSelectTitres']
+TitresLink.props = ['label', 'config', 'loadLinkableTitres', 'onSelectTitres']

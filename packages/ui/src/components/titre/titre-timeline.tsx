@@ -66,7 +66,7 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
         <h2>Phases</h2>
         <ul>
           {props.phasesWithAlterations.map((phaseWithAlterations, phaseIndex) => (
-            <div key={phaseIndex}>
+            <Fragment key={phaseIndex}>
               {phaseWithAlterations.map((demarche, demarcheIndex) => (
                 <Fragment key={demarche.slug}>
                   <li class={style.hidden}>
@@ -96,7 +96,7 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
                   ))}
                 </Fragment>
               ))}
-            </div>
+            </Fragment>
           ))}
         </ul>
         <div style={{ overflowX: 'auto' }} aria-hidden="true" tabindex={-1}>

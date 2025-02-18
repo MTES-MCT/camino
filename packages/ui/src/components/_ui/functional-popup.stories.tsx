@@ -2,6 +2,7 @@ import { FunctionalPopup } from './functional-popup'
 import { Meta, StoryFn } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { sleep } from 'camino-common/src/typescript-tools'
+import { Alert } from './alert'
 
 const meta: Meta = {
   title: 'Components/UI/Popup',
@@ -26,13 +27,7 @@ export const Main: StoryFn = () => (
         return sleep(5000)
       },
     }}
-    content={() => (
-      <div>
-        <div class="bg-warning color-bg p-s mb-l">
-          <span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.
-        </div>
-      </div>
-    )}
+    content={() => <Alert small={true} title="Attention : cette opération est définitive et ne peut pas être annulée" type="warning" />}
   />
 )
 
@@ -49,13 +44,7 @@ export const SaveError: StoryFn = () => (
         return Promise.reject(new Error('erreur'))
       },
     }}
-    content={() => (
-      <div>
-        <div class="bg-warning color-bg p-s mb-l">
-          <span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.
-        </div>
-      </div>
-    )}
+    content={() => <Alert small={true} title="Attention : cette opération est définitive et ne peut pas être annulée" type="warning" />}
   />
 )
 
@@ -72,12 +61,6 @@ export const NotValid: StoryFn = () => (
         return Promise.resolve()
       },
     }}
-    content={() => (
-      <div>
-        <div class="bg-warning color-bg p-s mb-l">
-          <span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.
-        </div>
-      </div>
-    )}
+    content={() => <Alert small={true} title="Attention : cette opération est définitive et ne peut pas être annulée" type="warning" />}
   />
 )
