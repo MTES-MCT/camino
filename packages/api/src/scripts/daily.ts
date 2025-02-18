@@ -117,7 +117,7 @@ const tasks = async () => {
     // TODO 2024-12-05 enlever le daily par email si il s'est bien envoyé via tchap
     await mailjetSend([config().ADMIN_EMAIL], {
       Subject: `[Camino][${config().ENV}] Résultats du daily`,
-      'Text-part': emailBody,
+      TextPart: emailBody,
     })
   }
   console.info('Tâches quotidiennes : terminé')

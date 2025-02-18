@@ -1,11 +1,15 @@
 import { Request, Response } from 'express'
 import { vi } from 'vitest'
-const origEmails = await vi.importActual('../src/tools/api-mailjet/emails')
 vi.mock('../src/tools/api-mailjet/emails', () => ({
   __esModule: true,
-  ...origEmails,
   emailsSend: vi.fn().mockImplementation(a => a),
   emailsWithTemplateSend: vi.fn().mockImplementation(a => a),
+}))
+
+vi.mock('../src/tools/api-mailjet/index', () => ({
+  __esModule: true,
+  mailjetAddContactsToGuyaneList: vi.fn().mockImplementation(a => a),
+  mailJetSendMail: vi.fn().mockImplementation(a => a),
 }))
 
 function assertObject(stuff: unknown): asserts stuff is object {

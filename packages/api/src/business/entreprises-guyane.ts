@@ -2,8 +2,8 @@ import { toDepartementId, Departements, CodePostal } from 'camino-common/src/sta
 import { PAYS_IDS } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
 import { knex } from '../knex'
-import { exploitantsGuyaneSubscriberUpdate } from '../tools/api-mailjet/guyane'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { mailjetAddContactsToGuyaneList } from '../tools/api-mailjet'
 
 interface Result {
   id: string
@@ -47,7 +47,7 @@ export const subscribeUsersToGuyaneExploitants = async (): Promise<ResultAggrega
       return acc
     }, {})
   const users = Object.values(reduced).toSorted((a, b) => a.email.localeCompare(b.email))
-  await exploitantsGuyaneSubscriberUpdate(
+  await mailjetAddContactsToGuyaneList(
     users.map(user => ({
       email: user.email,
       nom: `${user.nomUtilisateur} ${user.prenom}`,

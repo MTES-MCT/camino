@@ -44,7 +44,7 @@ const tasks = async () => {
     const emailBody = `Résultats de ${config().ENV} \n${readFileSync(logFile).toString()}`
     await mailjetSend([config().ADMIN_EMAIL], {
       Subject: `[Camino][${config().ENV}] Résultats du monthly`,
-      'Text-part': emailBody,
+      TextPart: emailBody,
     })
   }
   console.info('Tâches mensuelles : terminé')
