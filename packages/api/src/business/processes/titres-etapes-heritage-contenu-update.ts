@@ -3,7 +3,7 @@ import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-con
 import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { UserNotNull } from 'camino-common/src/roles'
 import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections'
-import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { Pool } from 'pg'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.queries'
@@ -30,7 +30,7 @@ export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNo
 
         return acc
       }, {})
-      const titreEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes.filter(e => etapeSectionsDictionary[e.id]))
+      const titreEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes.filter(e => isNotNullNorUndefined(etapeSectionsDictionary[e.id])))
 
       if (isNotNullNorUndefinedNorEmpty(titreEtapes)) {
         for (let index = 0; index < titreEtapes.length; index++) {

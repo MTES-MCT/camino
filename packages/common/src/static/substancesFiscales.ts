@@ -135,7 +135,7 @@ export const SubstancesFiscale: {
 const SubstancesFiscales = Object.values(SubstancesFiscale)
 
 export const substancesFiscalesBySubstanceLegale = (substanceLegaleId: SubstanceLegaleId): SubstanceFiscale[] => {
-  const substancesLegalesIds = SubstancesLegales.filter(({ id, substanceParentIds }) => id === substanceLegaleId || substanceParentIds?.includes(substanceLegaleId)).map(({ id }) => id)
+  const substancesLegalesIds = SubstancesLegales.filter(({ id, substanceParentIds }) => id === substanceLegaleId || (substanceParentIds?.includes(substanceLegaleId) ?? false)).map(({ id }) => id)
 
   return SubstancesFiscales.filter(({ substanceLegaleId }) => substancesLegalesIds.includes(substanceLegaleId))
 }

@@ -37,7 +37,7 @@ const etapesLabelFormat = (filter: EtapeCaminoFiltres, values: FilterEtapeValue[
   const fullFilter = caminoFiltres[filter]
 
   return values
-    .filter(value => value.typeId)
+    .filter(value => isNotNullNorUndefinedNorEmpty(value.typeId))
     .map(value => {
       let message = `type: ${EtapesTypes[value.typeId as EtapeTypeId].nom}`
       if (value.statutId) {

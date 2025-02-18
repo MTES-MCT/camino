@@ -4,7 +4,7 @@ import { DemarchesStatutsIds, isDemarcheStatutNonStatue, isDemarcheStatutNonVali
 import { isDemarcheTypeOctroi, DemarchesTypes } from 'camino-common/src/static/demarchesTypes'
 import { TitresStatutIds, TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { CaminoDate } from 'camino-common/src/date'
-import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export type TitreStatutIdFindDemarche = Pick<ITitreDemarche, 'typeId' | 'statutId' | 'demarcheDateDebut' | 'demarcheDateFin'>
 export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatutIdFindDemarche[] | null | undefined): TitreStatutId => {
@@ -38,7 +38,9 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatut
   }
 
   const isValide: boolean =
-    demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && demarcheDateFin && aujourdhui >= demarcheDateDebut && aujourdhui <= demarcheDateFin) ?? false
+    demarches?.some(
+      ({ demarcheDateDebut, demarcheDateFin }) => isNotNullNorUndefined(demarcheDateDebut) && isNotNullNorUndefined(demarcheDateFin) && aujourdhui >= demarcheDateDebut && aujourdhui <= demarcheDateFin
+    ) ?? false
   const inModificationEnInstance = titreInModificationEnInstance(titreDemarches)
 
   // Le titre est encore valide, mais il y a une demande de modification en cours
@@ -60,5 +62,5 @@ export const titreStatutIdFind = (aujourdhui: CaminoDate, demarches: TitreStatut
 }
 
 export const titreInModificationEnInstance = (demarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin'>[] | null | undefined): boolean => {
-  return demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => demarcheDateDebut && !demarcheDateFin) ?? false
+  return demarches?.some(({ demarcheDateDebut, demarcheDateFin }) => isNotNullNorUndefined(demarcheDateDebut) && isNullOrUndefined(demarcheDateFin)) ?? false
 }

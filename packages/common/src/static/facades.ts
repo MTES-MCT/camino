@@ -107,7 +107,7 @@ export const getDepartementsBySecteurs = (ids: SecteursMaritimes[]): Departement
 }
 export const getSecteursByDepartements = (ids: DepartementId[]): SecteursMaritimes[] => {
   return getValues(facades)
-    .flatMap(facade => Object.entries(facade).filter(([_key, secteur]) => ids.some(departementId => secteur.departementIds.includes(departementId))))
+    .flatMap(facade => Object.entries(facade).filter(([_key, secteur]: [string, SecteurMaritimeData]) => ids.some(departementId => secteur.departementIds.includes(departementId))))
     .map(([key, _name]) => key)
     .filter(onlyUnique)
     .filter(isSecteurMaritime)

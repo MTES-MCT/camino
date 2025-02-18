@@ -74,6 +74,7 @@ export const titreEtapeHeritageContenuFind = (
           section.elements.forEach(element => {
             // parmi les étapes précédentes,
             // trouve l'étape qui contient section / element
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             const prevTitreEtape = titreEtapes.find(e => e.id !== titreEtape.id && etapeSectionsDictionary[e.id]?.find(s => s.id === section.id && s.elements!.find(e => e.id === element.id)))
 
             const { hasChanged: contenuHasChanged, actif, value, etapeId } = heritageContenuFind(section.id, element.id, titreEtape, prevTitreEtape)

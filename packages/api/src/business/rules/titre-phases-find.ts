@@ -47,7 +47,9 @@ const findDateDebut = (demarche: TitreDemarchePhaseFind, titreTypeId: TitreTypeI
     }
 
     // retourne l’étape de publication la plus récente avec une date de début spécifiée
-    const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(demarche.etapes).find(titreEtape => titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) && titreEtape.dateDebut)
+    const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(demarche.etapes).find(
+      titreEtape => titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) && isNotNullNorUndefined(titreEtape.dateDebut)
+    )
 
     if (etapePublicationHasDateDebut?.dateDebut) {
       dateDebut = etapePublicationHasDateDebut.dateDebut
@@ -80,7 +82,9 @@ export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], titreT
     isNotNullNorUndefined(titreDemarcheAnnulation) && isNotNullNorUndefinedNorEmpty(titreDemarcheAnnulation.etapes) ? titreDemarcheAnnulationDateFinFind(titreDemarcheAnnulation.etapes) : null
 
   const filteredDemarches = sortedDemarches.filter(
-    demarche => isNotNullNorUndefinedNorEmpty(demarche.etapes) && (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => dateFin || duree))
+    demarche =>
+      isNotNullNorUndefinedNorEmpty(demarche.etapes) &&
+      (isDemarcheTypeWithPhase(demarche.typeId) || demarche.etapes.some(({ dateFin, duree }) => isNotNullNorUndefined(dateFin) || (isNotNullNorUndefined(duree) && duree !== 0)))
   )
 
   const phases = filteredDemarches.reduce<IntermediateTitrePhase[]>((acc, demarche) => {
@@ -203,7 +207,9 @@ const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFin
     return { dateFin: desistementDemandeur.date, duree: 0 }
   }
 
-  const titreEtapeHasDateFinOrDuree = titreEtapesSorted.find(({ typeId, dateFin, duree }) => etapeTypesIds.includes(typeId) && (dateFin || duree))
+  const titreEtapeHasDateFinOrDuree = titreEtapesSorted.find(
+    ({ typeId, dateFin, duree }) => etapeTypesIds.includes(typeId) && (isNotNullNorUndefined(dateFin) || (isNotNullNorUndefined(duree) && duree !== 0))
+  )
 
   if (!titreEtapeHasDateFinOrDuree) {
     const etapeClassementSansSuite = titreEtapesSorted.find(({ typeId }) => typeId === ETAPES_TYPES.classementSansSuite)

@@ -9,7 +9,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
 import { CaminoAnnee, getAnnee, toCaminoDate } from 'camino-common/src/date'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { getTitresModifiesByMonth } from '../../rest/journal.queries'
 import { callAndExit } from '../../../tools/fp-tools'
 
@@ -25,7 +25,7 @@ export const statistiquesGlobales = async (_: unknown, { pool }: Context): Promi
     const demarches = titresActivites.filter(titreActivite => {
       const dateSaisie = titreActivite.dateSaisie
 
-      return dateSaisie && dateSaisie.slice(0, 4) === new Date().getFullYear().toString()
+      return isNotNullNorUndefinedNorEmpty(dateSaisie) && dateSaisie.slice(0, 4) === new Date().getFullYear().toString()
     }).length
 
     return {
@@ -57,7 +57,7 @@ export const titresSurfaceIndexBuild = (titres: ITitre[], annee: CaminoAnnee): T
   for (const titre of titres) {
     // titres dont le dernier octroi valide avec une phase valide débute cette année
     const titreDemarcheOctroiValide = titre.demarches?.find(
-      demarche => demarche.typeId === DEMARCHES_TYPES_IDS.Octroi && demarche.demarcheDateDebut && getAnnee(demarche.demarcheDateDebut) === annee.toString()
+      demarche => demarche.typeId === DEMARCHES_TYPES_IDS.Octroi && isNotNullNorUndefined(demarche.demarcheDateDebut) && getAnnee(demarche.demarcheDateDebut) === annee.toString()
     )
 
     if (isNullOrUndefined(titreDemarcheOctroiValide)) {

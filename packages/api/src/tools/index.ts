@@ -14,6 +14,7 @@ export const dupFind = (key: string, ...arrays: Index<any>[][]): Index<any>[] =>
 
 export const objectsDiffer = (a: Index<any> | any, b: Index<any> | any): boolean => {
   const comparator = (a: Index<any> | any, b: Index<any> | any) =>
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     Object.keys(a).find(k => {
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (a[k] && b[k]) {

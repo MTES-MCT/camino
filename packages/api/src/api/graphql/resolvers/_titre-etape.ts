@@ -95,6 +95,7 @@ const titreEtapeHeritageContenuBuild = (
       (acc: { [elementId: string]: IHeritageElement }, element) => {
         acc[element.id] = {
           actif: !!titreEtapesFiltered.find(
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             e => e.id !== titreEtape.id && etapeSectionsDictionary[e.id] && (etapeSectionsDictionary[e.id]?.find(s => s.id === section.id && s.elements.find(el => el.id === element.id)) ?? false)
           ),
         }
@@ -107,7 +108,7 @@ const titreEtapeHeritageContenuBuild = (
     return heritageContenu
   }, {})
 
-  titreEtapesFiltered = titreEtapesFiltered.filter(e => etapeSectionsDictionary[e.id])
+  titreEtapesFiltered = titreEtapesFiltered.filter(e => isNotNullNorUndefined(etapeSectionsDictionary[e.id]))
 
   const { contenu, heritageContenu } = titreEtapeHeritageContenuFind(titreEtapesFiltered, titreEtape, etapeSectionsDictionary)
 

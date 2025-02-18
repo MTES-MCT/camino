@@ -36,7 +36,7 @@ const writeEtapesForTest = async () => {
     }
 
     const lesDemarchesFiltres = demarches
-      .filter(demarche => demarche.etapes?.length)
+      .filter(demarche => isNotNullNorUndefinedNorEmpty(demarche.etapes))
       .filter(demarche => {
         const firstEtapeDate = demarcheEnregistrementDemandeDateFind(demarche.etapes)
         let machineId: CaminoMachineId | undefined

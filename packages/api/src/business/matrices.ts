@@ -2,7 +2,7 @@ import '../init'
 import { FiscaliteFrance, decimalValidator, fiscaliteValidator, type Fiscalite } from 'camino-common/src/validators/fiscalite'
 import { ICommune, IContenuValeur } from '../types'
 import { departementIdValidator, Departements, toDepartementId } from 'camino-common/src/static/departement'
-import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 import { Commune, CommuneId, communeIdValidator, communeValidator } from 'camino-common/src/static/communes'
 import { CaminoAnnee } from 'camino-common/src/date'
 
@@ -148,7 +148,7 @@ export const getRawLines = (
       }
 
       if (titre.substances.length > 0 && activite.contenu) {
-        const substanceLegalesWithFiscales = titre.substances.filter(isNotNullNorUndefined).filter(substanceId => substancesFiscalesBySubstanceLegale(substanceId).length)
+        const substanceLegalesWithFiscales = titre.substances.filter(isNotNullNorUndefined).filter(substanceId => isNotNullNorUndefinedNorEmpty(substancesFiscalesBySubstanceLegale(substanceId)))
 
         if (substanceLegalesWithFiscales.length > 1) {
           // TODO 2022-07-25 on fait quoi ? On calcule quand même ?

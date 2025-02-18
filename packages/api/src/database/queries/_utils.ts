@@ -49,4 +49,5 @@ export const stringSplit = (string: string): string[] =>
         //          *                 |     0 ou n fois
         .replace(/(.*)-$/, '$1')
     )
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     .filter(e => e)

@@ -44,13 +44,13 @@
     ]
   },
   "devDependencies": {
-    "@semantic-release/gitlab": "^13.2.3",
+    "@semantic-release/gitlab": "^13.2.4",
     "@types/react": "file:stub/types__react",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.10",
-    "semantic-release": "^24.2.0",
-    "typescript": "^5.7.2",
-    "vue": "^3.5.4"
+    "lint-staged": "^15.4.3",
+    "semantic-release": "^24.2.2",
+    "typescript": "^5.7.3",
+    "vue": "^3.5.13"
   },
   "release": {
     "branches": [

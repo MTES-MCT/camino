@@ -159,7 +159,7 @@ const getTitreDates = (titre: Pick<ITitre, 'demarches'>): { dateDebut: CaminoDat
 
   return {
     dateDebut: sortedDemarches.find(demarche => !!demarche.demarcheDateDebut)?.demarcheDateDebut ?? null,
-    dateFin: sortedDemarches.reverse().find(demarche => demarche.demarcheDateDebut)?.demarcheDateFin ?? null,
+    dateFin: sortedDemarches.reverse().find(demarche => isNotNullNorUndefined(demarche.demarcheDateDebut))?.demarcheDateFin ?? null,
     dateDemande: titreDateDemandeFind(sortedDemarches),
   }
 }

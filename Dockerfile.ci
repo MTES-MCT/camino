@@ -14,4 +14,4 @@ COPY Makefile /app/Makefile
 
 RUN CI=true make install
 RUN mkdir /app/packages/api/node_modules /app/packages/ui/node_modules /app/packages/common/node_modules || true
-RUN npx playwright@1.49.0 install --with-deps chromium
+RUN npx playwright@1.50.1 install --with-deps chromium

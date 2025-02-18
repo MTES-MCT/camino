@@ -38,7 +38,7 @@ export const titreEtapesSortAscByDate = <T extends TitreEtapeForMachine>(titreEt
     }
 
     // On remet les brouillons à la bonne date, car la machine les a ignorés
-    const etapesInBrouillon = titreEtapes.filter(({ isBrouillon }) => isBrouillon)
+    const etapesInBrouillon = titreEtapes.filter(({ isBrouillon }) => isBrouillon === ETAPE_IS_BROUILLON)
     if (isNotNullNorUndefinedNorEmpty(etapesInBrouillon)) {
       return [...result, ...etapesInBrouillon].toSorted((a, b) => {
         if (a.isBrouillon === ETAPE_IS_BROUILLON || b.isBrouillon === ETAPE_IS_BROUILLON) {

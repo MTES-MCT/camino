@@ -5,7 +5,7 @@ import type { ITitreEtape } from '../../types'
 import { Etape, TitreEtapeForMachine, titreEtapeForMachineValidator, toMachineEtapes } from '../rules-demarches/machine-common'
 import { demarcheEnregistrementDemandeDateFind, DemarcheId } from 'camino-common/src/demarche'
 import { DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
+import { ETAPE_IS_BROUILLON, EtapeId, EtapeTypeEtapeStatutWithMainStep } from 'camino-common/src/etape'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { CaminoMachines, machineFind } from '../rules-demarches/machines'
 import { CaminoDate } from 'camino-common/src/date'
@@ -147,7 +147,7 @@ export const getPossiblesEtapesTypes = (
   }
 
   // On ne peut pas avoir 2 fois le même type d'étape en brouillon
-  const etapeTypeIdsInBrouillon = demarcheEtapes.filter(({ isBrouillon, id }) => id !== etapeId && isBrouillon).map(({ typeId }) => typeId)
+  const etapeTypeIdsInBrouillon = demarcheEtapes.filter(({ isBrouillon, id }) => id !== etapeId && isBrouillon === ETAPE_IS_BROUILLON).map(({ typeId }) => typeId)
 
   for (const etapeTypeIdInBrouillon of etapeTypeIdsInBrouillon) {
     delete etapesTypes[etapeTypeIdInBrouillon]
