@@ -8,31 +8,13 @@ import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/
 import { TITRES_TYPES_IDS, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
-import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, RecordPartial } from 'camino-common/src/typescript-tools'
+import { ETAPES_STATUTS, isEtapeStatusRejete } from 'camino-common/src/static/etapesStatuts'
+import { exhaustiveCheck, isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, RecordPartial } from 'camino-common/src/typescript-tools'
 import { machineFind } from '../rules-demarches/machines'
 
 const titreEtapesDecisivesCommunesTypes: EtapeTypeId[] = ['css', 'abd', 'and']
 
-const titreEtapesDecisivesDemandesTypes: EtapeTypeId[] = [
-  'mfr',
-  'men',
-  'meo',
-  'des',
-  'mcp',
-  'mcr',
-  'dim',
-  'dex',
-  'aca',
-  'def',
-  'sco',
-  'aco',
-  'apu',
-  'rpu',
-  'dpu',
-  'ihi',
-  ...titreEtapesDecisivesCommunesTypes,
-]
+const titreEtapesDecisivesDemandesTypes: EtapeTypeId[] = ['mfr', 'men', 'meo', 'des', 'mcp', 'mcr', 'dex', 'aca', 'def', 'sco', 'aco', 'apu', 'rpu', 'dpu', 'ihi', ...titreEtapesDecisivesCommunesTypes]
 
 const titreDemarchesDemandesTypes: DemarcheTypeId[] = ['oct', 'pro', 'pr1', 'pr2', 'pre', 'rec', 'rep', 'fus', 'exp', 'exs', 'mut', 'vut', 'amo', 'res', 'ces', 'dep', 'vct']
 
@@ -140,9 +122,14 @@ const titreDemarcheDemandeStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
   if (statutId) return statutId
 
   //  - le type de l’étape est une publication
-  //  - ou une décision implicite (dim)
+  //  - ou une décision implicite (dex avec statut rei ou aci)
   //  - ou des informations historiques incomplètes
-  const titreEtapesPublication = titreDemarcheEtapes.filter(titreEtape => titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) || ['dim', 'ihi'].includes(titreEtape.typeId))
+  const titreEtapesPublication = titreDemarcheEtapes.filter(
+    titreEtape =>
+      titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) ||
+      [ETAPES_TYPES.informationsHistoriquesIncompletes].includes(titreEtape.typeId) ||
+      (ETAPES_TYPES.decisionDeLAutoriteAdministrative === titreEtape.typeId && [ETAPES_STATUTS.ACCEPTE_DECISION_IMPLICITE, ETAPES_STATUTS.REJETE_DECISION_IMPLICITE].includes(titreEtape.statutId))
+  )
 
   if (titreEtapesPublication.length) {
     // si l'étape de publication la plus récente est
@@ -154,12 +141,28 @@ const titreDemarcheDemandeStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape,
     switch (titreEtapePublicationRecent.statutId) {
       case 'fai':
       case 'acc':
+      case 'aci':
         return DemarchesStatutsIds.Accepte
       case 'rej':
       case 'rei':
         return DemarchesStatutsIds.Rejete
-      default:
+      case 'def':
+      case 'dre':
+      case 'dep':
+      case 'enc':
+      case 'exe':
+      case 'req':
+      case 'com':
+      case 'inc':
+      case 'fav':
+      case 'pro':
+      case 'ter':
+      case 'fre':
+      case 'nul':
+      case 'ajo':
         return DemarchesStatutsIds.Indetermine
+      default:
+        exhaustiveCheck(titreEtapePublicationRecent.statutId)
     }
   }
 

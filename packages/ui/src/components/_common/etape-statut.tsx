@@ -10,6 +10,7 @@ type Props = {
 
 const couleurParStatut = {
   [ETAPES_STATUTS.ACCEPTE]: 'green-bourgeon',
+  [ETAPES_STATUTS.ACCEPTE_DECISION_IMPLICITE]: 'green-bourgeon',
   [ETAPES_STATUTS.DEFAVORABLE_AVEC_RESERVES]: 'purple-glycine',
   [ETAPES_STATUTS.EN_COURS]: 'orange-terre-battue',
   [ETAPES_STATUTS.FAIT]: 'green-bourgeon',

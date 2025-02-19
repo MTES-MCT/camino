@@ -67,12 +67,12 @@ entity "**entreprises_etablissements**" {
 }
 
 entity "**etape_avis**" {
+  + ""id"": //character varying(255) [PK]//
   --
-  *""id"": //character varying(255) //
   *""avis_type_id"": //character varying(255) //
   *""avis_statut_id"": //character varying(255) //
   *""avis_visibility_id"": //character varying(255) //
-  *""etape_id"": //character varying(255) //
+  *""etape_id"": //character varying(128) [FK]//
   *""description"": //text //
   *""date"": //character varying(10) //
   ""largeobject_id"": //oid //
@@ -82,7 +82,7 @@ entity "**etapes_documents**" {
   + ""id"": //character varying(255) [PK]//
   --
   *""etape_document_type_id"": //character varying(3) //
-  *""etape_id"": //character varying(255) [FK]//
+  *""etape_id"": //character varying(128) [FK]//
   ""description"": //character varying(1024) //
   *""public_lecture"": //boolean //
   *""entreprises_lecture"": //boolean //
@@ -129,14 +129,6 @@ entity "**logs**" {
   *""utilisateur_id"": //character varying(255) [FK]//
 }
 
-entity "**perimetre_reference**" {
-  + ""titre_etape_id"": //character varying(255) [PK][FK]//
-  + ""geo_systeme"": //character varying(255) [PK]//
-  --
-  ""opposable"": //boolean //
-  ""geojson_perimetre"": //jsonb //
-}
-
 entity "**sdom_zones_postgis**" {
   + ""id"": //character varying(30) [PK]//
   --
@@ -173,8 +165,8 @@ entity "**titres**" {
 }
 
 entity "**titres__titres**" {
-  + ""titre_from_id"": //character varying(255) [PK][FK]//
-  + ""titre_to_id"": //character varying(255) [PK][FK]//
+  + ""titre_from_id"": //character varying(128) [PK][FK]//
+  + ""titre_to_id"": //character varying(128) [PK][FK]//
   --
 }
 
@@ -182,7 +174,7 @@ entity "**titres_activites**" {
   + ""id"": //character varying(255) [PK]//
   --
   ""titre_id"": //character varying(128) [FK]//
-  ""utilisateur_id"": //character varying(128) [FK]//
+  ""utilisateur_id"": //character varying(255) [FK]//
   *""date"": //character varying(10) //
   ""date_saisie"": //character varying(10) //
   ""contenu"": //jsonb //
@@ -245,7 +237,10 @@ entity "**titres_etapes**" {
   *""amodiataire_ids"": //jsonb //
   *""is_brouillon"": //boolean //
   *""note"": //jsonb //
-  ""demarche_id_en_concurrence"": //character varying [FK]//
+  ""demarche_id_en_concurrence"": //character varying(128) [FK]//
+  *""etape_fondamentale_id"": //character varying(128) [FK]//
+  *""demarche_ids_consentement"": //jsonb //
+  *""departements"": //jsonb //
 }
 
 entity "**titres_etapes_entreprises_documents**" {
@@ -271,13 +266,13 @@ entity "**utilisateurs**" {
 
 entity "**utilisateurs__entreprises**" {
   --
-  ""utilisateur_id"": //character varying(64) [FK]//
+  ""utilisateur_id"": //character varying(255) [FK]//
   ""entreprise_id"": //character varying(64) [FK]//
 }
 
 entity "**utilisateurs__titres**" {
   + ""utilisateur_id"": //character varying(255) [PK][FK]//
-  + ""titre_id"": //character varying(255) [PK][FK]//
+  + ""titre_id"": //character varying(128) [PK][FK]//
   --
 }
 
@@ -287,13 +282,13 @@ entity "**utilisateurs__titres**" {
 
 "**entreprises_etablissements**"   }--  "**entreprises**"
 
+"**etape_avis**"   }--  "**titres_etapes**"
+
 "**etapes_documents**"   }--  "**titres_etapes**"
 
 "**journaux**"   }--  "**titres**"
 
 "**logs**"   }--  "**utilisateurs**"
-
-"**perimetre_reference**"   }--  "**titres_etapes**"
 
 "**titres__titres**"   }--  "**titres**"
 
@@ -310,6 +305,8 @@ entity "**utilisateurs__titres**" {
 "**titres_demarches**"   }--  "**titres**"
 
 "**titres_etapes**"   }--  "**titres_demarches**"
+
+"**titres_etapes**"   }--  "**titres_etapes**"
 
 "**titres_etapes**"   }--  "**titres_demarches**"
 

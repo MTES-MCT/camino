@@ -60,13 +60,6 @@ test('getAdministrationTitresTypesEtapesTypes', () => {
       },
       {
         "creationInterdit": true,
-        "etapeTypeId": "dim",
-        "lectureInterdit": false,
-        "modificationInterdit": true,
-        "titreTypeId": "cxm",
-      },
-      {
-        "creationInterdit": true,
         "etapeTypeId": "dpu",
         "lectureInterdit": false,
         "modificationInterdit": true,
@@ -194,13 +187,6 @@ test('getAdministrationTitresTypesEtapesTypes', () => {
       {
         "creationInterdit": true,
         "etapeTypeId": "dex",
-        "lectureInterdit": false,
-        "modificationInterdit": true,
-        "titreTypeId": "prm",
-      },
-      {
-        "creationInterdit": true,
-        "etapeTypeId": "dim",
         "lectureInterdit": false,
         "modificationInterdit": true,
         "titreTypeId": "prm",

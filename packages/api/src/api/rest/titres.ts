@@ -31,7 +31,7 @@ import { EffectDbQueryAndValidateErrors } from '../../pg-database'
 import { CaminoMachines, machineFind } from '../../business/rules-demarches/machines'
 import { demarcheEnregistrementDemandeDateFind } from 'camino-common/src/demarche'
 
-const etapesAMasquer = [ETAPES_TYPES.classementSansSuite, ETAPES_TYPES.desistementDuDemandeur, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]
+const etapesAMasquer = [ETAPES_TYPES.classementSansSuite, ETAPES_TYPES.desistementDuDemandeur, ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]
 
 export const titresAdministrations =
   (_pool: Pool) =>

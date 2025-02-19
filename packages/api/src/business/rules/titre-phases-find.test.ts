@@ -1305,8 +1305,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId5'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'dim',
-            statutId: 'acc',
+            typeId: 'dex',
+            statutId: 'aci',
             ordre: 5,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2022-05-09'),
@@ -2095,13 +2095,13 @@ describe("phases d'une démarche", () => {
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 4,
-                typeId: 'dim',
+                typeId: 'dex',
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2016-03-24'),
-                statutId: 'rej',
+                statutId: 'rei',
                 geojson4326Perimetre: null,
               },
               {

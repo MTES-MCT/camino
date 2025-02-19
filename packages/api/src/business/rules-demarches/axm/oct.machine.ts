@@ -105,7 +105,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   DEMANDER_INFORMATION_POUR_AVIS_DREAL: { db: ETES.demandeDinformations_AvisDuDREALDEALOuDGTM_, mainStep: false },
   RECEVOIR_INFORMATION_POUR_AVIS_DREAL: { db: ETES.receptionDinformation_AvisDuDREALDEALOuDGTM_, mainStep: false },
   // TODO 2023-04-19 RENDRE_DECISION_IMPLICITE_REJET est une étape principale le jour où on gère le délai entre la men et le rejet implicite
-  RENDRE_DECISION_IMPLICITE_REJET: { db: { REJETE: ETES.decisionImplicite.REJETE }, mainStep: false },
+  RENDRE_DECISION_IMPLICITE_REJET: { db: { REJETE_DECISION_IMPLICITE: ETES.decisionDeLAutoriteAdministrative.REJETE_DECISION_IMPLICITE }, mainStep: false },
   RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: { db: ETES.decisionDuJugeAdministratif, mainStep: false },
   FAIRE_DESISTEMENT_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
   FAIRE_CLASSEMENT_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },

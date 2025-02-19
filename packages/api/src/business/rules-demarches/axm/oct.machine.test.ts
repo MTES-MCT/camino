@@ -108,7 +108,11 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
   })
 
   test('peut faire uniquement une decision annulation par le juge administratif après une décision implicite', () => {
-    const { tree } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [ETES.demande.FAIT, ETES.enregistrementDeLaDemande.FAIT, ETES.decisionImplicite.REJETE])
+    const { tree } = setDateAndOrderAndInterpretMachine(axmOctMachine, '2020-01-01', [
+      ETES.demande.FAIT,
+      ETES.enregistrementDeLaDemande.FAIT,
+      ETES.decisionDeLAutoriteAdministrative.REJETE_DECISION_IMPLICITE,
+    ])
     expect(tree).toMatchInlineSnapshot(`
       [
         "RIEN                            (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",

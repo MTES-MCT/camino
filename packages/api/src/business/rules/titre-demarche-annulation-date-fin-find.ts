@@ -15,7 +15,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 export const titreDemarcheAnnulationDateFinFind = (titreEtapes: TitreEtapePhaseFind[]): CaminoDate | null | undefined => {
   // si l’étape valide l’annulation
   const etapeAnnulationValideCheck = (te: TitreEtapePhaseFind) =>
-    [ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.decisionImplicite].includes(te.typeId) ||
+    te.typeId === ETAPES_TYPES.decisionDeLAutoriteAdministrative ||
     // si l’ARM a une signature de l’avenant à l’autorisation de recherche minière fait
     (te.typeId === ETAPES_TYPES.avenantALautorisationDeRechercheMiniere && te.statutId === ETAPES_STATUTS.FAIT)
 

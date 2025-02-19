@@ -5,10 +5,10 @@ import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
 
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
-const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex","dim", "dpu","ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex", "dpu","ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
 const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma", "ede","edm","epu","esb","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
@@ -35,7 +35,6 @@ export const ETAPES_TYPES = {
   decisionDeLOfficeNationalDesForets: 'def',
   desistementDuDemandeur: 'des',
   decisionDeLAutoriteAdministrative: 'dex',
-  decisionImplicite: 'dim',
   publicationDeDecisionAuJORF: 'dpu',
   expertiseDREALOuDGTMServiceEau: 'ede',
   expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_: 'edm',
@@ -791,17 +790,6 @@ export const EtapesTypes = {
     public_lecture: false,
     entreprises_lecture: true,
   },
-  dim: {
-    id: 'dim',
-    nom: 'décision implicite',
-    description:
-      "En dehors des décisions implicites, l'autorité administrative compétente (préfet, ministre chargé des mines ou gouvernement) peut prendre une décision express de refus ou d'acceptation par arrêté ou décret en conseil d'État (décision relative aux concessions minières).",
-    fondamentale: true,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
-  },
   def: {
     id: 'def',
     nom: "décision de l'Office national des forêts",
@@ -1240,7 +1228,6 @@ const ETAPES_DECISIONS_IDS = [
   ETAPES_TYPES.publicationDeDecisionAuJORF,
   ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
   ETAPES_TYPES.decisionDeLAutoriteAdministrative,
-  ETAPES_TYPES.decisionImplicite,
   ETAPES_TYPES.decisionDeLOfficeNationalDesForets,
   ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere,
   ETAPES_TYPES.avenantALautorisationDeRechercheMiniere,

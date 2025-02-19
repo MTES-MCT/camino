@@ -552,7 +552,6 @@ const TDESections = {
       [ETAPES_TYPES.receptionDeComplements]: proprietesDeLaConcession,
       [ETAPES_TYPES.receptionDinformation]: proprietesDeLaConcession,
       [ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF]: proprietesDeLaConcession,
-      [ETAPES_TYPES.decisionImplicite]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDeLAutoriteAdministrative]: proprietesDeLaConcession,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
       [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: proprietesDeLaConcession,

@@ -6,6 +6,7 @@ import { objectsDiffer } from '../../tools/index'
 import { userSuper } from '../../database/user-super'
 import { getCurrent } from 'camino-common/src/date'
 import { TitreId } from 'camino-common/src/validators/titres'
+import { isNullOrUndefined } from 'camino-common/src/typescript-tools'
 
 export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]): Promise<TitreId[]> => {
   console.info()
@@ -29,7 +30,10 @@ export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]): Promise<
 
   for (const titre of titres) {
     const propsTitreEtapesIds = propsTitreEtapeIdKeys.reduce((propsTitreEtapesIds: IPropsTitreEtapesIds, propId) => {
-      const titreEtape = titrePropTitreEtapeFind(aujourdhui, propId, titre.demarches!, titre.titreStatutId!)
+      if (isNullOrUndefined(titre.demarches)) {
+        throw new Error('les démarches ne sont pas chargées')
+      }
+      const titreEtape = titrePropTitreEtapeFind(aujourdhui, propId, titre.demarches, titre.titreStatutId)
 
       if (titreEtape) {
         propsTitreEtapesIds[propId] = titreEtape.id

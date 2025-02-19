@@ -96,21 +96,20 @@ const titreDemarchePublicLectureFind = (
   // si le type d'étape est décision implicite
   //    ou décision de l'administration
   // et que le statut est rejeté
-  if ([ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLAutoriteAdministrative].includes(titreEtape.typeId) && isEtapeStatusRejete(titreEtape.statutId)) {
+  if ([ETAPES_TYPES.decisionDeLAutoriteAdministrative].includes(titreEtape.typeId) && isEtapeStatusRejete(titreEtape.statutId)) {
     //   si le type de titre est AXM
     //   alors la démarche est publique
     //   sinon la démarche n'est pas (plus) publique
     return titreTypeId === TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX
   }
 
-  // si le type d'étape est décision implicite
-  //    ou décision de l'administration
+  // si le type d'étape est décision de l'administration
   //    ou publication au JORF
   // et que le statut est accepté
   // alors la démarche est publique
   if (
-    [ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.publicationDeDecisionAuJORF].includes(titreEtape.typeId) &&
-    titreEtape.statutId === ETAPES_STATUTS.ACCEPTE
+    [ETAPES_TYPES.decisionDeLAutoriteAdministrative, ETAPES_TYPES.publicationDeDecisionAuJORF].includes(titreEtape.typeId) &&
+    [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.ACCEPTE_DECISION_IMPLICITE].includes(titreEtape.statutId)
   ) {
     return true
   }

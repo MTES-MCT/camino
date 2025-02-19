@@ -184,9 +184,7 @@ const etapeTypesIds: EtapeTypeId[] = ['dpu', 'rpu', 'dex', 'def', 'sco', 'aco']
 const titreDemarcheNormaleDateFinAndDureeFind = (titreEtapes: TitreEtapePhaseFind[]): { duree: number; dateFin: CaminoDate | null | undefined } => {
   const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
 
-  const derniereDecisionIndex = titreEtapesSorted.findIndex(({ typeId }) =>
-    [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionImplicite, ETAPES_TYPES.decisionDeLAutoriteAdministrative].includes(typeId)
-  )
+  const derniereDecisionIndex = titreEtapesSorted.findIndex(({ typeId }) => [ETAPES_TYPES.publicationDeDecisionAuJORF, ETAPES_TYPES.decisionDeLAutoriteAdministrative].includes(typeId))
 
   const derniereDecision = titreEtapesSorted[derniereDecisionIndex]
   if (isNotNullNorUndefined(derniereDecision)) {

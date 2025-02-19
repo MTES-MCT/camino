@@ -48,7 +48,7 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]): Promise
       if (Object.keys(patch).length) {
         await titreDemarcheUpdate(titreDemarche.id, patch)
 
-        console.info('titre / démarche : publique (mise à jour) ->', `${titre.id}: ${JSON.stringify(patch)}`)
+        console.info('titre / démarche : publique (mise à jour) ->', `${titreDemarche.slug}: ${JSON.stringify(patch)}`)
 
         titresDemarchesUpdated.push(titreDemarche.id)
       }

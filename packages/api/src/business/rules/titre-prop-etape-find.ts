@@ -13,7 +13,7 @@ import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { isEtapeDecision } from 'camino-common/src/static/etapesTypes'
 import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
-import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { ETAPE_IS_BROUILLON } from 'camino-common/src/etape'
 
 const etapeAmodiataireFind = (date: CaminoDate, titreEtape: Pick<ITitreEtape, 'titreDemarcheId'>, titreDemarches: Pick<ITitreDemarche, 'demarcheDateDebut' | 'demarcheDateFin' | 'id'>[]) => {
@@ -31,7 +31,12 @@ const etapeAmodiataireFind = (date: CaminoDate, titreEtape: Pick<ITitreEtape, 't
 
   return false
 }
-const etapesStatutAccepteeFaitOuFavorable = [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT, ETAPES_STATUTS.FAVORABLE]
+const etapesStatutAccepteeFaitOuFavorable = [
+  ETAPES_STATUTS.ACCEPTE,
+  ETAPES_STATUTS.ACCEPTE_DECISION_IMPLICITE,
+  ETAPES_STATUTS.FAIT,
+  ETAPES_STATUTS.FAVORABLE,
+] as const satisfies readonly EtapeStatutId[]
 const etapeValideCheck = (titreEtape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'isBrouillon'>, titreDemarcheTypeId: DemarcheTypeId, titreStatutId: TitreStatutId, propId?: IPropId) => {
   // si l'étape est une demande et que le titre est en demande initiale (statut réservé au octroi)
   if (titreEtape.typeId === 'mfr' && titreStatutId === 'dmi') {

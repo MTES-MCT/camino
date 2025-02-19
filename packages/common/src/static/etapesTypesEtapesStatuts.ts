@@ -90,13 +90,10 @@ export const EtapesTypesEtapesStatuts = {
   },
   desistementDuDemandeur: { FAIT: { etapeTypeId: 'des', etapeStatutId: 'fai' } },
   decisionDeLAutoriteAdministrative: {
+    ACCEPTE_DECISION_IMPLICITE: { etapeTypeId: 'dex', etapeStatutId: 'aci' },
     ACCEPTE: { etapeTypeId: 'dex', etapeStatutId: 'acc' },
     REJETE: { etapeTypeId: 'dex', etapeStatutId: 'rej' },
     REJETE_DECISION_IMPLICITE: { etapeTypeId: 'dex', etapeStatutId: 'rei' },
-  },
-  decisionImplicite: {
-    ACCEPTE: { etapeTypeId: 'dim', etapeStatutId: 'acc' },
-    REJETE: { etapeTypeId: 'dim', etapeStatutId: 'rej' },
   },
   publicationDeDecisionAuJORF: {
     ACCEPTE: { etapeTypeId: 'dpu', etapeStatutId: 'acc' },

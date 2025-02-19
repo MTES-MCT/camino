@@ -1,9 +1,10 @@
 import { Couleur } from './couleurs'
 import { z } from 'zod'
 
-const IDS = ['acc', 'dre', 'enc', 'fai', 'dep', 'exe', 'req', 'com', 'inc', 'fav', 'def', 'fre', 'ajo', 'rej', 'rei', 'ter', 'nul', 'pro'] as const
+const IDS = ['acc', 'aci', 'dre', 'enc', 'fai', 'dep', 'exe', 'req', 'com', 'inc', 'fav', 'def', 'fre', 'ajo', 'rej', 'rei', 'ter', 'nul', 'pro'] as const
 export const ETAPES_STATUTS = {
   ACCEPTE: 'acc',
+  ACCEPTE_DECISION_IMPLICITE: 'aci',
   DEFAVORABLE_AVEC_RESERVES: 'dre',
   EN_COURS: 'enc',
   FAIT: 'fai',
@@ -38,6 +39,7 @@ export interface EtapeStatut<T = EtapeStatutId> {
 // TODO 2023-10-24 utiliser les couleurs de Sarah
 export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
   acc: { id: 'acc', nom: 'accepté', couleur: 'success', description: "La demande a fait l'objet d'une décision favorable de l'administration." },
+  aci: { id: 'aci', nom: 'accepté décision implicite', couleur: 'success', description: "La demande a fait l'objet d'une décision implicite favorable de l'administration." },
   ajo: { id: 'ajo', nom: 'ajourné', couleur: 'warning' },
   com: { id: 'com', nom: 'complet', couleur: 'success' },
   def: { id: 'def', nom: 'défavorable', couleur: 'error' },
@@ -76,6 +78,7 @@ export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
 
 const ETAPES_STATUTS_OK_IDS = [
   ETAPES_STATUTS.ACCEPTE,
+  ETAPES_STATUTS.ACCEPTE_DECISION_IMPLICITE,
   ETAPES_STATUTS.FAIT,
   ETAPES_STATUTS.DEPOSE,
   ETAPES_STATUTS.COMPLETE,
@@ -90,5 +93,5 @@ export const isEtapeStatusOk = (etapeStatutId: EtapeStatutId): boolean => ETAPES
 export const ETAPES_STATUTS_REJETE_IDS = [ETAPES_STATUTS.REJETE, ETAPES_STATUTS.REJETE_DECISION_IMPLICITE] as const satisfies Readonly<EtapeStatutId[]>
 export const isEtapeStatusRejete = (etapeStatutId: EtapeStatutId): boolean => ETAPES_STATUTS_REJETE_IDS.includes(etapeStatutId)
 
-const EtapesFondamentalesStatutsOkIds = [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT, ETAPES_STATUTS.FAVORABLE]
+const EtapesFondamentalesStatutsOkIds = [ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.FAIT, ETAPES_STATUTS.FAVORABLE, ETAPES_STATUTS.ACCEPTE_DECISION_IMPLICITE]
 export const isFondamentalesStatutOk = (etapeStatutId: EtapeStatutId): boolean => EtapesFondamentalesStatutsOkIds.includes(etapeStatutId)

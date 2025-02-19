@@ -374,7 +374,7 @@ describe("publicité d'une démarche", () => {
           id: newDemarcheId(),
           demarcheDateDebut: toCaminoDate('2020-01-01'),
           demarcheDateFin: toCaminoDate('2021-01-01'),
-          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionImplicite, statutId: ETAPES_STATUTS.ACCEPTE }]),
+          etapes: etapesBuild([{ typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative, statutId: ETAPES_STATUTS.ACCEPTE_DECISION_IMPLICITE }]),
           titreId: newTitreId('titreId'),
         },
         TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS
@@ -392,7 +392,7 @@ describe("publicité d'une démarche", () => {
           demarcheDateFin: toCaminoDate('2021-01-01'),
           etapes: etapesBuild([
             { typeId: ETAPES_TYPES.avisDeMiseEnConcurrenceAuJORF, statutId: ETAPES_STATUTS.FAIT, isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-01') },
-            { typeId: ETAPES_TYPES.decisionImplicite, statutId: ETAPES_STATUTS.REJETE, isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-02') },
+            { typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative, statutId: ETAPES_STATUTS.REJETE_DECISION_IMPLICITE, isBrouillon: ETAPE_IS_NOT_BROUILLON, date: toCaminoDate('2021-01-02') },
           ]),
           titreId: newTitreId('titreId'),
         },

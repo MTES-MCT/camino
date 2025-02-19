@@ -1,4 +1,4 @@
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { ITitreDemarche } from '../../types'
 
 import { titreDemarcheSortAsc } from '../utils/titre-elements-sort-asc'
@@ -6,7 +6,14 @@ import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
 import { CaminoDate } from 'camino-common/src/date'
 import { isNullOrUndefinedOrEmpty } from 'camino-common/src/typescript-tools'
-const etapeTypeIds: EtapeTypeId[] = ['dpu', 'rpu', 'dex', 'dim', 'def', 'sco', 'aco']
+const etapeTypeIds: EtapeTypeId[] = [
+  ETAPES_TYPES.publicationDeDecisionAuJORF,
+  ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
+  ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+  ETAPES_TYPES.decisionDeLOfficeNationalDesForets,
+  ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere,
+  ETAPES_TYPES.avenantALautorisationDeRechercheMiniere,
+]
 const titreDemarcheOctroiDateDebutFind = (titreDemarches?: ITitreDemarche[] | null): CaminoDate | '0000' => {
   if (isNullOrUndefinedOrEmpty(titreDemarches)) {
     return '0000'
