@@ -93,7 +93,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE: { db: { REJETE: ETES.resultatMiseEnConcurrence.REJETE }, mainStep: true },
   NOTIFIER_DEMANDEUR: { db: ETES.notificationAuDemandeur, mainStep: true },
   RECEVOIR_REPONSE_DEMANDEUR: { db: ETES.reponseDuDemandeur, mainStep: false },
-  RENDRE_AVIS_CGE_IGEDD: { db: { FAIT: ETES.avisDuConseilGeneralDeLeconomie_CGE_.FAIT }, mainStep: true },
+  RENDRE_AVIS_CGE_IGEDD: { db: { FAIT: ETES.saisineEtAvisDuConseilGeneralDeLeconomie.FAIT }, mainStep: true },
   FAIRE_DEMANDE_MODIFICATION_AES: { db: ETES.demandeDeModificationAES, mainStep: false },
   FAIRE_LETTRE_SAISINE_PREFET: { db: ETES.saisineDuPrefet, mainStep: true },
   RENDRE_AVIS_COLLECTIVITES: { db: ETES.avisDesCollectivites, mainStep: true },

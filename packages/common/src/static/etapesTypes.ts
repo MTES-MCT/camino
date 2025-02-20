@@ -4,13 +4,13 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rif","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma","epu","exp","ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rif","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma","epu","exp","ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rde","rno","rpe","sas","sca","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex", "dpu","ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rif","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma","epu","exp","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma","epu","exp","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rde","rno", "rpe","sas","sca","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -18,7 +18,7 @@ const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac",
 export const ETAPES_TYPES = {
   abrogationDeLaDecision: 'abd',
   avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: 'aca',
-  avisDuConseilGeneralDeLeconomie_CGE_: 'acg',
+  saisineEtAvisDuConseilGeneralDeLeconomie: 'acg',
   avenantALautorisationDeRechercheMiniere: 'aco',
   decisionDuJugeAdministratif: 'and',
   avisDeMiseEnConcurrenceAuJORF: 'anf',
@@ -70,7 +70,6 @@ export const ETAPES_TYPES = {
   receptionDeComplements_RecevabiliteDeLaDemande_: 'rca',
   receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_: 'rcb',
   receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__: 'rcd',
-  rapportDuConseilGeneralDeLeconomie_CGE_: 'rcg',
   receptionDeComplements_CompletudeDeLaDemande_: 'rcm',
   receptionDeComplements: 'rco',
   receptionDeComplements_SaisineDeLaCARM_: 'rcs',
@@ -81,7 +80,6 @@ export const ETAPES_TYPES = {
   publicationDeDecisionAuRecueilDesActesAdministratifs: 'rpu',
   saisineDeLautoriteSignataire: 'sas',
   saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: 'sca',
-  saisineDuConseilGeneralDeLeconomie_CGE_: 'scg',
   resultatMiseEnConcurrence: 'rmc',
   signatureDeLautorisationDeRechercheMiniere: 'sco',
   saisineDuConseilDEtat: 'spe',
@@ -273,17 +271,6 @@ export const EtapesTypes = {
     public_lecture: true,
     entreprises_lecture: true,
   },
-  scg: {
-    id: 'scg',
-    nom: "saisine du conseil général de l'économie (CGE)",
-    description:
-      "Étape par laquelle le service instructeur transmet la demande, les différents avis et une proposition de décision du ministre chargé des mines au conseil général de l'économie pour avis.",
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
   sas: {
     id: 'sas',
     nom: "saisine de l'autorité signataire",
@@ -354,16 +341,6 @@ export const EtapesTypes = {
     date_fin: null,
     public_lecture: true,
     entreprises_lecture: true,
-  },
-  rcg: {
-    id: 'rcg',
-    nom: "rapport du conseil général de l'économie (CGE)",
-    description: '',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
   },
   sca: {
     id: 'sca',
@@ -868,8 +845,8 @@ export const EtapesTypes = {
   },
   acg: {
     id: 'acg',
-    nom: "avis du CGE et de l'IGEDD",
-    description: "Le conseil général de l'économie donne un avis sur la demande et sur son instruction au ministre chargé des mines. Cet avis n'est pas conforme.",
+    nom: "Saisine et avis du conseil général de l'économie",
+    description: '',
     fondamentale: false,
     unique: false,
     date_fin: null,
@@ -1196,7 +1173,7 @@ const ETAPES_BROUILLONS_IDS = [
   ETAPES_TYPES.consultationDesAdministrationsCentrales,
   ETAPES_TYPES.receptionDeComplements,
   ETAPES_TYPES.reponseDuDemandeur,
-  ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_,
+  ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie,
   ETAPES_TYPES.avisDesCollectivites,
 ] as const satisfies Readonly<EtapeTypeId[]>
 

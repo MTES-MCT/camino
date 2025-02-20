@@ -7,7 +7,7 @@ import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { TITRES_TYPES_IDS, TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeSlugValidator } from 'camino-common/src/etape'
@@ -43,12 +43,12 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreid'),
             id: newDemarcheId('demarcheId'),
-            typeId: 'oct',
-            statutId: 'rej',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
+            statutId: ETAPES_STATUTS.REJETE,
             etapes: [
               {
-                typeId: 'dpu',
-                statutId: 'fai',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+                statutId: ETAPES_STATUTS.FAIT,
                 ordre: 2,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2200-01-02'),
@@ -56,8 +56,8 @@ describe("phases d'une démarche", () => {
                 titreDemarcheId: newDemarcheId('demarcheId'),
               },
               {
-                typeId: 'dex',
-                statutId: 'rej',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.REJETE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2200-01-01'),
@@ -67,7 +67,7 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        'prr'
+        TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF
       )
     ).toEqual({})
   })
@@ -79,12 +79,12 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreid'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            typeId: 'oct',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             etapes: [
               {
-                typeId: 'dpu',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 2,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2200-01-01'),
@@ -92,8 +92,8 @@ describe("phases d'une démarche", () => {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
               },
               {
-                typeId: 'dex',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2200-01-01'),
@@ -103,7 +103,7 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        'cxh'
+        TITRES_TYPES_IDS.CONCESSION_HYDROCARBURE
       )
     ).toEqual({
       'h-cx-courdemanges-1988-oct01': {
@@ -120,12 +120,12 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            typeId: 'oct',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             etapes: [],
           },
         ],
-        'cxh'
+        TITRES_TYPES_IDS.CONCESSION_HYDROCARBURE
       )
     ).toEqual({})
   })
@@ -137,12 +137,12 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-ax-courdemanges-1988-oct01'),
-            typeId: 'oct',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             etapes: [
               {
-                typeId: 'dex',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2200-01-01'),
@@ -152,7 +152,7 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        'axm'
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX
       )
     ).toEqual({
       'h-ax-courdemanges-1988-oct01': {
@@ -169,12 +169,12 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('m-pr-courdemanges-1988-oct01'),
-            typeId: 'oct',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             etapes: [
               {
-                typeId: 'rpu',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2200-01-01'),
@@ -184,7 +184,7 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        'prm'
+        TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX
       )
     ).toEqual({
       'm-pr-courdemanges-1988-oct01': {
@@ -201,12 +201,12 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            typeId: 'oct',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             etapes: [
               {
-                typeId: 'dpu',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 2,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2200-01-01'),
@@ -215,8 +215,8 @@ describe("phases d'une démarche", () => {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
               },
               {
-                typeId: 'dex',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2200-01-01'),
@@ -227,7 +227,7 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        'cxh'
+        TITRES_TYPES_IDS.CONCESSION_HYDROCARBURE
       )
     ).toEqual({
       'h-cx-courdemanges-1988-oct01': {
@@ -244,14 +244,14 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            typeId: 'oct',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-                typeId: 'dpu',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 2,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2200-01-01'),
@@ -259,8 +259,8 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-                typeId: 'dex',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2200-01-01'),
@@ -271,14 +271,14 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-pro01'),
-            typeId: 'pro',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.Prolongation,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01'),
-                typeId: 'dpu',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 2,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2300-01-02'),
@@ -286,8 +286,8 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01'),
-                typeId: 'dex',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2300-01-02'),
@@ -296,7 +296,7 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        'cxh'
+        TITRES_TYPES_IDS.CONCESSION_HYDROCARBURE
       )
     ).toEqual({
       'h-cx-courdemanges-1988-oct01': {
@@ -317,14 +317,14 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            typeId: 'oct',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-                typeId: 'dpu',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 2,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2000-01-02'),
@@ -332,8 +332,8 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-                typeId: 'dex',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2000-01-01'),
@@ -344,22 +344,22 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
-            typeId: 'rec',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.RenonciationTotale,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
-                typeId: 'dpu',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 2,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2019-01-03'),
               },
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
-                typeId: 'dex',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2019-01-02'),
@@ -367,7 +367,7 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        'cxh'
+        TITRES_TYPES_IDS.CONCESSION_HYDROCARBURE
       )
     ).toEqual({
       'h-cx-courdemanges-1988-oct01': {
@@ -384,14 +384,14 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-            typeId: 'oct',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-                typeId: 'dpu',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 2,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2000-01-02'),
@@ -399,8 +399,8 @@ describe("phases d'une démarche", () => {
               },
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-                typeId: 'dex',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2000-01-01'),
@@ -411,22 +411,22 @@ describe("phases d'une démarche", () => {
           {
             titreId: newTitreId('titreId'),
             id: newDemarcheId('h-cx-courdemanges-1988-ren01'),
-            typeId: 'rep',
-            statutId: 'acc',
+            typeId: DEMARCHES_TYPES_IDS.RenonciationPartielle,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
-                typeId: 'dpu',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 2,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2019-01-03'),
               },
               {
                 titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-ren01'),
-                typeId: 'dex',
-                statutId: 'acc',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 ordre: 1,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2019-01-02'),
@@ -435,7 +435,7 @@ describe("phases d'une démarche", () => {
             ],
           },
         ],
-        'cxh'
+        TITRES_TYPES_IDS.CONCESSION_HYDROCARBURE
       )
     ).toEqual({
       'h-cx-courdemanges-1988-oct01': {
@@ -463,8 +463,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheId1,
         ordre: 11,
-        typeId: 'mut',
-        statutId: 'cls',
+        typeId: DEMARCHES_TYPES_IDS.Mutation,
+        statutId: DemarchesStatutsIds.ClasseSansSuite,
         etapes: [
           {
             titreDemarcheId: demarcheId1,
@@ -474,8 +474,8 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2016-12-28'),
             duree: 1920,
             surface: km2Validator.parse(5.51),
-            typeId: 'mfr',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.demande,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -486,8 +486,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2016-12-28'),
-            typeId: 'men',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.enregistrementDeLaDemande,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -498,8 +498,8 @@ describe("phases d'une démarche", () => {
             ordre: 3,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2017-04-07'),
-            typeId: 'css',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.classementSansSuite,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -510,8 +510,8 @@ describe("phases d'une démarche", () => {
         id: demarcheId2,
         titreId,
         ordre: 10,
-        typeId: 'pro',
-        statutId: 'cls',
+        typeId: DEMARCHES_TYPES_IDS.Prolongation,
+        statutId: DemarchesStatutsIds.ClasseSansSuite,
         etapes: [
           {
             titreDemarcheId: demarcheId2,
@@ -521,8 +521,8 @@ describe("phases d'une démarche", () => {
             date: toCaminoDate('2016-12-28'),
             duree: 1920,
             surface: km2Validator.parse(5.51),
-            typeId: 'mfr',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.demande,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -533,8 +533,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2016-12-28'),
-            typeId: 'men',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.enregistrementDeLaDemande,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -545,8 +545,8 @@ describe("phases d'une démarche", () => {
             ordre: 3,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2017-04-07'),
-            typeId: 'css',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.classementSansSuite,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -557,8 +557,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheId3,
         ordre: 9,
-        typeId: 'dam',
-        statutId: 'ins',
+        typeId: DEMARCHES_TYPES_IDS.DeclarationDArretDefinitifDesTravaux,
+        statutId: DemarchesStatutsIds.EnInstruction,
         etapes: [
           {
             id: newEtapeId('7'),
@@ -566,8 +566,8 @@ describe("phases d'une démarche", () => {
             ordre: 3,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2014-12-23'),
-            typeId: 'wpp',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.arretePrefectoralDePremierDonnerActe_DADT_,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -578,8 +578,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2013-08-01'),
-            typeId: 'wfd',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.declarationDarretDefinitifDeTravaux_DADT_,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -591,7 +591,7 @@ describe("phases d'une démarche", () => {
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2014-08-25'),
             typeId: ETAPES_TYPES.recevabiliteDeLaDemande,
-            statutId: 'fav',
+            statutId: ETAPES_STATUTS.FAVORABLE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -602,8 +602,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheId4,
         ordre: 8,
-        typeId: 'mut',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Mutation,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         etapes: [
           {
             id: newEtapeId('10'),
@@ -611,8 +611,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2002-12-24'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -623,8 +623,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2003-01-08'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -635,8 +635,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheId5,
         ordre: 7,
-        typeId: 'mut',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Mutation,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         etapes: [
           {
             id: newEtapeId('12'),
@@ -644,8 +644,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2000-09-26'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -656,8 +656,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2000-10-06'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -668,8 +668,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheId6,
         ordre: 6,
-        typeId: 'mut',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Mutation,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         etapes: [
           {
             id: newEtapeId('id'),
@@ -677,8 +677,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1975-11-24'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -689,8 +689,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1975-11-27'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -701,9 +701,9 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheId7,
         ordre: 5,
-        typeId: 'mut',
+        typeId: DEMARCHES_TYPES_IDS.Mutation,
 
-        statutId: 'acc',
+        statutId: ETAPES_STATUTS.ACCEPTE,
         etapes: [
           {
             id: newEtapeId('16'),
@@ -711,8 +711,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1970-11-16'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -723,8 +723,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1970-11-19'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -735,8 +735,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheId8,
         ordre: 4,
-        typeId: 'mut',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Mutation,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         etapes: [
           {
             id: newEtapeId('18'),
@@ -744,8 +744,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1949-08-31'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -756,8 +756,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1949-08-23'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -768,8 +768,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheId9,
         ordre: 3,
-        typeId: 'exp',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         etapes: [
           {
             id: newEtapeId('20'),
@@ -777,8 +777,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1889-02-27'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -789,8 +789,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1889-02-27'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -801,8 +801,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheId10,
         ordre: 2,
-        typeId: 'exp',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         etapes: [
           {
             id: newEtapeId('22'),
@@ -810,8 +810,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1879-11-14'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -822,8 +822,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1879-07-26'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -834,8 +834,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheId11,
         ordre: 1,
-        typeId: 'oct',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         etapes: [
           {
             id: newEtapeId('24'),
@@ -843,8 +843,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1858-03-24'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -855,8 +855,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1858-03-24'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -865,7 +865,7 @@ describe("phases d'une démarche", () => {
       },
     ]
 
-    const tested = titrePhasesFind(demarches, 'cxm')
+    const tested = titrePhasesFind(demarches, TITRES_TYPES_IDS.CONCESSION_METAUX)
     expect(tested).toStrictEqual({
       [newDemarcheId('demarcheId11')]: {
         dateDebut: '1858-03-24',
@@ -883,8 +883,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheIdProlongation,
         ordre: 11,
-        typeId: 'pro',
-        statutId: 'cls',
+        typeId: DEMARCHES_TYPES_IDS.Prolongation,
+        statutId: DemarchesStatutsIds.ClasseSansSuite,
         etapes: [
           {
             titreDemarcheId: demarcheIdProlongation,
@@ -892,8 +892,8 @@ describe("phases d'une démarche", () => {
             ordre: 3,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2011-04-07'),
-            typeId: 'css',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.classementSansSuite,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -904,8 +904,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2008-12-28'),
-            typeId: 'men',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.enregistrementDeLaDemande,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -917,8 +917,8 @@ describe("phases d'une démarche", () => {
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2008-12-28'),
             duree: 60,
-            typeId: 'mfr',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.demande,
+            statutId: ETAPES_STATUTS.FAIT,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -929,8 +929,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheIdOctroi,
         ordre: 1,
-        typeId: 'oct',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         etapes: [
           {
             id: newEtapeId('24'),
@@ -938,8 +938,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2000-03-24'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             duree: 120,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
@@ -951,8 +951,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2000-03-24'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -961,7 +961,7 @@ describe("phases d'une démarche", () => {
       },
     ]
 
-    const tested = titrePhasesFind(demarches, 'cxm')
+    const tested = titrePhasesFind(demarches, TITRES_TYPES_IDS.CONCESSION_METAUX)
     expect(tested).toStrictEqual({
       [demarcheIdOctroi]: {
         dateDebut: '2000-03-24',
@@ -982,8 +982,8 @@ describe("phases d'une démarche", () => {
         titreId,
         id: demarcheIdOctroi,
         ordre: 1,
-        typeId: 'oct',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         etapes: [
           {
             id: newEtapeId('24'),
@@ -991,8 +991,8 @@ describe("phases d'une démarche", () => {
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2000-03-24'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             duree: 120,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
@@ -1004,8 +1004,8 @@ describe("phases d'une démarche", () => {
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2000-03-24'),
-            typeId: 'dpu',
-            statutId: 'rej',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.REJETE,
             concurrence: 'non-applicable',
             hasTitreFrom: 'non-applicable',
             demarcheIdsConsentement: [],
@@ -1014,7 +1014,7 @@ describe("phases d'une démarche", () => {
       },
     ]
 
-    const tested = titrePhasesFind(demarches, 'cxm')
+    const tested = titrePhasesFind(demarches, TITRES_TYPES_IDS.CONCESSION_METAUX)
     expect(tested).toStrictEqual({})
   })
 
@@ -1023,15 +1023,15 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId1'),
         titreId: newTitreId('titreId'),
-        typeId: 'oct',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 1,
         etapes: [
           {
             id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1970-09-17'),
@@ -1042,8 +1042,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1970-09-09'),
@@ -1056,16 +1056,16 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId2'),
         titreId: newTitreId('titreId'),
-        typeId: 'mut',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Mutation,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 2,
         slug: demarcheSlugValidator.parse('m-cx-pontaubert-1970-mut01'),
         etapes: [
           {
             id: newEtapeId('demarcheId2EtapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1994-10-18'),
@@ -1078,8 +1078,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId2EtapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1994-10-13'),
@@ -1093,15 +1093,15 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId3'),
         titreId: newTitreId('titreId'),
-        typeId: 'rec',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.RenonciationTotale,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 3,
         etapes: [
           {
             id: newEtapeId('demarcheId3etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'mfr',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.demande,
+            statutId: ETAPES_STATUTS.FAIT,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2019-10-22'),
@@ -1112,8 +1112,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'men',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.enregistrementDeLaDemande,
+            statutId: ETAPES_STATUTS.FAIT,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2019-11-20'),
@@ -1124,8 +1124,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId5'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 5,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2022-05-09'),
@@ -1136,8 +1136,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId6'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 6,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2022-05-09'),
@@ -1148,8 +1148,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId3'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'apd',
-            statutId: 'fav',
+            typeId: ETAPES_TYPES.rapportEtAvisDeLaDREAL,
+            statutId: ETAPES_STATUTS.FAVORABLE,
             ordre: 3,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2020-05-11'),
@@ -1160,8 +1160,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId4'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'app',
-            statutId: 'fav',
+            typeId: ETAPES_TYPES.avisDuPrefet,
+            statutId: ETAPES_STATUTS.FAVORABLE,
             ordre: 4,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2020-06-30'),
@@ -1173,7 +1173,7 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const titreTypeId = 'cxm'
+    const titreTypeId = TITRES_TYPES_IDS.CONCESSION_METAUX
 
     const tested = titrePhasesFind(demarches, titreTypeId)
     expect(tested).toStrictEqual({
@@ -1193,15 +1193,15 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId1'),
         titreId: newTitreId('titreId'),
-        typeId: 'oct',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 1,
         etapes: [
           {
             id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1970-09-17'),
@@ -1212,8 +1212,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1970-09-09'),
@@ -1226,15 +1226,15 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId2'),
         titreId: newTitreId('titreId'),
-        typeId: 'mut',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Mutation,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 2,
         etapes: [
           {
             id: newEtapeId('demarcheId2EtapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1994-10-18'),
@@ -1247,8 +1247,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId2EtapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1994-10-13'),
@@ -1262,15 +1262,15 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId3'),
         titreId: newTitreId('titreId'),
-        typeId: 'rec',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.RenonciationTotale,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 3,
         etapes: [
           {
             id: newEtapeId('demarcheId3etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'mfr',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.demande,
+            statutId: ETAPES_STATUTS.FAIT,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2019-10-22'),
@@ -1281,8 +1281,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'men',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.enregistrementDeLaDemande,
+            statutId: ETAPES_STATUTS.FAIT,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2019-11-20'),
@@ -1293,8 +1293,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId3'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'apd',
-            statutId: 'fav',
+            typeId: ETAPES_TYPES.rapportEtAvisDeLaDREAL,
+            statutId: ETAPES_STATUTS.FAVORABLE,
             ordre: 3,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2020-05-11'),
@@ -1305,8 +1305,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId5'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'dex',
-            statutId: 'aci',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE_DECISION_IMPLICITE,
             ordre: 5,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2022-05-09'),
@@ -1317,8 +1317,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId3etapeId4'),
             titreDemarcheId: newDemarcheId('demarcheId3'),
-            typeId: 'app',
-            statutId: 'fav',
+            typeId: ETAPES_TYPES.avisDuPrefet,
+            statutId: ETAPES_STATUTS.FAVORABLE,
             ordre: 4,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2020-06-30'),
@@ -1329,7 +1329,7 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const titreTypeId = 'cxm'
+    const titreTypeId = TITRES_TYPES_IDS.CONCESSION_METAUX
 
     //  d'un côté on a une dim, de l'autre on a une dex suivie d'une dpu
     const tested = titrePhasesFind(demarches, titreTypeId)
@@ -1350,15 +1350,15 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId1'),
         titreId: newTitreId('titreId'),
-        typeId: 'oct',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 1,
         etapes: [
           {
             id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1968-01-24'),
@@ -1369,8 +1369,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1968-01-13'),
@@ -1384,14 +1384,14 @@ describe("phases d'une démarche", () => {
         id: newDemarcheId('demarcheId2'),
         titreId: newTitreId('titreId'),
         typeId: DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
-        statutId: 'acc',
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 2,
         etapes: [
           {
             id: newEtapeId('demarcheId2EtapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1981-09-13'),
@@ -1403,8 +1403,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId2EtapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('1981-09-09'),
@@ -1415,7 +1415,7 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const titreTypeId = 'cxm'
+    const titreTypeId = TITRES_TYPES_IDS.CONCESSION_METAUX
 
     const tested = titrePhasesFind(demarches, titreTypeId)
     expect(tested).toStrictEqual({
@@ -1434,15 +1434,15 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId1'),
         titreId: newTitreId('titreId'),
-        typeId: 'oct',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 1,
         etapes: [
           {
             id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2017-11-11'),
@@ -1454,8 +1454,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2017-11-06'),
@@ -1475,8 +1475,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId2EtapeIdDex'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
-            typeId: 'dex',
-            statutId: 'rej',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.REJETE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2023-01-01'),
@@ -1488,8 +1488,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId2EtapeIdDpu'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
-            typeId: 'dpu',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.FAIT,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2023-01-02'),
@@ -1501,7 +1501,7 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const titreTypeId = 'prw'
+    const titreTypeId = TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS
 
     const tested = titrePhasesFind(demarches, titreTypeId)
     expect(tested).toStrictEqual({
@@ -1520,15 +1520,15 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId1'),
         titreId: newTitreId('titreId'),
-        typeId: 'oct',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 1,
         etapes: [
           {
             id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2017-11-11'),
@@ -1540,8 +1540,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2017-11-06'),
@@ -1561,8 +1561,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId2EtapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
-            typeId: 'mfr',
-            statutId: 'fai',
+            typeId: ETAPES_TYPES.demande,
+            statutId: ETAPES_STATUTS.FAIT,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2022-07-08'),
@@ -1574,7 +1574,7 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const titreTypeId = 'prw'
+    const titreTypeId = TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS
 
     const tested = titrePhasesFind(demarches, titreTypeId)
     expect(tested).toStrictEqual({
@@ -1594,15 +1594,15 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId1'),
         titreId: newTitreId('titreId'),
-        typeId: 'oct',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 1,
         etapes: [
           {
             id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2017-11-11'),
@@ -1614,8 +1614,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2017-11-06'),
@@ -1635,7 +1635,7 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId2EtapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId2'),
-            typeId: 'mfr',
+            typeId: ETAPES_TYPES.demande,
             statutId: ETAPES_STATUTS.FAIT,
             ordre: 2,
             isBrouillon: ETAPE_IS_BROUILLON,
@@ -1648,7 +1648,7 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const titreTypeId = 'prw'
+    const titreTypeId = TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS
 
     const tested = titrePhasesFind(demarches, titreTypeId)
     expect(tested).toStrictEqual({
@@ -1664,15 +1664,15 @@ describe("phases d'une démarche", () => {
       {
         id: newDemarcheId('demarcheId1'),
         titreId: newTitreId('titreId'),
-        typeId: 'oct',
-        statutId: 'acc',
+        typeId: DEMARCHES_TYPES_IDS.Octroi,
+        statutId: ETAPES_STATUTS.ACCEPTE,
         ordre: 1,
         etapes: [
           {
             id: newEtapeId('demarcheId1etapeId3'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dpu',
-            statutId: 'rej',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.REJETE,
             ordre: 3,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2018-11-11'),
@@ -1683,8 +1683,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId1etapeId2'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dpu',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2017-11-11'),
@@ -1696,8 +1696,8 @@ describe("phases d'une démarche", () => {
           {
             id: newEtapeId('demarcheId1etapeId1'),
             titreDemarcheId: newDemarcheId('demarcheId1'),
-            typeId: 'dex',
-            statutId: 'acc',
+            typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
             isBrouillon: ETAPE_IS_NOT_BROUILLON,
             date: toCaminoDate('2017-11-06'),
@@ -1709,7 +1709,7 @@ describe("phases d'une démarche", () => {
       },
     ]
 
-    const tested = titrePhasesFind(demarches, 'prw')
+    const tested = titrePhasesFind(demarches, TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS)
     expect(tested).toStrictEqual({
       [newDemarcheId('demarcheId1')]: {
         dateDebut: '2017-11-11',
@@ -1729,282 +1729,282 @@ describe("phases d'une démarche", () => {
         [
           {
             titreId,
-            statutId: 'acc',
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
-            typeId: 'oct',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
             id: demarcheId1,
             etapes: [
               {
                 titreDemarcheId: demarcheId1,
                 ordre: 2,
-                typeId: 'dpu',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
                 duree: 36,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2010-11-05'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: multiPolygonWith4Points,
               },
               {
                 titreDemarcheId: demarcheId1,
                 ordre: 1,
-                typeId: 'dex',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2010-10-18'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
               },
             ],
           },
           {
             titreId,
-            statutId: 'acc',
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 2,
-            typeId: 'pr1',
+            typeId: DEMARCHES_TYPES_IDS.Prolongation1,
             id: demarcheId2,
             etapes: [
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 5,
-                typeId: 'apd',
+                typeId: ETAPES_TYPES.rapportEtAvisDeLaDREAL,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-05-13'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 11,
-                typeId: 'dex',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-12-04'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 9,
-                typeId: 'acg',
+                typeId: ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-11-09'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 1,
-                typeId: 'mfr',
+                typeId: ETAPES_TYPES.demande,
                 duree: 60,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2013-10-30'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 10,
-                typeId: 'acg',
+                typeId: ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-11-12'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 6,
-                typeId: 'app',
+                typeId: ETAPES_TYPES.avisDuPrefet,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-06-04'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 7,
-                typeId: 'scg',
+                typeId: ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-10-08'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 12,
-                typeId: 'dpu',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
                 dateFin: toCaminoDate('2018-11-05'),
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-12-17'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 3,
-                typeId: 'spp',
+                typeId: ETAPES_TYPES.saisineDuPrefet,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2013-11-19'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 2,
-                typeId: 'men',
+                typeId: ETAPES_TYPES.enregistrementDeLaDemande,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2013-10-30'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 4,
-                typeId: 'apo',
+                typeId: ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-02-11'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
               },
               {
                 titreDemarcheId: demarcheId2,
                 ordre: 8,
-                typeId: 'rcg',
+                typeId: ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-10-08'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
               },
             ],
           },
           {
             titreId,
-            statutId: 'dep',
+            statutId: DemarchesStatutsIds.Depose,
             ordre: 3,
-            typeId: 'vct',
+            typeId: DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
             id: demarcheId3,
             etapes: [
               {
                 titreDemarcheId: demarcheId3,
                 ordre: 2,
-                typeId: 'men',
+                typeId: ETAPES_TYPES.enregistrementDeLaDemande,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-07-31'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId3,
                 ordre: 1,
-                typeId: 'mfr',
+                typeId: ETAPES_TYPES.demande,
                 duree: 540,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2015-07-31'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
             ],
           },
           {
             titreId,
-            statutId: 'ins',
+            statutId: DemarchesStatutsIds.EnInstruction,
             ordre: 4,
-            typeId: 'pr2',
+            typeId: DEMARCHES_TYPES_IDS.Prolongation2,
             id: demarcheId4,
             etapes: [
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 1,
-                typeId: 'mfr',
+                typeId: ETAPES_TYPES.demande,
                 duree: 60,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2018-06-29'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 12,
-                typeId: 'apd',
+                typeId: ETAPES_TYPES.rapportEtAvisDeLaDREAL,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2021-07-30'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 4,
-                typeId: 'mco',
+                typeId: ETAPES_TYPES.demandeDeComplements,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2019-06-13'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 10,
-                typeId: 'asc',
+                typeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2020-02-04'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 14,
-                typeId: 'apd',
+                typeId: ETAPES_TYPES.rapportEtAvisDeLaDREAL,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2021-12-16'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 5,
-                typeId: 'rco',
+                typeId: ETAPES_TYPES.receptionDeComplements,
                 duree: 60,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2019-08-30'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 2,
-                typeId: 'men',
+                typeId: ETAPES_TYPES.enregistrementDeLaDemande,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2018-07-04'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 15,
-                typeId: 'ppu',
+                typeId: ETAPES_TYPES.participationDuPublic,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2023-01-18'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 6,
-                typeId: 'mco',
+                typeId: ETAPES_TYPES.demandeDeComplements,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2019-11-19'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 3,
-                typeId: 'spp',
+                typeId: ETAPES_TYPES.saisineDuPrefet,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2018-07-20'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 8,
-                typeId: 'mcr',
+                typeId: ETAPES_TYPES.recevabiliteDeLaDemande,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2020-01-29'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 7,
-                typeId: 'rco',
+                typeId: ETAPES_TYPES.receptionDeComplements,
                 duree: 60,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2019-12-26'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
               },
               {
                 titreDemarcheId: demarcheId4,
                 ordre: 13,
-                typeId: 'apo',
+                typeId: ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2021-10-29'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
               },
             ],
           },
         ],
-        'prm'
+        TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX
       )
     ).toMatchInlineSnapshot(`
       {
@@ -2030,96 +2030,96 @@ describe("phases d'une démarche", () => {
         [
           {
             titreId: newTitreId('nJ10z3Z74xi9OTh4oG6YXQBo'),
-            statutId: 'acc',
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
-            typeId: 'oct',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
             id: newDemarcheId('demarcheIdOctroi'),
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 2,
-                typeId: 'dpu',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
                 dateFin: toCaminoDate('2014-11-11'),
                 duree: 60,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2009-11-11'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: multiPolygonWith4Points,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 1,
-                typeId: 'dex',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
                 dateFin: toCaminoDate('2014-11-11'),
                 duree: 60,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2009-10-28'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: null,
               },
             ],
           },
           {
             titreId: newTitreId('EW9cDeM6PfXS4TPznkjsNZVO'),
-            statutId: 'rej',
+            statutId: ETAPES_STATUTS.REJETE,
             ordre: 2,
-            typeId: 'pr1',
+            typeId: DEMARCHES_TYPES_IDS.Prolongation1,
             id: newDemarcheId('demarcheIdPr1'),
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 3,
-                typeId: 'spp',
+                typeId: ETAPES_TYPES.saisineDuPrefet,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2014-10-10'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 1,
-                typeId: 'mfr',
+                typeId: ETAPES_TYPES.demande,
                 dateFin: null,
                 duree: 60,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2014-09-18'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 4,
-                typeId: 'dex',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2016-03-24'),
-                statutId: 'rei',
+                statutId: ETAPES_STATUTS.REJETE_DECISION_IMPLICITE,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 2,
-                typeId: 'men',
+                typeId: ETAPES_TYPES.enregistrementDeLaDemande,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2014-09-24'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
                 geojson4326Perimetre: null,
               },
             ],
           },
         ],
-        'pxm'
+        TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX
       )
     ).toEqual({
       demarcheIdOctroi: {
@@ -2139,132 +2139,132 @@ describe("phases d'une démarche", () => {
         [
           {
             titreId: newTitreId('o3RzmZvqZcKMNmaE3nwXdvkE'),
-            statutId: 'acc',
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
-            typeId: 'oct',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
             id: newDemarcheId('demarcheIdOctroi'),
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 2,
-                typeId: 'dpu',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
                 dateFin: toCaminoDate('2009-11-17'),
                 duree: 60,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2004-11-17'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: multiPolygonWith4Points,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 1,
-                typeId: 'dex',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
                 dateFin: toCaminoDate('2009-11-17'),
                 duree: 60,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2004-11-08'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: null,
               },
             ],
           },
           {
             titreId: newTitreId('Mef8FKNlX0WtohaO9wGOMQZs'),
-            statutId: 'des',
+            statutId: DemarchesStatutsIds.Desiste,
             ordre: 2,
-            typeId: 'pr1',
+            typeId: DEMARCHES_TYPES_IDS.Prolongation1,
             id: newDemarcheId('demarcheIdPr1'),
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 1,
-                typeId: 'mfr',
+                typeId: ETAPES_TYPES.demande,
                 dateFin: null,
                 duree: 24,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2009-08-14'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 6,
-                typeId: 'app',
+                typeId: ETAPES_TYPES.avisDuPrefet,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2011-12-05'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 3,
-                typeId: 'spp',
+                typeId: ETAPES_TYPES.saisineDuPrefet,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2009-11-27'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 2,
-                typeId: 'men',
+                typeId: ETAPES_TYPES.enregistrementDeLaDemande,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2009-08-17'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 7,
-                typeId: 'des',
+                typeId: ETAPES_TYPES.desistementDuDemandeur,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2012-08-24'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 5,
-                typeId: 'apo',
+                typeId: ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2011-10-06'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 4,
-                typeId: 'apd',
+                typeId: ETAPES_TYPES.rapportEtAvisDeLaDREAL,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2011-06-30'),
-                statutId: 'fav',
+                statutId: ETAPES_STATUTS.FAVORABLE,
                 geojson4326Perimetre: null,
               },
             ],
           },
         ],
-        'pxm'
+        TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX
       )
     ).toEqual({
       demarcheIdOctroi: {
@@ -2284,72 +2284,72 @@ describe("phases d'une démarche", () => {
         [
           {
             titreId: newTitreId('nJ10z3Z74xi9OTh4oG6YXQBo'),
-            statutId: 'acc',
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
-            typeId: 'oct',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
             id: newDemarcheId('demarcheIdOctroi'),
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 2,
-                typeId: 'dpu',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
                 dateFin: toCaminoDate('2014-11-11'),
                 duree: 60,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2009-11-11'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: multiPolygonWith4Points,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 1,
-                typeId: 'dex',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
                 dateFin: toCaminoDate('2014-11-11'),
                 duree: 60,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2009-10-28'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: null,
               },
             ],
           },
           {
             titreId: newTitreId('EW9cDeM6PfXS4TPznkjsNZVO'),
-            statutId: 'rej',
+            statutId: ETAPES_STATUTS.REJETE,
             ordre: 2,
-            typeId: 'pr1',
+            typeId: DEMARCHES_TYPES_IDS.Prolongation1,
             id: newDemarcheId('demarcheIdPr1'),
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 4,
-                typeId: 'dex',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2016-03-24'),
-                statutId: 'rej',
+                statutId: ETAPES_STATUTS.REJETE,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdPr1'),
                 ordre: 2,
-                typeId: 'men',
+                typeId: ETAPES_TYPES.enregistrementDeLaDemande,
                 dateFin: null,
                 duree: null,
                 dateDebut: null,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2014-09-24'),
-                statutId: 'fai',
+                statutId: ETAPES_STATUTS.FAIT,
                 geojson4326Perimetre: null,
               },
             ],
           },
         ],
-        'pxm'
+        TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX
       )
     ).toEqual({
       demarcheIdOctroi: {
@@ -2369,46 +2369,46 @@ describe("phases d'une démarche", () => {
         [
           {
             titreId: newTitreId('titreId'),
-            statutId: 'acc',
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
-            typeId: 'oct',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
             id: newDemarcheId('demarcheIdOctroi'),
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 3,
-                typeId: 'dpu',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
                 dateFin: toCaminoDate('2033-11-22'),
                 dateDebut: toCaminoDate('2003-11-22'),
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2003-11-22'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 2,
-                typeId: 'dex',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
                 dateFin: toCaminoDate('2033-11-22'),
                 dateDebut: toCaminoDate('2003-11-22'),
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2003-11-22'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 1,
-                typeId: 'dex',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2003-04-26'),
-                statutId: 'rej',
+                statutId: ETAPES_STATUTS.REJETE,
                 geojson4326Perimetre: null,
               },
             ],
           },
         ],
-        'cxh'
+        TITRES_TYPES_IDS.CONCESSION_HYDROCARBURE
       )
     ).toMatchInlineSnapshot(`
       {
@@ -2426,46 +2426,46 @@ describe("phases d'une démarche", () => {
         [
           {
             titreId: newTitreId('titreId'),
-            statutId: 'acc',
+            statutId: ETAPES_STATUTS.ACCEPTE,
             ordre: 1,
-            typeId: 'oct',
+            typeId: DEMARCHES_TYPES_IDS.Octroi,
             id: newDemarcheId('demarcheIdOctroi'),
             etapes: [
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 3,
-                typeId: 'dpu',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
                 dateFin: toCaminoDate('2033-11-23'),
                 dateDebut: toCaminoDate('2003-11-23'),
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2003-11-23'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 2,
-                typeId: 'dpu',
+                typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
                 dateFin: toCaminoDate('2033-11-22'),
                 dateDebut: toCaminoDate('2003-11-22'),
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2003-11-22'),
-                statutId: 'rej',
+                statutId: ETAPES_STATUTS.REJETE,
                 geojson4326Perimetre: null,
               },
               {
                 titreDemarcheId: newDemarcheId('demarcheIdOctroi'),
                 ordre: 1,
-                typeId: 'dex',
+                typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative,
                 isBrouillon: ETAPE_IS_NOT_BROUILLON,
                 date: toCaminoDate('2003-04-26'),
-                statutId: 'acc',
+                statutId: ETAPES_STATUTS.ACCEPTE,
                 geojson4326Perimetre: null,
               },
             ],
           },
         ],
-        'prm'
+        TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX
       )
     ).toMatchInlineSnapshot(`
       {

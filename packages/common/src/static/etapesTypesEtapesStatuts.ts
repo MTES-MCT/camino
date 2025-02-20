@@ -20,7 +20,7 @@ export const EtapesTypesEtapesStatuts = {
     AJOURNE: { etapeTypeId: 'aca', etapeStatutId: 'ajo' },
   },
 
-  avisDuConseilGeneralDeLeconomie_CGE_: {
+  saisineEtAvisDuConseilGeneralDeLeconomie: {
     FAVORABLE: { etapeTypeId: 'acg', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'acg', etapeStatutId: 'def' },
     FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'acg', etapeStatutId: 'fre' },
@@ -157,10 +157,6 @@ export const EtapesTypesEtapesStatuts = {
   receptionDeComplements_RecevabiliteDeLaDemande_: { FAIT: { etapeTypeId: 'rca', etapeStatutId: 'fai' } },
   receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_: { FAIT: { etapeTypeId: 'rcb', etapeStatutId: 'fai' } },
   receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__: { FAIT: { etapeTypeId: 'rcd', etapeStatutId: 'fai' } },
-  rapportDuConseilGeneralDeLeconomie_CGE_: {
-    FAVORABLE: { etapeTypeId: 'rcg', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'rcg', etapeStatutId: 'def' },
-  },
   receptionDeComplements_CompletudeDeLaDemande_: { FAIT: { etapeTypeId: 'rcm', etapeStatutId: 'fai' } },
   receptionDeComplements: { FAIT: { etapeTypeId: 'rco', etapeStatutId: 'fai' } },
   receptionDeComplements_SaisineDeLaCARM_: { FAIT: { etapeTypeId: 'rcs', etapeStatutId: 'fai' } },
@@ -177,7 +173,6 @@ export const EtapesTypesEtapesStatuts = {
   mesuresDePublicite: { FAIT: { etapeTypeId: 'mpb', etapeStatutId: 'fai' } },
   saisineDeLautoriteSignataire: { FAIT: { etapeTypeId: 'sas', etapeStatutId: 'fai' } },
   saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: { FAIT: { etapeTypeId: 'sca', etapeStatutId: 'fai' } },
-  saisineDuConseilGeneralDeLeconomie_CGE_: { FAIT: { etapeTypeId: 'scg', etapeStatutId: 'fai' } },
   signatureDeLautorisationDeRechercheMiniere: { FAIT: { etapeTypeId: 'sco', etapeStatutId: 'fai' } },
   saisineDuConseilDEtat: { FAIT: { etapeTypeId: 'spe', etapeStatutId: 'fai' } },
   saisineDeLaCommissionDepartementaleDesMines_CDM_: { FAIT: { etapeTypeId: 'spo', etapeStatutId: 'fai' } },

@@ -13,11 +13,15 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.ficheDePresentation, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
   ],
-  [ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_]: [
+  [ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDUnServiceDeLAdministrationCentrale, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDuConseilGeneralDeLEconomie_cge, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
+    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
   ],
   [ETAPES_TYPES.avenantALautorisationDeRechercheMiniere]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avenant, optionnel: true },
@@ -201,12 +205,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.dossierLoiSurLEau, optionnel: true },
   ],
-  [ETAPES_TYPES.rapportDuConseilGeneralDeLeconomie_CGE_]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
-  ],
   [ETAPES_TYPES.receptionDeComplements_CompletudeDeLaDemande_]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
@@ -230,13 +228,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.noteALAutoriteSignataire, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
-  ],
-  [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeSaisineDuConseilGeneralDeLEconomie_cge, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
   ],
   [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.contrat, optionnel: true },

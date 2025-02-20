@@ -102,7 +102,7 @@ describe('dateTypeStepIsComplete', () => {
 
 test('fondamentaleStepIsVisible', () => {
   expect(fondamentaleStepIsVisible(ETAPES_TYPES.demande)).toBe(true)
-  expect(fondamentaleStepIsVisible(ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_)).toBe(false)
+  expect(fondamentaleStepIsVisible(ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie)).toBe(false)
 })
 
 test('fondamentaleStepIsComplete', () => {
@@ -111,7 +111,7 @@ test('fondamentaleStepIsComplete', () => {
       {
         duree: { value: 0, heritee: false, etapeHeritee: null },
         substances: { value: [], heritee: false, etapeHeritee: null },
-        typeId: ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_,
+        typeId: ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie,
         titulaires: { value: [], heritee: false, etapeHeritee: null },
         amodiataires: { value: [], heritee: false, etapeHeritee: null },
       },
@@ -396,10 +396,10 @@ test('sectionsStepIsComplete', () => {
 
 test('perimetreStepIsVisible', () => {
   expect(perimetreStepIsVisible({ typeId: ETAPES_TYPES.demande }, DEMARCHES_TYPES_IDS.Octroi)).toBe(true)
-  expect(perimetreStepIsVisible({ typeId: ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_ }, DEMARCHES_TYPES_IDS.Octroi)).toBe(false)
+  expect(perimetreStepIsVisible({ typeId: ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie }, DEMARCHES_TYPES_IDS.Octroi)).toBe(false)
 
   expect(perimetreStepIsVisible({ typeId: ETAPES_TYPES.demande }, DEMARCHES_TYPES_IDS.Mutation)).toBe(false)
-  expect(perimetreStepIsVisible({ typeId: ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_ }, DEMARCHES_TYPES_IDS.Mutation)).toBe(false)
+  expect(perimetreStepIsVisible({ typeId: ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie }, DEMARCHES_TYPES_IDS.Mutation)).toBe(false)
 })
 
 test('perimetreStepIsComplete', () => {
@@ -457,7 +457,7 @@ test('perimetreStepIsComplete', () => {
   expect(
     perimetreStepIsComplete(
       {
-        typeId: ETAPES_TYPES.avisDuConseilGeneralDeLeconomie_CGE_,
+        typeId: ETAPES_TYPES.saisineEtAvisDuConseilGeneralDeLeconomie,
         perimetre: {
           value: {
             geojson4326Perimetre: null,

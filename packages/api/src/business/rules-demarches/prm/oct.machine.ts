@@ -56,9 +56,7 @@ type XStateEvent =
   | RendreRapportDREAL
   | { type: 'RENDRE_AVIS_PREFET' }
   | { type: 'RENDRE_AVIS_DES_COLLECTIVITES' }
-  | { type: 'FAIRE_SAISINE_CONSEIL_GENERAL_CHARGE_DES_MINES' }
-  | { type: 'FAIRE_RAPPORT_CONSEIL_GENERAL_CHARGE_DES_MINES' }
-  | { type: 'RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES' }
+  | { type: 'RENDRE_AVIS_CONSEIL_GENERAL_DE_L_ECONOMIE' }
   | { type: 'FAIRE_SAISINE_AUTORITE_SIGNATAIRE' }
   | { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTE' }
   | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE' }
@@ -104,9 +102,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RENDRE_RAPPORT_DREAL: { db: EtapesTypesEtapesStatuts.rapportEtAvisDeLaDREAL, mainStep: true },
   RENDRE_AVIS_PREFET: { db: EtapesTypesEtapesStatuts.avisDuPrefet, mainStep: true },
   RENDRE_AVIS_DES_COLLECTIVITES: { db: EtapesTypesEtapesStatuts.avisDesCollectivites, mainStep: true },
-  FAIRE_SAISINE_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.saisineDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
-  FAIRE_RAPPORT_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.rapportDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
-  RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES: { db: EtapesTypesEtapesStatuts.avisDuConseilGeneralDeLeconomie_CGE_, mainStep: true },
+  RENDRE_AVIS_CONSEIL_GENERAL_DE_L_ECONOMIE: { db: EtapesTypesEtapesStatuts.saisineEtAvisDuConseilGeneralDeLeconomie, mainStep: true },
   FAIRE_SAISINE_AUTORITE_SIGNATAIRE: { db: EtapesTypesEtapesStatuts.saisineDeLautoriteSignataire, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_ACCEPTE: { db: { ACCEPTE: EtapesTypesEtapesStatuts.decisionDeLAutoriteAdministrative.ACCEPTE }, mainStep: true },
   RENDRE_DECISION_ADMINISTRATION_REJETE: { db: { REJETE: EtapesTypesEtapesStatuts.decisionDeLAutoriteAdministrative.REJETE }, mainStep: true },
@@ -442,21 +438,11 @@ const prmOctMachine = createMachine({
           },
         },
       },
-      onDone: 'saisineDuConseilGeneralChargeDesMinesAFaire',
+      onDone: 'avisDuConseilGeneralDeLeconomieAFaire',
     },
-    saisineDuConseilGeneralChargeDesMinesAFaire: {
+    avisDuConseilGeneralDeLeconomieAFaire: {
       on: {
-        FAIRE_SAISINE_CONSEIL_GENERAL_CHARGE_DES_MINES: 'rapportDuConseilGeneralDesMinesAFaire',
-      },
-    },
-    rapportDuConseilGeneralDesMinesAFaire: {
-      on: {
-        FAIRE_RAPPORT_CONSEIL_GENERAL_CHARGE_DES_MINES: 'avisDuConseilGeneralDesMinesARendre',
-      },
-    },
-    avisDuConseilGeneralDesMinesARendre: {
-      on: {
-        RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES: 'saisineDeLAutoriteSignataireAFaire',
+        RENDRE_AVIS_CONSEIL_GENERAL_DE_L_ECONOMIE: 'saisineDeLAutoriteSignataireAFaire',
       },
     },
     saisineDeLAutoriteSignataireAFaire: {
