@@ -165,7 +165,7 @@ C;Point éç;-52.55;4.24113309117193`
     mkdirSync(dir, { recursive: true })
     writeFileSync(
       `${dir}/${fileName}`,
-      `nom;description;longitude;latitude
+      `  nom  ;description;longitude;latitude
 A;;-52,54;4,22269896902571
 B;;-52,55;4,22438936251509
 C;Point éç;-52,55;4,24113309117193`
@@ -178,8 +178,53 @@ C;Point éç;-52,55;4,24113309117193`
     }
 
     const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
-    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
+    expect(tested.statusCode, JSON.stringify(tested.body)).toBe(HTTP_STATUS.OK)
     expect(tested.body).toMatchSnapshot()
+  })
+  test('csv valide avec des virgules', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.csv`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(
+      `${dir}/${fileName}`,
+      `nom,description,longitude,latitude
+  A,,-52.54,4.22269896902571
+  B,,-52.55,4.22438936251509
+  C,Point éç,-52.55,4.24113309117193`
+    )
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('titre-slug'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'csv',
+    }
+
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.body).toMatchInlineSnapshot(`
+        {
+          "detail": "Seuls les séparateurs ';' sont acceptés",
+          "message": "Le séparateur est probablement incorrect",
+          "status": 400,
+        }
+      `)
+  })
+  test('csv valide mais sans contenu', async () => {
+    const fileName = `existing_temp_file_${idGenerate()}.csv`
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(`${dir}/${fileName}`, `nom,description,longitude,latitude`)
+    const body: GeojsonImportBody = {
+      titreSlug: titreSlugValidator.parse('titre-slug'),
+      titreTypeId: 'arm',
+      tempDocumentName: tempDocumentNameValidator.parse(fileName),
+      fileType: 'csv',
+    }
+
+    const tested = await restNewPostCall(dbPool, '/rest/geojson/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)
+    expect(tested.body).toMatchInlineSnapshot(`
+        {
+          "message": "Le CSV ne contient aucun élément",
+          "status": 400,
+        }
+      `)
   })
   test('fichier valide geojson polygon', async () => {
     const feature: FeatureCollectionPolygon = {
@@ -1474,7 +1519,7 @@ B;Point B;1063526.397924559889361;6867885.978687250986695;12,12;captage`
     }
 
     const tested = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS['RGFG95 / UTM zone 22N'] }, userSuper, body)
-    expect(tested.statusCode).toBe(HTTP_STATUS.OK)
+    expect(tested.statusCode, JSON.stringify(tested.body)).toBe(HTTP_STATUS.OK)
     expect(tested.body).toMatchSnapshot()
 
     const testedWithError = await restNewPostCall(dbPool, '/rest/geojson_forages/import/:geoSystemeId', { geoSystemeId: GEO_SYSTEME_IDS.WGS84 }, userSuper, body)

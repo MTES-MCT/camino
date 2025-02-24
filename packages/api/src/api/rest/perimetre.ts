@@ -41,7 +41,7 @@ import {
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
 import { parseShp } from 'shpjs'
-import { isNotNullNorUndefined, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, memoize } from 'camino-common/src/typescript-tools'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { canReadEtape } from './permissions/etapes'
@@ -157,7 +157,7 @@ const csvCommonValidator = z
     if ('Nom du point' in value) {
       value.nom = value['Nom du point']
     }
-    Object.keys(value).forEach(k => (value[k.toLowerCase()] = value[k]))
+    Object.keys(value).forEach(k => (value[k.toLowerCase().trim()] = value[k]))
 
     return value
   })
@@ -186,7 +186,6 @@ type GeojsonImportErrorMessages =
   | EffectDbQueryAndValidateErrors
   | typeof ouvertureGeoJSONError
   | typeof ouvertureShapeError
-  | typeof ouvertureCsvError
   | typeof importCsvRestrictionError
   | typeof recuperationInfoCsvError
   | typeof extractionGeoJSONError
@@ -194,6 +193,8 @@ type GeojsonImportErrorMessages =
   | GetGeojsonByGeoSystemeIdErrorMessages
   | GetGeojsonInformationErrorMessages
   | ConvertPointsErrors
+  | FileNameToCsvErrors
+
 export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'> = (rootPipe): Effect.Effect<GeojsonInformations, CaminoApiError<GeojsonImportErrorMessages>> => {
   return rootPipe.pipe(
     Effect.let('pathFrom', ({ body }) => join(process.cwd(), `/files/tmp/${body.tempDocumentName}`)),
@@ -373,6 +374,8 @@ export const geojsonImport: RestNewPostCall<'/rest/geojson/import/:geoSystemeId'
           'La liste des points est vide',
           'Le nombre de points est invalide',
           'Problème de Système géographique (SRID)',
+          'Le CSV ne contient aucun élément',
+          'Le séparateur est probablement incorrect',
           () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })
         ),
         Match.exhaustive
@@ -417,7 +420,10 @@ const readIsoOrUTF8FileSync = (path: string): string => {
   }
 }
 
-const fileNameToCsv = (pathFrom: string): Effect.Effect<unknown[], CaminoError<typeof ouvertureCsvError>> => {
+const csvVideError = 'Le CSV ne contient aucun élément' as const
+const mauvaisSeparateurCsvError = 'Le séparateur est probablement incorrect' as const
+type FileNameToCsvErrors = typeof ouvertureCsvError | typeof mauvaisSeparateurCsvError | typeof csvVideError
+const fileNameToCsv = (pathFrom: string): Effect.Effect<unknown[], CaminoError<FileNameToCsvErrors>> => {
   return Effect.try({
     try: () => {
       const fileContent = readIsoOrUTF8FileSync(pathFrom)
@@ -428,11 +434,22 @@ const fileNameToCsv = (pathFrom: string): Effect.Effect<unknown[], CaminoError<t
       }
 
       const sheet1 = result.Sheets[result.SheetNames[0]]
-
       return xlsx.utils.sheet_to_json(sheet1, { raw: true })
     },
     catch: e => ({ message: ouvertureCsvError, extra: e }),
-  })
+  }).pipe(
+    Effect.filterOrFail(
+      result => isNotNullNorUndefinedNorEmpty(result),
+      () => ({ message: csvVideError })
+    ),
+    Effect.filterOrFail(
+      result => {
+        const firstValue = result[0]
+        return typeof firstValue === 'object' && isNotNullNorUndefined(firstValue) && Object.keys(firstValue).length >= 2
+      },
+      () => ({ message: mauvaisSeparateurCsvError, detail: "Seuls les séparateurs ';' sont acceptés" })
+    )
+  )
 }
 
 const accesInterditError = 'Accès interdit' as const
@@ -485,7 +502,7 @@ export const geojsonImportPoints: RestNewPostCall<'/rest/geojson_points/import/:
   )
 }
 
-type GeosjsonImportForagesErrorMessages = ZodUnparseable | EffectDbQueryAndValidateErrors | typeof ouvertureCsvError | typeof ouvertureShapeError | typeof ouvertureGeoJSONError | ConvertPointsErrors
+type GeosjsonImportForagesErrorMessages = ZodUnparseable | EffectDbQueryAndValidateErrors | typeof ouvertureShapeError | typeof ouvertureGeoJSONError | ConvertPointsErrors | FileNameToCsvErrors
 export const geojsonImportForages: RestNewPostCall<'/rest/geojson_forages/import/:geoSystemeId'> = (
   rootPipe
 ): Effect.Effect<GeojsonImportForagesResponse, CaminoApiError<GeosjsonImportForagesErrorMessages>> => {
@@ -560,6 +577,8 @@ export const geojsonImportForages: RestNewPostCall<'/rest/geojson_forages/import
           'La liste des points est vide',
           'Le nombre de points est invalide',
           'Problème de Système géographique (SRID)',
+          'Le CSV ne contient aucun élément',
+          'Le séparateur est probablement incorrect',
           () => ({ ...caminoError, status: HTTP_STATUS.BAD_REQUEST })
         ),
         Match.exhaustive
