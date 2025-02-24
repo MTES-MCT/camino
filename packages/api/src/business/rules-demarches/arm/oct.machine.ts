@@ -166,7 +166,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: { db: EtapesTypesEtapesStatuts.validationDuPaiementDesFraisDeDossierComplementaires, mainStep: true },
   SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE: { db: EtapesTypesEtapesStatuts.signatureDeLautorisationDeRechercheMiniere, mainStep: true },
   DEMANDER_INFORMATION_MCR: { db: EtapesTypesEtapesStatuts.demandeDinformations_RecevabiliteDeLaDemande_, mainStep: false },
-  RECEVOIR_INFORMATION_MCR: { db: EtapesTypesEtapesStatuts.receptionDinformation_RecevabiliteDeLaDemande_, mainStep: false },
+  RECEVOIR_INFORMATION_MCR: { db: EtapesTypesEtapesStatuts.receptionDinformation, mainStep: false },
   DEMANDER_COMPLEMENTS_MCR: { db: EtapesTypesEtapesStatuts.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   RECEVOIR_COMPLEMENTS_MCR: { db: EtapesTypesEtapesStatuts.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   RECEVOIR_EXPERTISE_SERVICE_EAU: { db: EtapesTypesEtapesStatuts.expertiseDREALOuDGTMServiceEau, mainStep: false },

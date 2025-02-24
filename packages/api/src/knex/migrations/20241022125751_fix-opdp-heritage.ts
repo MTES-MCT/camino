@@ -1,5 +1,3 @@
-/* eslint-disable sql/no-unsafe-query */
-
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Knex } from 'knex'
 

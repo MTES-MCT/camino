@@ -63,7 +63,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   NOTIFIER_COLLECTIVITES_LOCALES: { db: ETES.notificationDesCollectivitesLocales, mainStep: true },
   RENDRE_DECISION_ABROGATION: { db: ETES.abrogationDeLaDecision, mainStep: false },
   DEMANDER_INFORMATION_POUR_AVIS_DREAL: { db: ETES.demandeDinformations_AvisDuDREALDEALOuDGTM_, mainStep: false },
-  RECEVOIR_INFORMATION_POUR_AVIS_DREAL: { db: ETES.receptionDinformation_AvisDuDREALDEALOuDGTM_, mainStep: false },
+  RECEVOIR_INFORMATION_POUR_AVIS_DREAL: { db: ETES.receptionDinformation, mainStep: false },
   RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: { db: ETES.decisionDuJugeAdministratif, mainStep: false },
   FAIRE_DESISTEMENT_DEMANDEUR: { db: ETES.desistementDuDemandeur, mainStep: false },
   FAIRE_CLASSEMENT_SANS_SUITE: { db: ETES.classementSansSuite, mainStep: false },

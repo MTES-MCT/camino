@@ -1,5 +1,3 @@
-/* eslint-disable sql/no-unsafe-query */
-
 import { CaminoDate, daysBetween } from 'camino-common/src/date.js'
 import { DemarcheId } from 'camino-common/src/demarche.js'
 import { EtapeId } from 'camino-common/src/etape.js'

@@ -1,4 +1,3 @@
-/* eslint-disable sql/no-unsafe-query */
 import { Knex } from 'knex'
 
 export const up = async (knex: Knex): Promise<void> => {

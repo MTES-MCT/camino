@@ -504,7 +504,7 @@ const TDESections = {
       ],
       [ETAPES_TYPES.receptionDeComplements_RecevabiliteDeLaDemande_]: caracteristiquesARM,
       [ETAPES_TYPES.receptionDeComplements_CompletudeDeLaDemande_]: caracteristiquesARM,
-      [ETAPES_TYPES.receptionDinformation_RecevabiliteDeLaDemande_]: caracteristiquesARM,
+      [ETAPES_TYPES.receptionDinformation]: caracteristiquesARM,
       [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: [
         { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', optionnel: false }] },
         {

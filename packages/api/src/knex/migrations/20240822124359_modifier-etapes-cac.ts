@@ -1,5 +1,3 @@
-/* eslint-disable sql/no-unsafe-query */
-
 import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape'
 import { DOCUMENTS_TYPES_IDS, DocumentTypeId, DocumentsTypes } from 'camino-common/src/static/documentsTypes'
 import { Knex } from 'knex'

@@ -1,5 +1,3 @@
-/* eslint-disable sql/no-unsafe-query */
-
 import { CaminoDate } from 'camino-common/src/date'
 import { DemarcheId } from 'camino-common/src/demarche'
 import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape'

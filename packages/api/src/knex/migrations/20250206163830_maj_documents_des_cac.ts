@@ -1,4 +1,3 @@
-/* eslint-disable sql/no-unsafe-query */
 import { EtapeDocumentId, EtapeId } from 'camino-common/src/etape'
 import { AutreDocumentTypeId, DocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { isNullOrUndefined } from 'camino-common/src/typescript-tools'

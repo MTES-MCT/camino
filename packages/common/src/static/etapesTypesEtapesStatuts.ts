@@ -173,9 +173,7 @@ export const EtapesTypesEtapesStatuts = {
     FAVORABLE: { etapeTypeId: 'rde', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'rde', etapeStatutId: 'def' },
   },
-  receptionDinformation_AvisDuDREALDEALOuDGTM_: { FAIT: { etapeTypeId: 'rie', etapeStatutId: 'fai' } },
   receptionDinformation: { FAIT: { etapeTypeId: 'rif', etapeStatutId: 'fai' } },
-  receptionDinformation_RecevabiliteDeLaDemande_: { FAIT: { etapeTypeId: 'rim', etapeStatutId: 'fai' } },
   rapportDuConseilDEtat: {
     FAVORABLE: { etapeTypeId: 'rpe', etapeStatutId: 'fav' },
     DEFAVORABLE: { etapeTypeId: 'rpe', etapeStatutId: 'def' },

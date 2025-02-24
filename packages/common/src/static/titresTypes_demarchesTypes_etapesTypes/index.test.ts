@@ -21,7 +21,7 @@ test('getEtapesTDE', () => {
       "rca",
       "rcm",
       "mim",
-      "rim",
+      "rif",
       "mcr",
       "meo",
       "css",

@@ -1,4 +1,3 @@
-/* eslint-disable sql/no-unsafe-query */
 import { CaminoDate } from 'camino-common/src/date'
 import { etapeAvisIdValidator, EtapeDocumentId, EtapeId } from 'camino-common/src/etape'
 import { DATE_DEBUT_PROCEDURE_SPECIFIQUE_AXM_ARM } from 'camino-common/src/machines'

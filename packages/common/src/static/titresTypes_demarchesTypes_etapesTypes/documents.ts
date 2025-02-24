@@ -227,13 +227,6 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau, optionnel: true },
   ],
-  [ETAPES_TYPES.receptionDinformation]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.documentsCartographiques, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.lettreDeDemande, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.lettre, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.notes, optionnel: true },
-  ],
   [ETAPES_TYPES.rapportDuConseilDEtat]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.extraitDuRegistreDesDeliberationsDeLaSectionDesTravauxPublicDuConseilDEtat, optionnel: true }],
   [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.arrete, optionnel: true }],
   [ETAPES_TYPES.saisineDeLautoriteSignataire]: [

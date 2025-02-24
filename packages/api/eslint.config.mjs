@@ -135,4 +135,10 @@ export default [
       ],
     },
   },
+  {
+    files: ['**/migrations/*.ts'],
+    rules: {
+      'sql/no-unsafe-query': 'off',
+    },
+  },
 ]

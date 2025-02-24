@@ -5,10 +5,10 @@ import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
 
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rif","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
-const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex", "dpu","ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rie","rif","rim","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
+const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex", "dpu","ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rif","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
 const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma", "ede","edm","epu","esb","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
@@ -78,9 +78,7 @@ export const ETAPES_TYPES = {
   receptionDeComplements: 'rco',
   receptionDeComplements_SaisineDeLaCARM_: 'rcs',
   recepisseDeDeclarationLoiSurLeau: 'rde',
-  receptionDinformation_AvisDuDREALDEALOuDGTM_: 'rie',
   receptionDinformation: 'rif',
-  receptionDinformation_RecevabiliteDeLaDemande_: 'rim',
   reponseDuDemandeur: 'rno',
   rapportDuConseilDEtat: 'rpe',
   publicationDeDecisionAuRecueilDesActesAdministratifs: 'rpu',
@@ -248,16 +246,6 @@ export const EtapesTypes = {
     public_lecture: true,
     entreprises_lecture: true,
   },
-  rim: {
-    id: 'rim',
-    nom: "réception d'information (recevabilité de la demande)",
-    description: 'après une mcr',
-    fondamentale: true,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
-  },
   cac: {
     id: 'cac',
     nom: 'consultation des administrations centrales',
@@ -298,16 +286,6 @@ export const EtapesTypes = {
     date_fin: null,
     public_lecture: false,
     entreprises_lecture: false,
-  },
-  rie: {
-    id: 'rie',
-    nom: "réception d'information (avis du DREAL, DEAL ou DGTM)",
-    description: 'après une adp',
-    fondamentale: true,
-    unique: false,
-    date_fin: null,
-    public_lecture: true,
-    entreprises_lecture: true,
   },
   sas: {
     id: 'sas',
