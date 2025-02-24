@@ -35,7 +35,7 @@ const onUploadFinish = async (_req: IncomingMessage, res: ServerResponse, upload
     throw { body: 'Le fichier téléversé est étrange', status_code: 500 }
   }
 
-  const extension = fileName.split('.').at(-1)
+  const extension = fileName.split('.').at(-1)?.toLowerCase()
   const parsedExtension = fileUploadTypeValidator.safeParse(extension)
   if (!parsedExtension.success) {
     console.error("L'extension du fichier téléversé n'est pas autorisé", upload)
