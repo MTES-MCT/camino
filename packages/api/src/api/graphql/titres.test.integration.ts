@@ -80,27 +80,18 @@ const titreEtapesPubliques: ITitreInsert = {
         {
           id: newEtapeId('titre-id-demarche-id-asc'),
           typeId: 'asc',
-          ordre: 8,
+          ordre: 6,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'fai',
           date: toCaminoDate('2020-02-02'),
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
         {
-          id: newEtapeId('titre-id-demarche-id-edm'),
-          typeId: 'edm',
-          ordre: 6,
-          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
-          statutId: 'acc',
-          date: toCaminoDate('2020-02-02'),
-          isBrouillon: ETAPE_IS_NOT_BROUILLON,
-        },
-        {
-          id: newEtapeId('titre-id-demarche-id-ede'),
-          typeId: 'ede',
+          id: newEtapeId('titre-id-demarche-id-exp'),
+          typeId: 'exp',
           ordre: 5,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
-          statutId: 'acc',
+          statutId: 'fav',
           date: toCaminoDate('2020-02-02'),
           isBrouillon: ETAPE_IS_NOT_BROUILLON,
         },
@@ -217,7 +208,7 @@ describe('titre', () => {
     const res = await graphQLCall(dbPool, titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
     expect(res.body.errors).toBe(undefined)
-    expect(res.body.data.titres.elements[0].demarches[0].etapes).toHaveLength(8)
+    expect(res.body.data.titres.elements[0].demarches[0].etapes).toHaveLength(7)
     expect(
       res.body.data.titres.elements[0].demarches[0].etapes.map(({ id }: { id: string }) => ({
         id,
@@ -226,8 +217,7 @@ describe('titre', () => {
       expect.arrayContaining([
         { id: 'titre-id-demarche-id-asc' },
         { id: 'titre-id-demarche-id-dpu' },
-        { id: 'titre-id-demarche-id-ede' },
-        { id: 'titre-id-demarche-id-edm' },
+        { id: 'titre-id-demarche-id-exp' },
         { id: 'titre-id-demarche-id-pfc' },
         { id: 'titre-id-demarche-id-pfd' },
         { id: 'titre-id-demarche-id-vfc' },

@@ -66,8 +66,7 @@ type XStateEvent =
   | { type: 'RECEVOIR_INFORMATION_MCR' }
   | { type: 'DEMANDER_COMPLEMENTS_MCR' }
   | { type: 'RECEVOIR_COMPLEMENTS_MCR' }
-  | { type: 'RECEVOIR_EXPERTISE_SERVICE_EAU' }
-  | { type: 'RECEVOIR_EXPERTISE_SERVICE_MINES' }
+  | { type: 'RECEVOIR_EXPERTISE' }
   | { type: 'NOTIFIER_DEMANDEUR_SIGNATURE_ARM' }
   | { type: 'FAIRE_AVENANT_ARM' }
   | { type: 'NOTIFIER_AVENANT_ARM' }
@@ -169,8 +168,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   RECEVOIR_INFORMATION_MCR: { db: EtapesTypesEtapesStatuts.receptionDinformation, mainStep: false },
   DEMANDER_COMPLEMENTS_MCR: { db: EtapesTypesEtapesStatuts.demandeDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
   RECEVOIR_COMPLEMENTS_MCR: { db: EtapesTypesEtapesStatuts.receptionDeComplements_RecevabiliteDeLaDemande_, mainStep: false },
-  RECEVOIR_EXPERTISE_SERVICE_EAU: { db: EtapesTypesEtapesStatuts.expertiseDREALOuDGTMServiceEau, mainStep: false },
-  RECEVOIR_EXPERTISE_SERVICE_MINES: { db: EtapesTypesEtapesStatuts.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_, mainStep: false },
+  RECEVOIR_EXPERTISE: { db: EtapesTypesEtapesStatuts.expertises, mainStep: false },
   NOTIFIER_DEMANDEUR_SIGNATURE_ARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_, mainStep: true },
   FAIRE_AVENANT_ARM: { db: EtapesTypesEtapesStatuts.avenantALautorisationDeRechercheMiniere, mainStep: false },
   NOTIFIER_AVENANT_ARM: { db: EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, mainStep: false },
@@ -609,28 +607,17 @@ const armOctMachine = createMachine({
             expertisesMachine: {
               type: 'parallel',
               states: {
-                expertiseServiceEauMachine: {
-                  initial: 'expertiseServiceEauAfaire',
+                expertiseMachine: {
+                  initial: 'expertiseAFaire',
                   states: {
-                    expertiseServiceEauAfaire: {
+                    expertiseAFaire: {
                       on: {
-                        RECEVOIR_EXPERTISE_SERVICE_EAU: 'expertiseServiceEauFait',
+                        RECEVOIR_EXPERTISE: 'expertiseFaite',
                       },
                     },
-                    expertiseServiceEauFait: {
+                    expertiseFaite: {
                       type: 'final',
                     },
-                  },
-                },
-                expertiseServiceMinesMachine: {
-                  initial: 'expertiseServiceMinesAFaire',
-                  states: {
-                    expertiseServiceMinesAFaire: {
-                      on: {
-                        RECEVOIR_EXPERTISE_SERVICE_MINES: 'expertiseServiceMinesFait',
-                      },
-                    },
-                    expertiseServiceMinesFait: { type: 'final' },
                   },
                 },
                 avisDesServicesEtCommissionsConsultativesMachine: {

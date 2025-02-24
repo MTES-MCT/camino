@@ -242,7 +242,7 @@ export const getAvisTypes = (
     if (TitresTypes[titreTypeId].typeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION) {
       avis[AVIS_TYPES.confirmationAccordProprietaireDuSol] = { id: AVIS_TYPES.confirmationAccordProprietaireDuSol, optionnel: true }
     }
-  } else if (etapeTypeId === ETAPES_TYPES.consultationDesAdministrationsCentrales) {
+  } else if ([ETAPES_TYPES.consultationDesAdministrationsCentrales, ETAPES_TYPES.expertises].includes(etapeTypeId)) {
     avis[AVIS_TYPES.autreAvis] = { id: AVIS_TYPES.autreAvis, optionnel: true }
   }
 

@@ -21,6 +21,7 @@ import { etapeCreate } from './rest-test-utils'
 import { insertTitreGraph, ITitreInsert, multiPolygonWith4Points } from '../../../tests/integration-test-helper'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { DOCUMENTS_TYPES_IDS } from 'camino-common/src/static/documentsTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -546,8 +547,8 @@ describe('etapeModifier', () => {
     expect(putRes.statusCode, JSON.stringify(putRes.body)).toBe(HTTP_STATUS.OK)
   })
 
-  test('ne peut pas modifier une étape EDE sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
-    const { titreDemarcheId, titreEtapeId } = await etapeCreate('ede')
+  test('ne peut pas modifier une étape Expertises sur un titre ARM en tant que PTMG (utilisateur admin)', async () => {
+    const { titreDemarcheId, titreEtapeId } = await etapeCreate(ETAPES_TYPES.expertises)
     const res = await restNewPutCall(
       dbPool,
       '/rest/etapes',
@@ -558,8 +559,8 @@ describe('etapeModifier', () => {
       },
       {
         id: titreEtapeId,
-        typeId: 'ede',
-        statutId: 'fai',
+        typeId: ETAPES_TYPES.expertises,
+        statutId: ETAPES_STATUTS.FAVORABLE,
         titreDemarcheId,
         date: caminoDateValidator.parse('2018-01-01'),
         duree: null,

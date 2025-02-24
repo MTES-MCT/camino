@@ -4,14 +4,13 @@ import { Definition } from '../definition'
 import { EtapeBrouillon } from '../etape'
 
 // prettier-ignore
-
-const IDS = ["abd", "aca","aco","and","anf","def","dex","dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rif","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma", "ede","edm","epu","esb", "ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
+const IDS = ["abd", "aca","aco","and","anf","def","dex","dpu", "ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rif","rmc", "rpu","sco","acg","acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma","epu","exp","ipc", "mca","mcb","mcd", "mci","mcm","mco","mcp","mcr","mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno","rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const
 
 // prettier-ignore
 const FONDAMENTALES_IDS = ["abd", "aca","aco","and","anf","def","dex", "dpu","ihi", "mfr","mod","rca","rcb","rcd","rcm","rco","rcs","rif","rmc", "rpu","sco"] as const satisfies Readonly<EtapeTypeIdFondamentaleArray>
 
 // prettier-ignore
-const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma", "ede","edm","epu","esb","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
+const NON_FONDAMENTALES_IDS = ["acg", "acf","apd","ape","apo","app","apu","cac","css","dae","ddc","des","dma","epu","exp","ipc", "mca","mcb","mcd","mci", "mcm","mco","mcp","mcr", "mcs","mec","men","meo","mie","mif","mim","mna","mnb","mnc","mnd","mni","mno","mns","mnv","mpb", "ncl","pfc","pfd","ppu","pqr","rcg","rde","rno", "rpe","sas","sca","scg","spe","spo","spp","vfc","vfd","wae","wao","war","wau","wda","wdc","wdd","wde","wfa","wfd","wfo","wmt","wpb","wpc","wpo","wpp","wps","wrc","wrt","wse","wtp", "asc", "adc"] as const satisfies Readonly<EtapeTypeIdNonFondamentale[]>
 
 // Ceci est un test :)
 ;[...FONDAMENTALES_IDS, ...NON_FONDAMENTALES_IDS] as const satisfies typeof IDS
@@ -36,10 +35,8 @@ export const ETAPES_TYPES = {
   desistementDuDemandeur: 'des',
   decisionDeLAutoriteAdministrative: 'dex',
   publicationDeDecisionAuJORF: 'dpu',
-  expertiseDREALOuDGTMServiceEau: 'ede',
-  expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_: 'edm',
   enquetePublique: 'epu',
-  expertiseDREALOuDGTMServiceBiodiversite: 'esb',
+  expertises: 'exp',
   informationsHistoriquesIncompletes: 'ihi',
   demandeDeComplements_RecevabiliteDeLaDemande_: 'mca',
   demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_: 'mcb',
@@ -666,26 +663,6 @@ export const EtapesTypes = {
     public_lecture: true,
     entreprises_lecture: true,
   },
-  esb: {
-    id: 'esb',
-    nom: 'expertise DREAL ou DGTM service biodiversité',
-    description: 'Instruction de demande sur la réglementation ayant trait à la biodiversité par les services de la DGTM.',
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
-  ede: {
-    id: 'ede',
-    nom: 'expertise DREAL ou DGTM service eau',
-    description: "Instruction de demande sur la réglementation ayant trait à l'eau par les services de la DGTM.\n",
-    fondamentale: false,
-    unique: false,
-    date_fin: null,
-    public_lecture: false,
-    entreprises_lecture: false,
-  },
   mec: {
     id: 'mec',
     nom: 'avis de demande concurrente',
@@ -788,9 +765,9 @@ export const EtapesTypes = {
     public_lecture: true,
     entreprises_lecture: true,
   },
-  edm: {
-    id: 'edm',
-    nom: 'expertise DGTM service prévention des risques et industries extractives (DATE)',
+  exp: {
+    id: 'exp',
+    nom: 'expertises DREAL ou DGTM',
     description: '',
     fondamentale: false,
     unique: false,

@@ -100,20 +100,15 @@ export const EtapesTypesEtapesStatuts = {
     REJETE: { etapeTypeId: 'dpu', etapeStatutId: 'rej' },
     FAIT: { etapeTypeId: 'dpu', etapeStatutId: 'fai' },
   },
-  expertiseDREALOuDGTMServiceEau: {
-    FAVORABLE: { etapeTypeId: 'ede', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'ede', etapeStatutId: 'def' },
-  },
-  expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_: {
-    FAVORABLE: { etapeTypeId: 'edm', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'edm', etapeStatutId: 'def' },
+  expertises: {
+    FAVORABLE: { etapeTypeId: 'exp', etapeStatutId: 'fav' },
+    DEFAVORABLE: { etapeTypeId: 'exp', etapeStatutId: 'def' },
   },
   enquetePublique: {
     PROGRAMME: { etapeTypeId: 'epu', etapeStatutId: 'pro' },
     EN_COURS: { etapeTypeId: 'epu', etapeStatutId: 'enc' },
     TERMINE: { etapeTypeId: 'epu', etapeStatutId: 'ter' },
   },
-  expertiseDREALOuDGTMServiceBiodiversite: { FAIT: { etapeTypeId: 'esb', etapeStatutId: 'fai' } },
   informationsHistoriquesIncompletes: { FAIT: { etapeTypeId: 'ihi', etapeStatutId: 'fai' } },
   demandeDeComplements_RecevabiliteDeLaDemande_: { FAIT: { etapeTypeId: 'mca', etapeStatutId: 'fai' } },
   demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_: { FAIT: { etapeTypeId: 'mcb', etapeStatutId: 'fai' } },

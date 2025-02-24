@@ -291,7 +291,7 @@ describe('etapeCreer', () => {
     expect(res.statusCode, JSON.stringify(res.body)).toBe(HTTP_STATUS.OK)
   })
 
-  test('ne peut pas créer une étape EDE sur un titre ARM en tant que DGTM (utilisateur admin)', async () => {
+  test('ne peut pas créer une étape Expertises sur un titre ARM en tant que ONF (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
     const res = await restNewPostCall(
@@ -300,11 +300,11 @@ describe('etapeCreer', () => {
       {},
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
+        administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
       },
       {
-        typeId: 'ede',
-        statutId: 'fai',
+        typeId: ETAPES_TYPES.expertises,
+        statutId: ETAPES_STATUTS.FAVORABLE,
         titreDemarcheId,
         date: toCaminoDate('2018-01-01'),
         ...blankEtapeProps,
@@ -317,12 +317,12 @@ describe('etapeCreer', () => {
       }
     )
 
-    expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST)
+    expect(res.statusCode).toBe(HTTP_STATUS.NOT_FOUND)
     expect(res.body).toMatchInlineSnapshot(`
       {
-        "detail": "les étapes de la démarche TDE ne sont pas valides",
-        "message": "l'étape n'est pas valide",
-        "status": 400,
+        "detail": "L'utilisateur n'a pas accès à la démarche",
+        "message": "la démarche n'existe pas",
+        "status": 404,
       }
     `)
   })
@@ -331,8 +331,8 @@ describe('etapeCreer', () => {
     const titreDemarcheId = await demarcheCreate()
 
     const res = await restNewPostCall(dbPool, '/rest/etapes', {}, userSuper, {
-      typeId: 'ede',
-      statutId: 'fav',
+      typeId: ETAPES_TYPES.expertises,
+      statutId: ETAPES_STATUTS.FAVORABLE,
       titreDemarcheId,
       date: toCaminoDate('2018-01-01'),
       ...blankEtapeProps,

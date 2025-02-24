@@ -52,7 +52,6 @@ type XStateEvent =
   | { type: 'DEPOSER_DEMANDE_CONCURRENTE' }
   | OuvrirParticipationDuPublic
   | RendreAvisServicesEtCommissionsConsultatives
-  | { type: 'RENDRE_AVIS_POLICE_EAU' }
   | RendreAvisCDM
   | RendreRapportDREAL
   | { type: 'RENDRE_AVIS_PREFET' }
@@ -101,8 +100,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
   DEPOSER_DEMANDE_CONCURRENTE: { db: EtapesTypesEtapesStatuts.avisDeDemandeConcurrente, mainStep: false },
   OUVRIR_PARTICIPATION_DU_PUBLIC: { db: EtapesTypesEtapesStatuts.participationDuPublic, mainStep: true },
   RENDRE_AVIS_SERVICES_ET_COMMISSIONS_CONSULTATIVES: { db: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives, mainStep: true },
-  RENDRE_AVIS_POLICE_EAU: { db: EtapesTypesEtapesStatuts.expertiseDREALOuDGTMServiceEau, mainStep: false },
-
   RENDRE_AVIS_CDM: { db: EtapesTypesEtapesStatuts.avisDeLaCommissionDepartementaleDesMines_CDM_, mainStep: true },
   RENDRE_RAPPORT_DREAL: { db: EtapesTypesEtapesStatuts.rapportEtAvisDeLaDREAL, mainStep: true },
   RENDRE_AVIS_PREFET: { db: EtapesTypesEtapesStatuts.avisDuPrefet, mainStep: true },

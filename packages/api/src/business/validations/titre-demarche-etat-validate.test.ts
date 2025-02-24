@@ -950,7 +950,7 @@ describe('getPossiblesEtapesTypes', () => {
 
   test('ajoute une nouvelle étape en plein milieu', () => {
     const tested = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, undefined, toCaminoDate('2019-12-04'), etapes)
-    expect(Object.keys(tested).toSorted()).toStrictEqual(['ede', 'edm', 'mod'])
+    expect(Object.keys(tested).toSorted()).toStrictEqual(['exp', 'mod'])
   })
 
   test('peut faire une dae, une rde et pfd AVANT la mfr', () => {
@@ -1139,9 +1139,9 @@ describe('getPossiblesEtapesTypes', () => {
         demarcheIdsConsentement: [],
       },
       {
-        id: newEtapeId('idedm'),
+        id: newEtapeId('idexp'),
         date: toCaminoDate('2021-11-30'),
-        typeId: 'edm',
+        typeId: 'exp',
         statutId: 'fav',
         concurrence: 'non-applicable',
         hasTitreFrom: 'non-applicable',
@@ -1211,7 +1211,7 @@ describe('getPossiblesEtapesTypes', () => {
     ]
 
     const tested = getPossiblesEtapesTypes(machine, 'arm', 'oct', undefined, undefined, toCaminoDate('2022-07-01'), etapes)
-    expect(Object.keys(tested).toSorted()).toStrictEqual(['asc', 'css', 'des', 'ede', 'mcb', 'mod', 'rcb', 'rde'])
+    expect(Object.keys(tested).toSorted()).toStrictEqual(['asc', 'css', 'des', 'mcb', 'mod', 'rcb', 'rde'])
     vi.resetAllMocks()
   })
   test('peut faire une completude (mcp) le même jour que le dépôt (men) de la demande', () => {

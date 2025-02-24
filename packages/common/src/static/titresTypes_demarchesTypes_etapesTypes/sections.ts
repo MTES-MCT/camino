@@ -141,20 +141,10 @@ const EtapesTypesSections = {
   [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: [
     { id: 'paiement', nom: 'Informations sur le paiement', elements: [{ id: 'facture', nom: 'Facture ONF', type: 'text', optionnel: true, description: "Numéro de facture émise par l'ONF" }] },
   ],
-  [ETAPES_TYPES.expertiseDREALOuDGTMServiceEau]: [
+  [ETAPES_TYPES.expertises]: [
     {
       id: 'deal',
-      nom: 'DEAL service eau',
-      elements: [
-        { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "élément d'expertise" },
-        { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: "Prénom et nom de l'agent chargé de l'expertise" },
-      ],
-    },
-  ],
-  [ETAPES_TYPES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_]: [
-    {
-      id: 'deal',
-      nom: 'DEAL service mines',
+      nom: 'Expertises',
       elements: [
         { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "élément d'expertise" },
         { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: "Prénom et nom de l'agent chargé de l'expertise" },

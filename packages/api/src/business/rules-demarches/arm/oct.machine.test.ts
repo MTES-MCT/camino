@@ -3,6 +3,8 @@ import { setDateAndOrderAndInterpretMachine } from '../machine-test-helper'
 import { EtapeTypeEtapeStatutValidPair, EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { Etape } from '../machine-common'
 import { describe, expect, test } from 'vitest'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 const etapesProd = require('./2019-10-31-oct.cas.json') // eslint-disable-line
 
 describe('vérifie l’arbre d’octroi d’ARM', () => {
@@ -18,9 +20,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('quelles sont mes prochaines étapes sur un titre mécanisé', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
   [
@@ -34,9 +36,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('quelles sont mes prochaines étapes sur un titre mécanisé avec franchissements', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-03', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 1 } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true, franchissements: 1 } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
   [
@@ -50,9 +52,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('quelles sont mes prochaines étapes non mécanisé', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-03', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: false } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
 
     expect(tree).toMatchInlineSnapshot(`
@@ -73,7 +75,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       ETES.validationDuPaiementDesFraisDeDossier.FAIT,
       ETES.recevabiliteDeLaDemande.FAVORABLE,
       ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
-      ETES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_.FAVORABLE,
+      ETES.expertises.FAVORABLE,
     ]
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2023-09-01', etapes)
     expect(tree).toMatchInlineSnapshot(`
@@ -84,9 +86,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
-        "RECEVOIR_EXPERTISE_SERVICE_MINES                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
+        "RECEVOIR_EXPERTISE                                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE]",
       ]
     `)
   })
@@ -102,14 +104,14 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         ETES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.FAIT,
       ])
     ).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"sca","etapeStatutId":"fai","date":"2023-10-03"}' after '["pfd_fai","mfr_fai","men_fai","mcp_com","vfd_fai","mcr_fav"]'. The event {"type":"FAIRE_SAISINE_CARM","date":"2023-10-03","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"sca","etapeStatutId":"fai","date":"2023-10-03"}' after '["pfd_fai","mfr_fai","men_fai","mcp_com","vfd_fai","mcr_fav"]'. The event {"type":"FAIRE_SAISINE_CARM","date":"2023-10-03","status":"fai"} should be one of 'CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES']`
     )
   })
   test('la demande ne peut pas être effectuée après une modification de la demande', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mod', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: false } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.modificationDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
 
     expect(tree).toMatchInlineSnapshot(`
@@ -124,10 +126,10 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('on peut faire une demande de compléments après une complétude incomplète', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: false } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'inc' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: false } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.INCOMPLETE },
     ])
 
     expect(tree).toMatchInlineSnapshot(`
@@ -150,8 +152,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut créer une étape "men" juste après une "mfr"', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2022-04-16', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -165,8 +167,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('ne peut pas créer une étape "mcp" sans "men"', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2022-04-14', [
-        { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-        { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+        { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
+        { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -174,9 +176,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('ne peut pas créer 2 "mfr"', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2019-12-31', [
-        { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-        { etapeTypeId: 'men', etapeStatutId: 'fai' },
-        { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
+        { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
+        { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+        { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -184,8 +186,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('ne peut pas déplacer une étape "men" sans "mfr"', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-01', [
-        { etapeTypeId: 'men', etapeStatutId: 'fai' },
-        { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
+        { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+        { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -202,8 +204,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     'peut créer une étape "%s" juste après une "men" et que le titre est mécanisé avec franchissement d’eau',
     (etape: EtapeTypeEtapeStatutValidPair & Omit<Etape, 'date' | 'etapeTypeId' | 'etapeStatutId'>) => {
       setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
-        { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 1 } } },
-        { etapeTypeId: 'men', etapeStatutId: 'fai' },
+        { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true, franchissements: 1 } } },
+        { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
         etape,
       ])
     }
@@ -211,10 +213,10 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut créer une étape "mcp" après une "men"', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -229,9 +231,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut créer une "des" après "men"', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-02-02', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'des', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.desistementDuDemandeur, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -247,20 +249,20 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2019-12-31', [
         {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.demande,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'men',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'des',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.desistementDuDemandeur,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'des',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.desistementDuDemandeur,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
       ])
     ).toThrowErrorMatchingSnapshot()
@@ -269,20 +271,20 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
         {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.demande,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'men',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'des',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.desistementDuDemandeur,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'css',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.classementSansSuite,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
       ])
     ).toThrowErrorMatchingSnapshot()
@@ -290,57 +292,57 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('peut créer une "des" si le titre est en attente de "pfc"', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
       {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.demande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
         contenu: { arm: { mecanise: true } },
       },
       {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
+        etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
+        etapeStatutId: ETAPES_STATUTS.EXEMPTE,
       },
       {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
+        etapeTypeId: ETAPES_TYPES.completudeDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.COMPLETE,
       },
       {
-        etapeTypeId: 'mod',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.modificationDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
+        etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.FAVORABLE,
       },
       {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'sca',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'aca',
-        etapeStatutId: 'fav',
+        etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
+        etapeStatutId: ETAPES_STATUTS.FAVORABLE,
       },
       {
-        etapeTypeId: 'mnb',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'des',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.desistementDuDemandeur,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
     ])
     expect(tree).toMatchInlineSnapshot(`
@@ -353,8 +355,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
         "MODIFIER_DEMANDE                                      (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE]",
         "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
         "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM]",
         "NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM                (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
@@ -367,44 +369,44 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-01', [
         {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.demande,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'men',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'pfd',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'mcp',
-          etapeStatutId: 'com',
+          etapeTypeId: ETAPES_TYPES.completudeDeLaDemande,
+          etapeStatutId: ETAPES_STATUTS.COMPLETE,
         },
         {
-          etapeTypeId: 'vfd',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'mcr',
-          etapeStatutId: 'fav',
+          etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande,
+          etapeStatutId: ETAPES_STATUTS.FAVORABLE,
         },
         {
-          etapeTypeId: 'asc',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'sca',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
         {
-          etapeTypeId: 'aca',
-          etapeStatutId: 'fav',
+          etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
+          etapeStatutId: ETAPES_STATUTS.FAVORABLE,
         },
         {
-          etapeTypeId: 'mnb',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
         },
       ])
     ).toThrowErrorMatchingSnapshot()
@@ -412,16 +414,16 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut créer une "mnd" apres une "aca" défavorable', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-08-18', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
-      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
-      { etapeTypeId: 'aca', etapeStatutId: 'def' },
-      { etapeTypeId: 'mnd', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.DEFAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -431,8 +433,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
         "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
         "RENDRE_AVIS_DEFAVORABLE_CARM                          (publique      , rejeté                 ) -> [NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM]",
         "NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM              (publique      , rejeté                 ) -> []",
@@ -443,36 +445,36 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('peut créer une "mod" si il n’y a pas de sca', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2019-12-12', [
       {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.demande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
+        etapeTypeId: ETAPES_TYPES.completudeDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.COMPLETE,
       },
       {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
+        etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.FAVORABLE,
       },
       {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'mod',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.modificationDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
     ])
     expect(tree).toMatchInlineSnapshot(`
@@ -483,9 +485,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
-        "MODIFIER_DEMANDE                                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
+        "MODIFIER_DEMANDE                                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
       ]
     `)
   })
@@ -493,20 +495,20 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('peut créer une "mcp" après une "pfd" et "men"', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-01-30', [
       {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.demande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
+        etapeTypeId: ETAPES_TYPES.completudeDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.COMPLETE,
       },
     ])
     expect(tree).toMatchInlineSnapshot(`
@@ -523,46 +525,46 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('peut créer une "sca" après une "asc" et "rde"', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-06-22', [
       {
-        etapeTypeId: 'dae',
-        etapeStatutId: 'exe',
+        etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
+        etapeStatutId: ETAPES_STATUTS.EXEMPTE,
       },
       {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.demande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
         contenu: { arm: { mecanise: true, franchissements: 3 } },
       },
       {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
+        etapeTypeId: ETAPES_TYPES.completudeDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.COMPLETE,
       },
       {
-        etapeTypeId: 'rde',
-        etapeStatutId: 'fav',
+        etapeTypeId: ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau,
+        etapeStatutId: ETAPES_STATUTS.FAVORABLE,
         contenu: { arm: { franchissements: 3 } },
       },
       {
-        etapeTypeId: 'vfd',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'mcr',
-        etapeStatutId: 'fav',
+        etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.FAVORABLE,
       },
       {
-        etapeTypeId: 'asc',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'sca',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
     ])
     expect(tree).toMatchInlineSnapshot(`
@@ -575,8 +577,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
         "ACCEPTER_RDE                                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
         "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
       ]
     `)
@@ -584,21 +586,21 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut faire une "sco" après une "aca" favorable en mécanisé', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-28', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 3 } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
-      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'rde', etapeStatutId: 'fav', contenu: { arm: { franchissements: 3 } } },
-      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
-      { etapeTypeId: 'aca', etapeStatutId: 'fav' },
-      { etapeTypeId: 'mnb', etapeStatutId: 'fai' },
-      { etapeTypeId: 'pfc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'sco', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true, franchissements: 3 } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau, etapeStatutId: ETAPES_STATUTS.FAVORABLE, contenu: { arm: { franchissements: 3 } } },
+      { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: 'pfc', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: 'sco', etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -609,9 +611,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "EXEMPTER_DAE                                          (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE]",
-        "ACCEPTER_RDE                                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE]",
+        "ACCEPTER_RDE                                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
         "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
         "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM]",
         "NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM                (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
@@ -624,15 +626,15 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('les étapes sont vérifiées dans le bon ordre', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-04-09', [
-      { etapeTypeId: 'rde', etapeStatutId: 'fav', contenu: { arm: { franchissements: 3 } } },
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 3 } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
-      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau, etapeStatutId: ETAPES_STATUTS.FAVORABLE, contenu: { arm: { franchissements: 3 } } },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true, franchissements: 3 } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -644,8 +646,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
       ]
     `)
   })
@@ -653,20 +655,20 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('des étapes qui se font la même journée', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-03', [
       {
-        etapeTypeId: 'pfd',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.demande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'men',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
       },
       {
-        etapeTypeId: 'mcp',
-        etapeStatutId: 'com',
+        etapeTypeId: ETAPES_TYPES.completudeDeLaDemande,
+        etapeStatutId: ETAPES_STATUTS.COMPLETE,
       },
     ])
     expect(tree).toMatchInlineSnapshot(`
@@ -682,18 +684,18 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut réaliser une saisine de la CARM après un récépissé de la déclaration sur l’eau défavorable', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-07-28', [
-      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true, franchissements: 3 } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
-      { etapeTypeId: 'mcb', etapeStatutId: 'fai' },
-      { etapeTypeId: 'edm', etapeStatutId: 'fav' },
-      { etapeTypeId: 'rde', etapeStatutId: 'def', contenu: { arm: { franchissements: 3 } } },
-      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true, franchissements: 3 } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.expertises, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau, etapeStatutId: ETAPES_STATUTS.DEFAVORABLE, contenu: { arm: { franchissements: 3 } } },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -704,11 +706,11 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "DEMANDER_COMPLEMENTS_RDE                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_COMPLEMENTS_RDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RECEVOIR_EXPERTISE_SERVICE_MINES                      (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_COMPLEMENTS_RDE,RECEVOIR_EXPERTISE_SERVICE_EAU,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "REFUSER_RDE                                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "DEMANDER_COMPLEMENTS_RDE                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_COMPLEMENTS_RDE,RECEVOIR_EXPERTISE,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RECEVOIR_EXPERTISE                                    (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_COMPLEMENTS_RDE,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "REFUSER_RDE                                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE]",
         "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
       ]
     `)
@@ -716,19 +718,19 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut réaliser une demande de compléments après un avis de la CARM ajourné', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-03', [
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
-      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
-      { etapeTypeId: 'aca', etapeStatutId: 'ajo' },
-      { etapeTypeId: 'mna', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcs', etapeStatutId: 'fai' },
-      { etapeTypeId: 'rcs', etapeStatutId: 'fai' },
-      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: 'ajo' },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_AjournementDeLaCARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.demandeDeComplements_SaisineDeLaCARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.receptionDeComplements_SaisineDeLaCARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -738,8 +740,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
         "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
         "RENDRE_AVIS_AJOURNE_CARM                              (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM]",
         "NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM                  (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_COMPLEMENT_SAISINE_CARM,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM]",
@@ -752,19 +754,19 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut réaliser une demande d’ARM non mécanisée et un avenant', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-03', [
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai' },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
-      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
-      { etapeTypeId: 'aca', etapeStatutId: 'fav' },
-      { etapeTypeId: 'sco', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mns', etapeStatutId: 'fai' },
-      { etapeTypeId: 'aco', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mnv', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: 'sco', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: 'mns', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: 'aco', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: 'mnv', etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -774,8 +776,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
         "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
         "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE]",
         "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR_SIGNATURE_ARM]",
@@ -788,22 +790,22 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut réaliser une demande d’ARM mécanisée et un avenant', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
-      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'sca', etapeStatutId: 'fai' },
-      { etapeTypeId: 'aca', etapeStatutId: 'fav' },
-      { etapeTypeId: 'mnb', etapeStatutId: 'fai' },
-      { etapeTypeId: 'pfc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'sco', etapeStatutId: 'fai' },
-      { etapeTypeId: 'aco', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mnv', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: 'pfc', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: 'sco', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: 'aco', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: 'mnv', etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -814,8 +816,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE]",
         "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
         "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM]",
         "NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM                (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
@@ -830,13 +832,13 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test("peut faire une demande de compléments pour la RDE si les franchissements d'eau ne sont pas spécifiés sur une ARM mécanisée", () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-07-14', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
-      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'mcb', etapeStatutId: 'fai' },
-      { etapeTypeId: 'rcb', etapeStatutId: 'fai', contenu: { arm: { franchissements: 4 } } },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: 'mcb', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: 'rcb', etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { franchissements: 4 } } },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -856,12 +858,12 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-23', [
         {
-          etapeTypeId: 'dae',
-          etapeStatutId: 'exe',
+          etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
+          etapeStatutId: ETAPES_STATUTS.EXEMPTE,
         },
         {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.demande,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
           contenu: { arm: { mecanise: false } },
         },
       ])
@@ -872,13 +874,13 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-23', [
         {
-          etapeTypeId: 'rde',
-          etapeStatutId: 'fav',
+          etapeTypeId: ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau,
+          etapeStatutId: ETAPES_STATUTS.FAVORABLE,
           contenu: { arm: { franchissements: 1 } },
         },
         {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
+          etapeTypeId: ETAPES_TYPES.demande,
+          etapeStatutId: ETAPES_STATUTS.FAIT,
           contenu: { arm: { mecanise: false } },
         },
       ])
@@ -887,17 +889,17 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut réaliser une validation des frais de dossier complémentaire après un désistement', () => {
     let result = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
-      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'css', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mnc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.classementSansSuite, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_ClassementSansSuite_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(result.tree).toMatchInlineSnapshot(`
       [
@@ -908,8 +910,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE]",
         "CLASSER_SANS_SUITE                                    (publique      , classé sans suite      ) -> [NOTIFIER_DEMANDEUR_CSS]",
         "NOTIFIER_DEMANDEUR_CSS                                (publique      , classé sans suite      ) -> [VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
         "VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES     (publique      , classé sans suite      ) -> []",
@@ -917,15 +919,15 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     `)
 
     result = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'css', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mnc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.classementSansSuite, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_ClassementSansSuite_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(result.tree).toMatchInlineSnapshot(`
       [
@@ -943,16 +945,16 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     `)
 
     result = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcr', etapeStatutId: 'fav' },
-      { etapeTypeId: 'asc', etapeStatutId: 'fai' },
-      { etapeTypeId: 'des', etapeStatutId: 'fai' },
-      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.desistementDuDemandeur, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(result.tree).toMatchInlineSnapshot(`
       [
@@ -963,22 +965,22 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE,REFUSER_RDE]",
         "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE,VALIDER_FRAIS_DE_DOSSIER]",
         "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_COMPLEMENTS_RDE,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_RDE]",
-        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
-        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE_SERVICE_EAU,RECEVOIR_EXPERTISE_SERVICE_MINES,REFUSER_RDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [ACCEPTER_RDE,CLASSER_SANS_SUITE,DEMANDER_COMPLEMENTS_RDE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,REFUSER_RDE]",
         "DESISTER_PAR_LE_DEMANDEUR                             (publique      , désisté                ) -> [VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES]",
         "VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES     (publique      , désisté                ) -> []",
       ]
     `)
 
     result = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
-      { etapeTypeId: 'mfr', etapeStatutId: 'fai', contenu: { arm: { mecanise: true } } },
-      { etapeTypeId: 'men', etapeStatutId: 'fai' },
-      { etapeTypeId: 'dae', etapeStatutId: 'exe' },
-      { etapeTypeId: 'pfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'mcp', etapeStatutId: 'com' },
-      { etapeTypeId: 'des', etapeStatutId: 'fai' },
-      { etapeTypeId: 'vfd', etapeStatutId: 'fai' },
-      { etapeTypeId: 'vfc', etapeStatutId: 'fai' },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.desistementDuDemandeur, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(result.tree).toMatchInlineSnapshot(`
       [
@@ -998,8 +1000,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('peut faire une "mfr" non mécanisée avec un franchissement d’eau', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2019-12-10', [
       {
-        etapeTypeId: 'mfr',
-        etapeStatutId: 'fai',
+        etapeTypeId: ETAPES_TYPES.demande,
+        etapeStatutId: ETAPES_STATUTS.FAIT,
         contenu: { arm: { mecanise: false, franchissements: 3 } },
       },
     ])

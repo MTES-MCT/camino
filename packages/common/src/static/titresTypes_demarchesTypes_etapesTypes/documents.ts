@@ -96,10 +96,7 @@ const EtapesTypesDocumentsTypes = {
     { documentTypeId: DOCUMENTS_TYPES_IDS.ordonnance, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.publicationAuJorf, optionnel: true },
   ],
-  [ETAPES_TYPES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_]: [
-    { documentTypeId: DOCUMENTS_TYPES_IDS.avis, optionnel: true },
-    { documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true },
-  ],
+  [ETAPES_TYPES.expertises]: [{ documentTypeId: DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines, optionnel: true }],
   [ETAPES_TYPES.enquetePublique]: [
     { documentTypeId: DOCUMENTS_TYPES_IDS.avisDEnquetePublique, optionnel: true },
     { documentTypeId: DOCUMENTS_TYPES_IDS.arretePrefectoral, optionnel: true },

@@ -4,6 +4,7 @@ import { CanReadDemarche } from './demarches'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 import { isAssociee, isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes'
 import { entrepriseIdValidator } from 'camino-common/src/entreprise'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 
 const shouldNotBeCalled = () => Promise.reject(new Error('should not be called'))
 
@@ -29,7 +30,7 @@ describe('canReadEtape', () => {
         () => Promise.resolve(titreTypeId),
         () => Promise.resolve([]),
         shouldNotBeCalled,
-        'ede',
+        ETAPES_TYPES.expertises,
         demarche
       )
     ).toBe(false)
@@ -40,7 +41,7 @@ describe('canReadEtape', () => {
         () => Promise.resolve(titreTypeId),
         () => Promise.resolve([]),
         shouldNotBeCalled,
-        'ede',
+        ETAPES_TYPES.expertises,
         demarche
       )
     ).toBe(true)
