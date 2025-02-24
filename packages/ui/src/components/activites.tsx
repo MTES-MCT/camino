@@ -111,6 +111,7 @@ export const PureActivites = defineComponent<Props>(props => {
           getData={getData}
           download={{
             id: 'downloadActivites',
+            downloadTitle: 'Télécharger les activités',
             downloadRoute: '/activites',
             formats: activitesDownloadFormats,
             params: {},

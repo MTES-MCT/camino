@@ -123,7 +123,7 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
             class="fr-mr-2w"
             href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_origine.value))}`}
             download={`perimetre-${props.titreSlug}-${props.perimetre.geojson_origine_geo_systeme_id}.geojson`}
-            icon="fr-icon-download-line"
+            icon={{ name: 'fr-icon-download-line', position: 'right' }}
             buttonType="secondary"
             title={`Télécharge le périmètre au format geojson dans le référentiel d'origine ${props.perimetre.geojson_origine_geo_systeme_id}`}
             label={`.geojson (${props.perimetre.geojson_origine_geo_systeme_id})`}
@@ -132,7 +132,7 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
             <DsfrLink
               href={`data:${contentTypes.geojson};charset=utf-8,${encodeURI(JSON.stringify(geojson_4326.value))}`}
               download={`perimetre-${props.titreSlug}-4326.geojson`}
-              icon="fr-icon-download-line"
+              icon={{ name: 'fr-icon-download-line', position: 'right' }}
               buttonType="secondary"
               title="Télécharge le périmètre au format geojson dans le référentiel 4326"
               label=".geojson (4326)"

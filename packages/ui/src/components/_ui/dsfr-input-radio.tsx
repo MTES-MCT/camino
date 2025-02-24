@@ -2,16 +2,22 @@ import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { defineComponent } from 'vue'
 
-type Props<T extends string> = {
+export interface RadioElement<T extends string> {
+  itemId: T
+  legend: { main: string; description?: string }
+  disabled?: boolean
+}
+
+interface Props<T extends string> {
   id?: string
   legend: { main: string; description?: string }
   disabled?: boolean
-  required?: boolean
+  required: boolean
   orientation?: 'vertical' | 'horizontal'
   valueChanged: (value: T) => void
   initialValue?: T | null
   size?: 'sm' | 'md'
-  elements: { itemId: T; legend: { main: string; description?: string }; disabled?: boolean }[]
+  elements: RadioElement<T>[]
 }
 
 export const DsfrInputRadio = defineComponent(<T extends string>(props: Props<T>) => {

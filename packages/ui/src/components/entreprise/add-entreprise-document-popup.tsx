@@ -1,6 +1,6 @@
-import { EntrepriseId } from 'camino-common/src/entreprise'
+import { EntrepriseDocumentId, EntrepriseId } from 'camino-common/src/entreprise'
 import { computed, defineComponent, ref } from 'vue'
-import { FunctionalPopup } from '../_ui/functional-popup'
+import { FunctionalPopup, Validate } from '../_ui/functional-popup'
 import { uiEntrepriseDocumentInputValidator } from './entreprise-api-client'
 import { DocumentsTypes, EntrepriseDocumentTypeId, EntrepriseDocumentTypeIds, sortedEntrepriseDocumentTypes } from 'camino-common/src/static/documentsTypes'
 import { CaminoDate } from 'camino-common/src/date'
@@ -71,7 +71,7 @@ export const AddEntrepriseDocumentPopup = defineComponent<Props>(props => {
     }
   })
 
-  const validate = {
+  const validate: Validate<{ id: EntrepriseDocumentId } | null> = {
     action: async () => {
       if (entrepriseDocumentFile.value !== null) {
         const tempDocumentName = await props.apiClient.uploadTempDocument(entrepriseDocumentFile.value)

@@ -210,7 +210,7 @@ export const Titres = defineComponent({
               nom="Titres miniers et autorisations"
               download={
                 titresForCarte.value.titres.length > 0 || (titresForTable.value.status === 'LOADED' && titresForTable.value.value.rows.length > 0)
-                  ? { formats: titresDownloadFormats, downloadRoute: '/titres', params: {} }
+                  ? { downloadTitle: 'Télécharger les titres', formats: titresDownloadFormats, downloadRoute: '/titres', params: {} }
                   : null
               }
               renderButton={() => <DemandeTitreButton user={user} />}

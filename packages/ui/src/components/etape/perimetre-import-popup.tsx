@@ -53,6 +53,7 @@ export const PerimetreImportPopup = defineComponent<Props>(props => {
         </div>
       </fieldset>
       <DsfrInputRadio
+        required={true}
         legend={{ main: 'Type de fichier' }}
         orientation="horizontal"
         valueChanged={fileTypeSelected}

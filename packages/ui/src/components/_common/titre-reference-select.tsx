@@ -67,7 +67,7 @@ export const TitreReferenceSelect = defineComponent<Props>(props => {
       ))}
 
       {isNullOrUndefined(references.value.find(r => !r.referenceTypeId || !r.nom)) ? (
-        <DsfrButton buttonType="tertiary" onClick={referenceAdd} title="Ajouter une référence" icon={'fr-icon-add-line'} />
+        <DsfrButton buttonType="tertiary" onClick={referenceAdd} title="Ajouter une référence" icon={{ name: 'fr-icon-add-line', position: 'right' }} />
       ) : null}
     </div>
   )

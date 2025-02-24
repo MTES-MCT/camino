@@ -13,6 +13,7 @@ const valueChangedAction = action('valueChanged')
 export const Default: StoryFn = () => (
   <DsfrInputRadio
     id="input1"
+    required={true}
     legend={{ main: 'Légende' }}
     valueChanged={valueChangedAction}
     elements={[
@@ -25,6 +26,7 @@ export const Default: StoryFn = () => (
 
 export const WithDescription: StoryFn = () => (
   <DsfrInputRadio
+    required={true}
     id="input2"
     legend={{ main: 'Légende', description: 'description' }}
     valueChanged={valueChangedAction}
@@ -37,6 +39,7 @@ export const WithDescription: StoryFn = () => (
 )
 export const WithValue: StoryFn = () => (
   <DsfrInputRadio
+    required={true}
     id="input4"
     legend={{ main: 'Légende' }}
     valueChanged={valueChangedAction}
@@ -50,6 +53,7 @@ export const WithValue: StoryFn = () => (
 )
 export const Disabled: StoryFn = () => (
   <DsfrInputRadio
+    required={true}
     id="input5"
     disabled={true}
     legend={{ main: 'Légende' }}
@@ -63,6 +67,7 @@ export const Disabled: StoryFn = () => (
 )
 export const OneElementDisabled: StoryFn = () => (
   <DsfrInputRadio
+    required={true}
     id="input5"
     disabled={false}
     legend={{ main: 'Légende élément 2 désactivé' }}
@@ -74,10 +79,10 @@ export const OneElementDisabled: StoryFn = () => (
     ]}
   />
 )
-export const Required: StoryFn = () => (
+export const Optional: StoryFn = () => (
   <DsfrInputRadio
     id="input6"
-    required={true}
+    required={false}
     legend={{ main: 'Légende' }}
     valueChanged={valueChangedAction}
     elements={[

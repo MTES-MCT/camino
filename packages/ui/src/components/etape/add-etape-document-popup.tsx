@@ -97,7 +97,7 @@ export const AddEtapeDocumentPopup = defineComponent<Props>(props => {
         </div>
 
         <div class="fr-fieldset__element" style={{ order: 2 }}>
-          <DsfrInputRadio legend={{ main: 'Visibilité' }} elements={visibilityChoices.value} initialValue={etapeDocumentVisibility.value} valueChanged={visibilityChange} />
+          <DsfrInputRadio legend={{ main: 'Visibilité' }} required={true} elements={visibilityChoices.value} initialValue={etapeDocumentVisibility.value} valueChanged={visibilityChange} />
         </div>
         <div class="fr-fieldset__element" style={{ order: etapeDocumentTypeId.value === DOCUMENTS_TYPES_IDS.autreDocument ? -1 : 3 }}>
           <DsfrTextarea

@@ -318,7 +318,14 @@ export const DemarcheEtape = defineComponent<Props>(props => {
             {canEditOrDeleteEtape.value ? (
               <>
                 {isBrouillon.value ? <DsfrButton buttonType="primary" label="Finaliser" title="Finaliser l'étape" onClick={deposePopupOpen} disabled={!isDeposable.value} /> : null}
-                <DsfrLink icon={'fr-icon-pencil-line'} disabled={false} to={{ name: 'etapeEdition', params: { id: props.etape.slug } }} buttonType="secondary" title="Modifier l’étape" label={null} />
+                <DsfrLink
+                  icon={{ name: 'fr-icon-pencil-line', position: 'right' }}
+                  disabled={false}
+                  to={{ name: 'etapeEdition', params: { id: props.etape.slug } }}
+                  buttonType="secondary"
+                  title="Modifier l’étape"
+                  label={null}
+                />
                 {canDelete.value ? <DsfrButtonIcon icon={'fr-icon-delete-bin-line'} buttonType="secondary" title="Supprimer l’étape" onClick={removePopupOpen} /> : null}
               </>
             ) : null}

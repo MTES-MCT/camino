@@ -23,7 +23,7 @@ export const All: StoryFn = () => (
   </div>
 )
 
-export const ButtonWithTextAndIcon: StoryFn = () => <DsfrButton title="Mon title" onClick={onClick} icon="fr-icon-alert-fill" />
+export const ButtonWithTextAndIcon: StoryFn = () => <DsfrButton title="Mon title" onClick={onClick} icon={{ name: 'fr-icon-alert-fill', position: 'right' }} />
 
 export const AllIcon: StoryFn = () => (
   <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -40,10 +40,10 @@ export const AllIcon: StoryFn = () => (
 export const Link: StoryFn = () => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
     <DsfrLink disabled={false} icon={null} title="Titre" label="Label" to={{ name: 'dashboard', params: {} }} />
-    <DsfrLink disabled={false} icon="fr-icon-account-circle-fill" title="Titre" to={{ name: 'dashboard', params: {} }} />
+    <DsfrLink disabled={false} icon={{ name: 'fr-icon-account-circle-fill', position: 'right' }} title="Titre" to={{ name: 'dashboard', params: {} }} />
     <DsfrLink buttonType="primary" icon={null} disabled={false} title="Titre" to={{ name: 'dashboard', params: {} }} />
-    <DsfrLink buttonType="primary" disabled={false} icon="fr-icon-alert-fill" title="Titre" to={{ name: 'dashboard', params: {} }} />
-    <DsfrLink buttonType="primary" disabled={false} icon="fr-icon-alert-fill" title="Titre" to={{ name: 'dashboard', params: {} }} label={null} />
+    <DsfrLink buttonType="primary" disabled={false} icon={{ name: 'fr-icon-alert-fill', position: 'right' }} title="Titre" to={{ name: 'dashboard', params: {} }} />
+    <DsfrLink buttonType="primary" disabled={false} icon={{ name: 'fr-icon-alert-fill', position: 'right' }} title="Titre" to={{ name: 'dashboard', params: {} }} label={null} />
     <DsfrLink breadcrumb={true} disabled={false} icon={null} title="Titre" to={{ name: 'dashboard', params: {} }} label={null} />
   </div>
 )

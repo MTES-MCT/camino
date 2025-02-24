@@ -15,7 +15,7 @@ import {
   NewPutRestRoutes,
   NewDeleteRestRoutes,
 } from 'camino-common/src/rest'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { ZodType, z } from 'zod'
 
@@ -84,6 +84,41 @@ type GetWithJsonArgs<T extends GetRestRoutes | NewGetRestRoutes, Method extends 
 
 export const getWithJson = async <T extends GetRestRoutes>(...args: GetWithJsonArgs<T, 'get'>): Promise<z.infer<(typeof CaminoRestRoutes)[T]['get']['output']>> =>
   callFetch(args[0], args[1], 'get', args.length === 3 ? args[2] : {})
+
+export const downloadBlob = async <T extends DownloadRestRoutes>(
+  path: T,
+  params: CaminoRestParams<T>,
+  searchParams: Record<string, string> = {}
+): Promise<{ data: Blob; filename: string } | undefined> => {
+  const url = getUiRestRoute(path, params, searchParams)
+
+  const fetched = await fetch(url)
+  if (fetched.ok) {
+    if (fetched.status === 200) {
+      let filename: string = 'telechargement_camino'
+
+      const contentDisposition = fetched.headers.get('Content-Disposition')
+      if (isNotNullNorUndefinedNorEmpty(contentDisposition)) {
+        const filenameMatch = contentDisposition.match(/filename=(.+)/)
+        if (isNotNullNorUndefinedNorEmpty(filenameMatch) && filenameMatch.length > 1) {
+          filename = filenameMatch[1]
+        }
+      }
+
+      return { data: await fetched.blob(), filename }
+    }
+
+    return
+  }
+
+  if (fetched.status === HTTP_STATUS.UNAUTHORIZED) {
+    window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
+  }
+
+  console.error(`Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`)
+  // TODO 2024-05-02 améliorer la gestion du status http
+  throw new CaminoHttpError(`Une erreur s'est produite lors de la récupération des données`, fetched.status as HttpStatus)
+}
 
 const errorMessage: CaminoError<string> = { message: "L'api est inaccessible" }
 export const newGetWithJson = async <T extends NewGetRestRoutes>(...args: GetWithJsonArgs<T, 'newGet'>): Promise<CaminoError<string> | z.infer<(typeof CaminoRestRoutes)[T]['newGet']['output']>> => {

@@ -5,22 +5,25 @@ import type { JSX } from 'vue/jsx-runtime'
 import { CaminoError } from 'camino-common/src/zod-tools'
 import { createFocusTrap, FocusTrap } from 'focus-trap'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { DsfrButton } from './dsfr-button'
+import { fr } from '@codegouvfr/react-dsfr'
 
+export type Validate<T> = {
+  text?: string
+  action: () => Promise<CaminoError<string> | T>
+}
 interface Props<T> {
   id?: string
   title: string
   content: () => JSX.Element
   close: () => void
-  validate: {
-    text?: string
-    action: () => Promise<CaminoError<string> | T>
-  }
+  validate: Validate<T>
   canValidate: boolean
 }
 
 export const FunctionalPopup = defineComponent(<T,>(props: Props<T>) => {
   const canValidate = computed<boolean>(() => {
-    return props.canValidate
+    return props.canValidate && validateProcess.value.status !== 'LOADING'
   })
   const dialogRef = ref<HTMLDialogElement | null>(null)
   const trap = ref<FocusTrap | null>(null)
@@ -96,55 +99,64 @@ export const FunctionalPopup = defineComponent(<T,>(props: Props<T>) => {
     // TODO 2023-11-28 ici on interdit le teleport dans le cas de vitest pour que les snapshots soient présentes. On a pas trouvé mieux à cette date
     <Teleport to="body" disabled={devMode}>
       <div>
-        <dialog ref={dialogRef} id={id} class="fr-modal fr-modal--opened" open={true} aria-modal={true} role="dialog" aria-labelledby={`${id}-title`} onClick={props.close} style={{ zIndex: 1000001 }}>
-          <div class="fr-container fr-container--fluid fr-container-md" onClick={stopPropagation}>
-            <div class="fr-grid-row fr-grid-row--center">
-              <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
-                <div class="fr-modal__body">
-                  <div class="fr-modal__header">
-                    <button class="fr-btn--close fr-btn" aria-controls={id} title="Fermer" onClick={() => props.close()}>
+        <dialog
+          ref={dialogRef}
+          id={id}
+          class={fr.cx('fr-modal', 'fr-modal--opened')}
+          open={true}
+          aria-modal={true}
+          role="dialog"
+          aria-labelledby={`${id}-title`}
+          onClick={props.close}
+          style={{ zIndex: 1000001 }}
+        >
+          <div class={fr.cx('fr-container', 'fr-container--fluid', 'fr-container-md')} onClick={stopPropagation}>
+            <div class={fr.cx('fr-grid-row', 'fr-grid-row--center')}>
+              <div class={fr.cx('fr-col-12', 'fr-col-md-8', 'fr-col-lg-6')}>
+                <div class={fr.cx('fr-modal__body')}>
+                  <div class={fr.cx('fr-modal__header')}>
+                    <button class={fr.cx('fr-btn--close', 'fr-btn')} aria-controls={id} title="Fermer" onClick={() => props.close()}>
                       Fermer
                     </button>
                   </div>
-                  <div class="fr-modal__content">
-                    <h1 id={`${id}-title`} class="fr-modal__title">
-                      <span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>
+                  <div class={fr.cx('fr-modal__content')}>
+                    <h1 id={`${id}-title`} class={fr.cx('fr-modal__title')}>
+                      <span class={fr.cx('fr-icon-arrow-right-line', 'fr-icon--lg')} aria-hidden="true"></span>
                       {props.title}
                     </h1>
-                    <div class="fr-container">
+                    <div class={fr.cx('fr-container')}>
                       {props.content()}
                       {validateProcess.value.status === 'ERROR' || validateProcess.value.status === 'NEW_ERROR' ? (
-                        <LoadingElement class="fr-mt-4v" data={validateProcess.value} renderItem={() => null} />
+                        <LoadingElement class={fr.cx('fr-mt-4v')} data={validateProcess.value} renderItem={() => null} />
                       ) : null}
                     </div>
                   </div>
 
-                  <div class="fr-modal__footer">
+                  <div class={fr.cx('fr-modal__footer')}>
                     <div style={{ display: 'flex', width: '100%', justifyContent: 'end', alignItems: 'center', gap: '1rem' }}>
                       {validateProcess.value.status !== 'ERROR' && validateProcess.value.status !== 'NEW_ERROR' ? <LoadingElement data={validateProcess.value} renderItem={() => null} /> : null}
-                      <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left" style={{ width: 'auto' }}>
+                      <ul class={fr.cx('fr-btns-group', 'fr-btns-group--right', 'fr-btns-group--inline-reverse', 'fr-btns-group--inline-lg', 'fr-btns-group--icon-left')} style={{ width: 'auto' }}>
                         <li>
-                          <button
-                            class={['fr-btn', 'fr-icon-check-line', 'fr-btn--icon-left', !canValidate.value ? 'disabled' : '']}
+                          <DsfrButton
+                            icon={{ name: 'fr-icon-check-line', position: 'left' }}
                             disabled={!canValidate.value || validateProcess.value.status === 'LOADING'}
                             onClick={e => {
                               e.stopPropagation()
 
                               return validate()
                             }}
-                          >
-                            {text}
-                          </button>
+                            title={text}
+                          />
                         </li>
                         <li>
-                          <button
-                            class="fr-btn fr-icon-arrow-go-back-fill fr-btn--icon-left fr-btn--secondary"
+                          <DsfrButton
+                            icon={{ name: 'fr-icon-arrow-go-back-fill', position: 'left' }}
+                            buttonType="secondary"
                             disabled={validateProcess.value.status === 'LOADING'}
                             aria-controls={id}
                             onClick={props.close}
-                          >
-                            Annuler
-                          </button>
+                            title="Annuler"
+                          />
                         </li>
                       </ul>
                     </div>

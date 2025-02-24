@@ -96,7 +96,7 @@ export const Preview = defineComponent<Props>(props => {
                 buttonType={props.activite.deposable ? 'secondary' : 'primary'}
                 label={null}
                 title="modifier l'activité"
-                icon="fr-icon-edit-line"
+                icon={{ name: 'fr-icon-edit-line', position: 'right' }}
                 to={{ name: 'activiteEdition', params: { activiteId: props.activite.slug } }}
                 disabled={false}
               />

@@ -8,10 +8,6 @@ const meta: Meta = {
 }
 export default meta
 
-export const Default: StoryFn = () => <PureDownloads formats={['geojson', 'xlsx']} downloadRoute={'/demarches'} params={{}} route={{ query: {} }} id="id" />
+export const Default: StoryFn = () => <PureDownloads downloadTitle="Télécharger les démarches" formats={['geojson', 'xlsx']} downloadRoute={'/demarches'} params={{}} route={{ query: {} }} id="id" />
 
-export const OnlyOneFormat: StoryFn = () => <PureDownloads formats={['pdf']} downloadRoute={'/demarches'} params={{}} route={{ query: {} }} id="id" />
-
-export const WithOverridenTitle: StoryFn = () => (
-  <PureDownloads formats={['pdf']} downloadRoute={'/demarches'} params={{}} route={{ query: {} }} id="id" downloadTitle="Surchage du titre du bouton de téléchargement" />
-)
+export const OnlyOneFormat: StoryFn = () => <PureDownloads downloadTitle="Télécharger les démarches" formats={['pdf']} downloadRoute={'/demarches'} params={{}} route={{ query: {} }} id="id" />

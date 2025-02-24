@@ -179,6 +179,7 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
             <DsfrInputRadio
               legend={{ main: 'Décision' }}
               initialValue={decision.value}
+              required={true}
               elements={[ETAPES_STATUTS.ACCEPTE, ETAPES_STATUTS.REJETE].map(status => ({ itemId: status, legend: { main: capitalize(EtapesStatuts[status].nom) } }))}
               valueChanged={setDecision}
             />
@@ -186,6 +187,7 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
               {decision.value === 'acc' ? (
                 <div>
                   <DsfrInputRadio
+                    required={true}
                     legend={{ main: 'Quel périmètre acceptez-vous ?' }}
                     elements={[
                       { itemId: 'origin', legend: { main: 'Celui de la demande' } },

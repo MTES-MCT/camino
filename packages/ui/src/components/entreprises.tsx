@@ -78,7 +78,7 @@ export const PureEntreprises = defineComponent<Props>(props => {
     <Liste
       nom="entreprises"
       colonnes={entreprisesColonnes}
-      download={{ id: 'entreprisesDownload', downloadRoute: '/entreprises', formats: entreprisesDownloadFormats, params: {} }}
+      download={{ id: 'entreprisesDownload', downloadTitle: 'Télécharger les entreprises', downloadRoute: '/entreprises', formats: entreprisesDownloadFormats, params: {} }}
       getData={getData}
       listeFiltre={{
         filtres: routesDefinitions[props.currentRoute.name].meta.filtres,

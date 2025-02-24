@@ -106,6 +106,7 @@ export const LayersControl = defineComponent<LayersControlProps>(props => {
           elements={getEntriesHardcore(baseMapNames).map(([name, layer]) => {
             return { itemId: layer, legend: { main: name } }
           })}
+          required={true}
           valueChanged={radioValueChanged}
           legend={{ main: '' }}
           size="sm"

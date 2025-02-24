@@ -99,7 +99,7 @@ const TablePoints: FunctionalComponent<Pick<Props, 'geo_systeme_id' | 'geojson_o
           style={{ marginLeft: 'auto' }}
           href={`data:${contentTypes.csv};charset=utf-8,${csvContent}`}
           download={`points-${props.titreSlug}.csv`}
-          icon="fr-icon-download-line"
+          icon={{ name: 'fr-icon-download-line', position: 'right' }}
           buttonType="secondary"
           title="Télécharge les points au format csv"
           label=".csv"
@@ -135,7 +135,7 @@ const TableForages: FunctionalComponent<NotNullableKeys<Pick<Props, 'geo_systeme
         style={{ alignSelf: 'end' }}
         href={`data:${contentTypes.csv};charset=utf-8,${csvContent}`}
         download={`forages-${props.titreSlug}.csv`}
-        icon="fr-icon-download-line"
+        icon={{ name: 'fr-icon-download-line', position: 'right' }}
         buttonType="secondary"
         title="Télécharge les forages au format csv"
         label=".csv"

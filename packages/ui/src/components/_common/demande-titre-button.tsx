@@ -6,7 +6,7 @@ import { DsfrLink } from '../_ui/dsfr-button'
 
 export const DemandeTitreButton: FunctionalComponent<{ user: User }> = ({ user }) => {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
-    return <DsfrLink to={{ name: 'titreCreation', params: {} }} buttonType="primary" title="Demander un titre" icon="fr-icon-add-line" disabled={false} />
+    return <DsfrLink to={{ name: 'titreCreation', params: {} }} buttonType="primary" title="Demander un titre" icon={{ name: 'fr-icon-add-line', position: 'right' }} disabled={false} />
   }
 
   return null

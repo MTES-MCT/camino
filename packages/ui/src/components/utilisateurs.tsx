@@ -51,7 +51,7 @@ export const PureUtilisateurs = defineComponent<Props>(props => {
           route={props.currentRoute}
           colonnes={utilisateursColonnes}
           getData={load}
-          download={{ id: 'utilisateursDownload', downloadRoute: '/utilisateurs', formats: utilisateursDownloadFormats, params: {} }}
+          download={{ id: 'utilisateursDownload', downloadTitle: 'Télécharger les utilisateurs', downloadRoute: '/utilisateurs', formats: utilisateursDownloadFormats, params: {} }}
           renderButton={null}
         />
       ) : (
