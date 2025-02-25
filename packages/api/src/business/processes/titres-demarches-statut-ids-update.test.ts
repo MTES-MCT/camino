@@ -5,6 +5,7 @@ import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_fo
 import { toCaminoDate } from 'camino-common/src/date'
 import { Pool } from 'pg'
 import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { Effect } from 'effect'
 
 vi.mock('./titres-etapes-heritage-contenu-update.queries', () => ({
   getDemarches: vi.fn().mockResolvedValue(true),
@@ -20,110 +21,116 @@ console.info = vi.fn()
 
 describe("statut des démarches d'un titre", () => {
   test("met à jour le statut d'une démarche", async () => {
-    getDemarchesMock.mockResolvedValue({
-      [newDemarcheId('')]: {
-        id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-        titreId: newTitreId('h-cx-courdemanges-1988'),
-        titreTypeId: 'cxh',
-        typeId: 'oct',
-        statutId: 'rej',
-        etapes: [
-          {
-            id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
-            typeId: 'dpu',
-            statutId: 'acc',
-            concurrence: 'non-applicable',
-            hasTitreFrom: 'non-applicable',
-            isBrouillon: ETAPE_IS_NOT_BROUILLON,
-            ordre: 2,
-            date: toCaminoDate('1988-03-11'),
-            communes: [],
-            contenu: {},
-            heritageContenu: {},
-            surface: null,
-            demarcheIdsConsentement: [],
-          },
-          {
-            id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
-            typeId: 'dex',
-            statutId: 'acc',
-            concurrence: 'non-applicable',
-            hasTitreFrom: 'non-applicable',
-            isBrouillon: ETAPE_IS_NOT_BROUILLON,
-            ordre: 1,
-            date: toCaminoDate('1988-03-06'),
-            communes: [],
-            contenu: {},
-            heritageContenu: {},
-            surface: null,
-            demarcheIdsConsentement: [],
-          },
-        ],
-      },
-    })
+    getDemarchesMock.mockReturnValue(
+      Effect.succeed({
+        [newDemarcheId('')]: {
+          id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+          titreId: newTitreId('h-cx-courdemanges-1988'),
+          titreTypeId: 'cxh',
+          typeId: 'oct',
+          statutId: 'rej',
+          etapes: [
+            {
+              id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
+              typeId: 'dpu',
+              statutId: 'acc',
+              concurrence: 'non-applicable',
+              hasTitreFrom: 'non-applicable',
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              ordre: 2,
+              date: toCaminoDate('1988-03-11'),
+              communes: [],
+              contenu: {},
+              heritageContenu: {},
+              surface: null,
+              demarcheIdsConsentement: [],
+            },
+            {
+              id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
+              typeId: 'dex',
+              statutId: 'acc',
+              concurrence: 'non-applicable',
+              hasTitreFrom: 'non-applicable',
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              ordre: 1,
+              date: toCaminoDate('1988-03-06'),
+              communes: [],
+              contenu: {},
+              heritageContenu: {},
+              surface: null,
+              demarcheIdsConsentement: [],
+            },
+          ],
+        },
+      })
+    )
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(undefined as unknown as Pool)
 
     expect(titresDemarchesStatutUpdated.length).toEqual(1)
   })
 
   test("ne met pas à jour le statut d'une démarche", async () => {
-    getDemarchesMock.mockResolvedValue({
-      [newDemarcheId('')]: {
-        id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-        titreId: newTitreId('h-cx-courdemanges-1988'),
-        titreTypeId: 'cxh',
-        typeId: 'oct',
-        statutId: 'acc',
-        etapes: [
-          {
-            id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
-            typeId: 'dpu',
-            statutId: 'acc',
-            concurrence: 'non-applicable',
-            hasTitreFrom: 'non-applicable',
-            isBrouillon: ETAPE_IS_NOT_BROUILLON,
-            ordre: 2,
-            date: toCaminoDate('1988-03-11'),
-            communes: [],
-            contenu: {},
-            heritageContenu: {},
-            surface: null,
-            demarcheIdsConsentement: [],
-          },
-          {
-            id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
-            typeId: 'dex',
-            statutId: 'acc',
-            concurrence: 'non-applicable',
-            hasTitreFrom: 'non-applicable',
-            isBrouillon: ETAPE_IS_NOT_BROUILLON,
-            ordre: 1,
-            date: toCaminoDate('1988-03-06'),
-            communes: [],
-            contenu: {},
-            heritageContenu: {},
-            surface: null,
-            demarcheIdsConsentement: [],
-          },
-        ],
-      },
-    })
+    getDemarchesMock.mockReturnValue(
+      Effect.succeed({
+        [newDemarcheId('')]: {
+          id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+          titreId: newTitreId('h-cx-courdemanges-1988'),
+          titreTypeId: 'cxh',
+          typeId: 'oct',
+          statutId: 'acc',
+          etapes: [
+            {
+              id: newEtapeId('h-cx-courdemanges-1988-oct01-dpu01'),
+              typeId: 'dpu',
+              statutId: 'acc',
+              concurrence: 'non-applicable',
+              hasTitreFrom: 'non-applicable',
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              ordre: 2,
+              date: toCaminoDate('1988-03-11'),
+              communes: [],
+              contenu: {},
+              heritageContenu: {},
+              surface: null,
+              demarcheIdsConsentement: [],
+            },
+            {
+              id: newEtapeId('h-cx-courdemanges-1988-oct01-dex01'),
+              typeId: 'dex',
+              statutId: 'acc',
+              concurrence: 'non-applicable',
+              hasTitreFrom: 'non-applicable',
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              ordre: 1,
+              date: toCaminoDate('1988-03-06'),
+              communes: [],
+              contenu: {},
+              heritageContenu: {},
+              surface: null,
+              demarcheIdsConsentement: [],
+            },
+          ],
+        },
+      })
+    )
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(undefined as unknown as Pool)
 
     expect(titresDemarchesStatutUpdated.length).toEqual(0)
   })
 
   test("ne met pas à jour le statut d'une démarche sans étape", async () => {
-    getDemarchesMock.mockResolvedValue({
-      [newDemarcheId('')]: {
-        id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
-        titreId: newTitreId('h-cx-courdemanges-1988'),
-        titreTypeId: 'cxh',
-        typeId: 'oct',
-        statutId: 'ind',
-        etapes: [],
-      },
-    })
+    getDemarchesMock.mockReturnValue(
+      Effect.succeed({
+        [newDemarcheId('')]: {
+          id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+          titreId: newTitreId('h-cx-courdemanges-1988'),
+          titreTypeId: 'cxh',
+          typeId: 'oct',
+          statutId: 'ind',
+          etapes: [],
+        },
+      })
+    )
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(undefined as unknown as Pool)
     expect(titresDemarchesStatutUpdated.length).toEqual(0)
   })

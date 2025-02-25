@@ -4,12 +4,13 @@ import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-fin
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { getDemarches } from './titres-etapes-heritage-contenu-update.queries'
 import { Pool } from 'pg'
+import { callAndExit } from '../../tools/fp-tools'
 
 export const titresDemarchesStatutIdUpdate = async (pool: Pool, titreId?: TitreId): Promise<string[]> => {
   console.info()
   console.info('statut des démarches…')
 
-  const titresDemarches = await getDemarches(pool, undefined, titreId)
+  const titresDemarches = await callAndExit(getDemarches(pool, undefined, titreId))
 
   const titresDemarchesUpdated: string[] = []
 

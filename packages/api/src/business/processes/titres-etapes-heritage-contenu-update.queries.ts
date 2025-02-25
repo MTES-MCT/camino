@@ -1,6 +1,6 @@
 import { sql } from '@pgtyped/runtime'
-import { Redefine, dbQueryAndValidate } from '../../pg-database'
-import { IGetEtapesByDemarcheInternalQuery } from './titres-etapes-heritage-contenu-update.queries.types'
+import { EffectDbQueryAndValidateErrors, Redefine, effectDbQueryAndValidate } from '../../pg-database'
+import { IGetAllEtapeIdsDbQuery, IGetEtapesByDemarcheInternalQuery } from './titres-etapes-heritage-contenu-update.queries.types'
 import { caminoDateValidator } from 'camino-common/src/date'
 import { DemarcheId, demarcheIdValidator } from 'camino-common/src/demarche'
 import { DemarcheStatutId, demarcheStatutIdValidator } from 'camino-common/src/static/demarchesStatuts'
@@ -9,13 +9,28 @@ import { etapeStatutIdValidator } from 'camino-common/src/static/etapesStatuts'
 import { TitreTypeId, titreTypeIdValidator } from 'camino-common/src/static/titresTypes'
 import { ETAPE_TYPE_FOR_CONCURRENCY_DATA, etapeTypeIdValidator } from 'camino-common/src/static/etapesTypes'
 import { TitreId, titreIdValidator } from 'camino-common/src/validators/titres'
-import { etapeBrouillonValidator, etapeIdValidator } from 'camino-common/src/etape'
+import { etapeBrouillonValidator, EtapeId, etapeIdValidator } from 'camino-common/src/etape'
 import { z } from 'zod'
 import { Pool } from 'pg'
 import { communeValidator } from 'camino-common/src/static/communes'
 import { TitreEtapeForMachine } from '../rules-demarches/machine-common'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { km2Validator } from 'camino-common/src/number'
+import { CaminoError } from 'camino-common/src/zod-tools'
+import { Effect } from 'effect'
+
+const getAllEtapeIdValidator = z.object({ id: etapeIdValidator, heritage_contenu: z.record(z.record(z.object({ etapeId: etapeIdValidator.optional().nullable() }))).nullable() })
+
+type GetAllEtapes = z.infer<typeof getAllEtapeIdValidator>
+
+export const getAllEtapeIds = (pool: Pool): Effect.Effect<{ ids: Set<EtapeId>; etapes: GetAllEtapes[] }, CaminoError<EffectDbQueryAndValidateErrors>> =>
+  effectDbQueryAndValidate(getAllEtapeIdsDb, {}, pool, getAllEtapeIdValidator).pipe(
+    Effect.map(etapes => {
+      return { ids: new Set(etapes.map(({ id }) => id)), etapes }
+    })
+  )
+
+const getAllEtapeIdsDb = sql<Redefine<IGetAllEtapeIdsDbQuery, {}, z.infer<typeof getAllEtapeIdValidator>>>`select id, heritage_contenu from titres_etapes where archive is false`
 
 const getEtapesByDemarcheValidator = z.object({
   contenu: z.any().nullable(),
@@ -39,24 +54,12 @@ const getEtapesByDemarcheValidator = z.object({
   demarche_ids_consentement: z.array(demarcheIdValidator).nullable(),
 })
 
-export const getDemarches = async (
+export const getDemarches = (
   pool: Pool,
   demarcheId?: DemarcheId,
   titreId?: TitreId
-): Promise<{
-  [key: DemarcheId]: {
-    etapes: TitreEtapeForMachine[]
-    id: DemarcheId
-    typeId: DemarcheTypeId
-    titreTypeId: TitreTypeId
-    titreId: TitreId
-    statutId: DemarcheStatutId
-  }
-}> => {
-  const etapes = await dbQueryAndValidate(getEtapesByDemarcheInternal, { demarcheId, titreId }, pool, getEtapesByDemarcheValidator)
-
-  // FIXMACHINE trier les démarches par ordre de la première étape pour avoir la bonne visibilité des démarches
-  return etapes.reduce<{
+): Effect.Effect<
+  {
     [key: DemarcheId]: {
       etapes: TitreEtapeForMachine[]
       id: DemarcheId
@@ -65,51 +68,67 @@ export const getDemarches = async (
       titreId: TitreId
       statutId: DemarcheStatutId
     }
-  }>((acc, row) => {
-    if (!isNotNullNorUndefined(acc[row.demarche_id])) {
-      acc[row.demarche_id] = {
-        etapes: [],
-        id: row.demarche_id,
-        titreId: row.titre_id,
-        titreTypeId: row.titre_type_id,
-        typeId: row.demarche_type_id,
-        statutId: row.demarche_statut_id,
-      }
-    }
+  },
+  CaminoError<EffectDbQueryAndValidateErrors>
+> =>
+  effectDbQueryAndValidate(getEtapesByDemarcheInternal, { demarcheId, titreId }, pool, getEtapesByDemarcheValidator).pipe(
+    Effect.map(etapes => {
+      // FIXMACHINE trier les démarches par ordre de la première étape pour avoir la bonne visibilité des démarches
+      return etapes.reduce<{
+        [key: DemarcheId]: {
+          etapes: TitreEtapeForMachine[]
+          id: DemarcheId
+          typeId: DemarcheTypeId
+          titreTypeId: TitreTypeId
+          titreId: TitreId
+          statutId: DemarcheStatutId
+        }
+      }>((acc, row) => {
+        if (!isNotNullNorUndefined(acc[row.demarche_id])) {
+          acc[row.demarche_id] = {
+            etapes: [],
+            id: row.demarche_id,
+            titreId: row.titre_id,
+            titreTypeId: row.titre_type_id,
+            typeId: row.demarche_type_id,
+            statutId: row.demarche_statut_id,
+          }
+        }
 
-    if (
-      isNotNullNorUndefined(row.id) &&
-      isNotNullNorUndefined(row.ordre) &&
-      isNotNullNorUndefined(row.type_id) &&
-      isNotNullNorUndefined(row.statut_id) &&
-      isNotNullNorUndefined(row.date) &&
-      isNotNullNorUndefined(row.is_brouillon)
-    ) {
-      acc[row.demarche_id].etapes.push({
-        id: row.id,
-        ordre: row.ordre,
-        typeId: row.type_id,
-        statutId: row.statut_id,
-        isBrouillon: row.is_brouillon,
-        date: row.date,
-        contenu: row.contenu,
-        heritageContenu: row.heritage_contenu,
-        communes: row.communes,
-        surface: row.surface,
-        concurrence:
-          row.type_id === ETAPE_TYPE_FOR_CONCURRENCY_DATA
-            ? isNotNullNorUndefined(row.demarche_id_en_concurrence) && isNotNullNorUndefined(row.demarche_concurrente_public_lecture)
-              ? { amIFirst: false, demarcheConcurrenteVisibilite: row.demarche_concurrente_public_lecture === true ? 'publique' : 'confidentielle' }
-              : { amIFirst: true }
-            : 'non-applicable',
-        demarcheIdsConsentement: row.demarche_ids_consentement ?? [],
-        hasTitreFrom: row.has_titre_from,
-      })
-    }
+        if (
+          isNotNullNorUndefined(row.id) &&
+          isNotNullNorUndefined(row.ordre) &&
+          isNotNullNorUndefined(row.type_id) &&
+          isNotNullNorUndefined(row.statut_id) &&
+          isNotNullNorUndefined(row.date) &&
+          isNotNullNorUndefined(row.is_brouillon)
+        ) {
+          acc[row.demarche_id].etapes.push({
+            id: row.id,
+            ordre: row.ordre,
+            typeId: row.type_id,
+            statutId: row.statut_id,
+            isBrouillon: row.is_brouillon,
+            date: row.date,
+            contenu: row.contenu,
+            heritageContenu: row.heritage_contenu,
+            communes: row.communes,
+            surface: row.surface,
+            concurrence:
+              row.type_id === ETAPE_TYPE_FOR_CONCURRENCY_DATA
+                ? isNotNullNorUndefined(row.demarche_id_en_concurrence) && isNotNullNorUndefined(row.demarche_concurrente_public_lecture)
+                  ? { amIFirst: false, demarcheConcurrenteVisibilite: row.demarche_concurrente_public_lecture === true ? 'publique' : 'confidentielle' }
+                  : { amIFirst: true }
+                : 'non-applicable',
+            demarcheIdsConsentement: row.demarche_ids_consentement ?? [],
+            hasTitreFrom: row.has_titre_from,
+          })
+        }
 
-    return acc
-  }, {})
-}
+        return acc
+      }, {})
+    })
+  )
 
 const getEtapesByDemarcheInternal = sql<Redefine<IGetEtapesByDemarcheInternalQuery, { demarcheId?: DemarcheId; titreId?: TitreId }, z.infer<typeof getEtapesByDemarcheValidator>>>`
 SELECT

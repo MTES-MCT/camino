@@ -85,7 +85,7 @@ export const DsfrInput = defineComponent<Props>(props => {
         <label class="fr-label" for={id}>
           {props.legend.main}
           {!props.required ? ' (optionnel)' : null}
-          {props.type.type === 'date' ? <span class="fr-hint-text">au format jj/mm/yyyy</span> : null}
+          {props.type.type === 'date' ? <span class="fr-hint-text">au format jj/mm/aaaa</span> : null}
           {isNotNullNorUndefined(props.legend.description) ? <span class="fr-hint-text" v-html={props.legend.description}></span> : null}
         </label>
       ) : null}

@@ -2,6 +2,7 @@ import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-com
 import { Index, IEntrepriseEtablissement, IEntreprise } from '../types'
 export const dailySummaryMarker = 'tâches exécutées:' as const
 export const logsUpdate = ({
+  heritageWithUnknownEtapes,
   etapesCompletesErreurs,
   tdeErreurs,
   demarcheDefinitionsErreurs,
@@ -29,6 +30,7 @@ export const logsUpdate = ({
   etablissementsUpdated,
   etablissementsDeleted,
 }: {
+  heritageWithUnknownEtapes?: unknown[]
   etapesCompletesErreurs?: { surTitreValide: string[]; autre: string[]; etapesRecentes: string[] }
   tdeErreurs?: number
   demarcheDefinitionsErreurs?: number
@@ -72,6 +74,9 @@ export const logsUpdate = ({
     }
   }
 
+  if (isNotNullNorUndefinedNorEmpty(heritageWithUnknownEtapes)) {
+    console.error(`${heritageWithUnknownEtapes.length} heritage de contenu qui pointe sur des étapes non existantes`)
+  }
   if (isNotNullNorUndefined(tdeErreurs) && tdeErreurs > 0) {
     console.warn(`${tdeErreurs} erreurs TDE`)
   }

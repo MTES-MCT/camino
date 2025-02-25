@@ -10,7 +10,7 @@ import { titresPublicUpdate } from './processes/titres-public-update'
 import { titresPropsEtapesIdsUpdate } from './processes/titres-props-etapes-ids-update'
 import { titresStatutIdsUpdate } from './processes/titres-statut-ids-update'
 import { titresEtapesHeritagePropsUpdate } from './processes/titres-etapes-heritage-props-update'
-import { titresEtapesHeritageContenuUpdate } from './processes/titres-etapes-heritage-contenu-update'
+import { checkEtapeInContenuHeritage, titresEtapesHeritageContenuUpdate } from './processes/titres-etapes-heritage-contenu-update'
 import { titresActivitesPropsUpdate } from './processes/titres-activites-props-update'
 import { titresSlugsUpdate } from './processes/titres-slugs-update'
 import { logsUpdate } from './_logs-update'
@@ -40,6 +40,7 @@ export const daily = async (pool: Pool): Promise<void> => {
     const fondamentaleIdUpdated = await callAndExit(etapesFondamentaleIdUpdateForAll(pool))
     const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(userSuper)
     const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(pool, userSuper)
+    const heritageWithUnknownEtapes = await callAndExit(checkEtapeInContenuHeritage(pool))
 
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(pool)
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate()
@@ -62,6 +63,7 @@ export const daily = async (pool: Pool): Promise<void> => {
     const etapesCompletesErreurs = await etapesCompletesCheck(pool)
 
     logsUpdate({
+      heritageWithUnknownEtapes,
       etapesCompletesErreurs: etapesCompletesErreurs,
       tdeErreurs,
       demarcheDefinitionsErreurs,

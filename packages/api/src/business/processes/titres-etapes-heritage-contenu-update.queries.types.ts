@@ -1,6 +1,21 @@
 /** Types generated for queries found in "src/business/processes/titres-etapes-heritage-contenu-update.queries.ts" */
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 
+/** 'GetAllEtapeIdsDb' parameters type */
+export type IGetAllEtapeIdsDbParams = void;
+
+/** 'GetAllEtapeIdsDb' return type */
+export interface IGetAllEtapeIdsDbResult {
+  heritage_contenu: Json | null;
+  id: string;
+}
+
+/** 'GetAllEtapeIdsDb' query type */
+export interface IGetAllEtapeIdsDbQuery {
+  params: IGetAllEtapeIdsDbParams;
+  result: IGetAllEtapeIdsDbResult;
+}
+
 /** 'GetEtapesByDemarcheInternal' parameters type */
 export interface IGetEtapesByDemarcheInternalParams {
   demarcheId?: string | null | void;

@@ -9,12 +9,13 @@ import { Pool } from 'pg'
 import { TitreId } from 'camino-common/src/validators/titres'
 import { TitreEtapeForMachine, titreEtapeForMachineValidator } from '../rules-demarches/machine-common'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
+import { callAndExit } from '../../tools/fp-tools'
 
 export const titresEtapesOrdreUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId): Promise<string[]> => {
   console.info()
   console.info('ordre des étapes…')
 
-  const titresDemarches = await getDemarches(pool, demarcheId)
+  const titresDemarches = await callAndExit(getDemarches(pool, demarcheId))
 
   return titresEtapesOrdreUpdateVisibleForTesting(user, titresDemarches)
 }
