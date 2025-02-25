@@ -1,10 +1,10 @@
-import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { defineComponent } from 'vue'
 import { JSX } from 'vue/jsx-runtime'
 
 export type Props = {
-  id?: string
+  id: string
   legend: { main: string | JSX.Element; description?: string }
   size?: 'sm' | 'md'
   disabled?: boolean
@@ -13,8 +13,6 @@ export type Props = {
 }
 
 export const DsfrInputCheckbox = defineComponent<Props>(props => {
-  const id = props.id ?? `checkbox_${(random() * 1000).toFixed()}`
-
   const updateFromEvent = (e: Event) => {
     if (isEventWithTarget(e)) {
       props.valueChanged(e.target.checked)
@@ -23,8 +21,8 @@ export const DsfrInputCheckbox = defineComponent<Props>(props => {
 
   return () => (
     <div class={['fr-checkbox-group', props.size === 'sm' ? 'fr-checkbox-group--sm' : null]}>
-      <input onInput={updateFromEvent} disabled={props.disabled ?? false} checked={props.initialValue ?? false} name="archive" id={id} type="checkbox" />
-      <label class="fr-label" for={id}>
+      <input onInput={updateFromEvent} disabled={props.disabled ?? false} checked={props.initialValue ?? false} name="archive" id={props.id} type="checkbox" />
+      <label class="fr-label" for={props.id}>
         {props.legend.main}
         {isNotNullNorUndefinedNorEmpty(props.legend.description) ? <span class="fr-hint-text">{props.legend.description}</span> : null}
       </label>

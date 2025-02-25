@@ -11,7 +11,7 @@ export default meta
 
 const valueChangedAction = action('valueChanged')
 
-export const Checked: StoryFn = () => <DsfrInputCheckbox initialValue={true} legend={{ main: 'Label', description: 'Description' }} valueChanged={valueChangedAction} />
-export const NotChecked: StoryFn = () => <DsfrInputCheckbox initialValue={false} legend={{ main: 'Label' }} valueChanged={valueChangedAction} />
-export const Disabled: StoryFn = () => <DsfrInputCheckbox legend={{ main: 'C’est désactivé' }} disabled={true} valueChanged={valueChangedAction} />
-export const Small: StoryFn = () => <DsfrInputCheckbox legend={{ main: 'Label' }} size="sm" valueChanged={valueChangedAction} />
+export const Checked: StoryFn = () => <DsfrInputCheckbox id="check" initialValue={true} legend={{ main: 'Label', description: 'Description' }} valueChanged={valueChangedAction} />
+export const NotChecked: StoryFn = () => <DsfrInputCheckbox id="check" initialValue={false} legend={{ main: 'Label' }} valueChanged={valueChangedAction} />
+export const Disabled: StoryFn = () => <DsfrInputCheckbox id="check" legend={{ main: 'C’est désactivé' }} disabled={true} valueChanged={valueChangedAction} />
+export const Small: StoryFn = () => <DsfrInputCheckbox id="check" legend={{ main: 'Label' }} size="sm" valueChanged={valueChangedAction} />

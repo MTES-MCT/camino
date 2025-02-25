@@ -698,6 +698,7 @@ const EtapeEditFormInternal = defineComponent<
 
       <DsfrTextarea required={false} initialValue={props.etape.note.valeur} class="fr-mt-2w" style="flex-grow: 1" legend={{ main: 'Notes' }} valueChanged={onUpdateNotes} />
       <DsfrInputCheckbox
+        id="is_avertissement"
         legend={{ main: 'Cette note est un avertissement', description: 'Apparait sur le résumé de la démarche' }}
         valueChanged={onUpdateNoteAvertissement}
         initialValue={props.etape.note.is_avertissement}

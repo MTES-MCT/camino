@@ -195,6 +195,7 @@ const InnerComponent: FunctionalComponent<SectionElementEditProps> = props => {
       return (
         <div>
           <DsfrInputCheckbox
+            id={element.id}
             initialValue={element.value}
             legend={{ main: element.nom ?? '', description: element.description }}
             valueChanged={(e: boolean) => props.onValueChange({ ...element, value: e })}

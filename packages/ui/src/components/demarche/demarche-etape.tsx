@@ -134,7 +134,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
   }
 
   const canDownloadZip = computed<boolean>(() => {
-    return props.etape.avis_documents.length + props.etape.entreprises_documents.length + props.etape.etape_documents.length > 1
+    return props.etape.avis_documents.filter(({ has_file }) => has_file).length + props.etape.entreprises_documents.length + props.etape.etape_documents.length > 1
   })
 
   const canDelete = computed<boolean>(() =>

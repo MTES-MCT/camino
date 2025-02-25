@@ -17,6 +17,7 @@ import { DemarcheEtapeFondamentale, demarcheIdValidator } from 'camino-common/sr
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { AVIS_STATUTS, AVIS_TYPES, AvisVisibilityIds } from 'camino-common/src/static/avisTypes'
 
 const meta: Meta = {
   title: 'Components/Demarche/Etape',
@@ -1300,6 +1301,59 @@ export const AvisDesServices: StoryFn = () => (
       etape_documents: documents,
       entreprises_documents: entrepriseDocuments,
       avis_documents: [],
+    }}
+    apiClient={apiClient}
+    currentDate={toCaminoDate('3000-01-01')}
+    entreprises={entreprises}
+  />
+)
+
+export const AvisDesServicesSansTelechargerToutLesDocuments: StoryFn = () => (
+  <DemarcheEtape
+    titre={{ titreStatutId: 'val', typeId: 'arm', nom: 'nom du titre', slug: titreSlug }}
+    demarche={{
+      id: demarcheIdValidator.parse('demarcheId'),
+      demarche_statut_id: DemarchesStatutsIds.EnInstruction,
+      demarche_type_id: 'oct',
+      titulaireIds: [entrepriseIdValidator.parse('titulaire1')],
+      administrationsLocales: [],
+      sdom_zones: [],
+      etapes: [],
+      communes: [],
+    }}
+    router={routerPushMock}
+    user={{ ...testBlankUser, role: 'super' }}
+    etape={{
+      id: etapeIdValidator.parse('etapeId'),
+      slug: etapeSlugValidator.parse('etape-slug'),
+      note: { valeur: '', is_avertissement: false },
+      etape_type_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeTypeId,
+      etape_statut_id: EtapesTypesEtapesStatuts.avisDesServicesEtCommissionsConsultatives.FAIT.etapeStatutId,
+      is_brouillon: ETAPE_IS_BROUILLON,
+      date,
+      sections_with_values: [],
+      etape_documents: [],
+      entreprises_documents: [],
+      avis_documents: [
+        {
+          id: etapeAvisIdValidator.parse('avis'),
+          has_file: false,
+          description: '',
+          date: toCaminoDate('2025-01-01'),
+          avis_visibility_id: AvisVisibilityIds.Public,
+          avis_type_id: AVIS_TYPES.autreAvis,
+          avis_statut_id: AVIS_STATUTS.Favorable,
+        },
+        {
+          id: etapeAvisIdValidator.parse('avis2'),
+          has_file: true,
+          description: '',
+          date: toCaminoDate('2025-01-01'),
+          avis_visibility_id: AvisVisibilityIds.Public,
+          avis_type_id: AVIS_TYPES.autreAvis,
+          avis_statut_id: AVIS_STATUTS.Favorable,
+        },
+      ],
     }}
     apiClient={apiClient}
     currentDate={toCaminoDate('3000-01-01')}
