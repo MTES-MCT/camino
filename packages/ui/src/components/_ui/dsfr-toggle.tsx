@@ -1,10 +1,9 @@
-import { random } from '@/utils/vue-tsx-utils'
 import { fr } from '@codegouvfr/react-dsfr'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { defineComponent, ref } from 'vue'
 
 type Props = {
-  id?: string
+  id: string
   legendLabel: string
   legendHint?: string
   valueChanged: (value: boolean) => void
@@ -12,8 +11,6 @@ type Props = {
 }
 
 export const DsfrToggle = defineComponent<Props>(props => {
-  const id = props.id ?? `toggle_${(random() * 1000).toFixed()}`
-
   const toggled = ref<boolean>(props.initialValue)
 
   const updateFromEvent = () => {
@@ -21,14 +18,14 @@ export const DsfrToggle = defineComponent<Props>(props => {
     props.valueChanged(toggled.value)
   }
 
-  const hintId = `toggle-${id}-hint-text`
+  const hintId = `toggle-${props.id}-hint-text`
 
   const extraInputProps = isNotNullNorUndefined(props.legendHint) ? { 'aria-describedby': hintId } : {}
 
   return () => (
     <div class={[fr.cx('fr-toggle')]}>
-      <input type="checkbox" class={[fr.cx('fr-toggle__input')]} checked={toggled.value} {...extraInputProps} id={id} onClick={updateFromEvent} />
-      <label class={[fr.cx('fr-toggle__label')]} for={id} data-fr-checked-label="Activé" data-fr-unchecked-label="Désactivé">
+      <input type="checkbox" class={[fr.cx('fr-toggle__input')]} checked={toggled.value} {...extraInputProps} id={props.id} onClick={updateFromEvent} />
+      <label class={[fr.cx('fr-toggle__label')]} for={props.id} data-fr-checked-label="Activé" data-fr-unchecked-label="Désactivé">
         <span class=" fr-ml-4w">{props.legendLabel}</span>
       </label>
       {isNotNullNorUndefined(props.legendHint) ? (

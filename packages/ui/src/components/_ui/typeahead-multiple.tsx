@@ -1,6 +1,6 @@
 import { computed, Ref, ref, watch, defineComponent } from 'vue'
 import styles from './typeahead.module.css'
-import { isEventWithTarget, random, useState } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget, useState } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { DsfrTag } from './tag'
 import type { JSX } from 'vue/jsx-runtime'
@@ -24,8 +24,7 @@ type Props<T extends TypeAheadRecord, K extends keyof T> = {
 }
 
 export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K extends keyof T>(props: Props<T, K>) => {
-  const id = props.props.id ?? `typeahead_${(random() * 1000).toFixed()}`
-  const wrapperId = computed(() => `${id}_wrapper`)
+  const wrapperId = computed(() => `${props.props.id}_wrapper`)
   const getItems = (items: (Pick<T, K> & Partial<Omit<T, K>>)[]): T[] => items.map(o => props.props.items.find(i => i[props.props.itemKey] === o[props.props.itemKey])).filter(isNotNullNorUndefined)
   const selectedItems = ref<T[]>(getItems(props.overrideItems ?? [])) as Ref<T[]>
 
@@ -118,7 +117,7 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
     input.value = ''
 
     currentSelectionIndex.value = 0
-    document.getElementById(id)?.focus()
+    document.getElementById(props.props.id)?.focus()
 
     selectedItems.value.push(item)
 
@@ -154,11 +153,11 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
         })}
 
         <input
-          id={id}
+          id={props.props.id}
           ref={myTypeaheadInput}
           value={input.value}
           type="text"
-          name={id}
+          name={props.props.id}
           style={{ outline: 'none' }}
           placeholder={props.props.placeholder}
           autocomplete="off"
@@ -166,8 +165,8 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
           onFocus={onFocus}
           onBlur={onBlur}
           role="combobox"
-          aria-controls={`${id}-control`}
-          aria-activedescendant={isListVisible.value ? `${id}-control-${currentSelectionIndex.value}` : `${id}-control`}
+          aria-controls={`${props.props.id}-control`}
+          aria-activedescendant={isListVisible.value ? `${props.props.id}-control-${currentSelectionIndex.value}` : `${props.props.id}-control`}
           aria-expanded={isListVisible.value}
           aria-autocomplete="list"
           onKeydown={payload => {
@@ -199,7 +198,7 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
           }}
         />
       </div>
-      <ul class={`${styles['typeahead-list']} ${isListVisible.value ? styles['typeahead-list--visible'] : ''}`} tabindex="-1" id={`${id}-control`} role="listbox">
+      <ul class={`${styles['typeahead-list']} ${isListVisible.value ? styles['typeahead-list--visible'] : ''}`} tabindex="-1" id={`${props.props.id}-control`} role="listbox">
         {notSelectedItems.value.map((item, index) => {
           return (
             <li
@@ -209,7 +208,7 @@ export const TypeAheadMultiple = defineComponent(<T extends TypeAheadRecord, K e
               onClick={() => selectItem(item)}
               onMouseenter={() => (currentSelectionIndex.value = index)}
               aria-selected={isListVisible.value && currentSelectionIndex.value === index}
-              id={`${id}-control-${index}`}
+              id={`${props.props.id}-control-${index}`}
             >
               {props.props.displayItemInList ? props.props.displayItemInList(item) : <span>{props.props.itemChipLabel(item)}</span>}
             </li>

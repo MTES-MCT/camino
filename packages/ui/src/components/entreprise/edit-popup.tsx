@@ -33,9 +33,9 @@ export const EntrepriseEditPopup = defineComponent<Props>(props => {
   }
   const content = () => (
     <form>
-      <DsfrInput required={false} legend={{ main: 'Téléphone' }} type={{ type: 'text' }} valueChanged={telephoneChange} initialValue={telephone.value} />
-      <DsfrInput required={false} legend={{ main: 'Adresse électronique' }} type={{ type: 'text' }} valueChanged={emailChange} initialValue={email.value} />
-      <DsfrInput required={false} legend={{ main: 'Site internet' }} type={{ type: 'text' }} valueChanged={urlChange} initialValue={url.value} />
+      <DsfrInput id="entreprise_telephone" required={false} legend={{ main: 'Téléphone' }} type={{ type: 'text' }} valueChanged={telephoneChange} initialValue={telephone.value} />
+      <DsfrInput id="entreprise_email" required={false} legend={{ main: 'Adresse électronique' }} type={{ type: 'text' }} valueChanged={emailChange} initialValue={email.value} />
+      <DsfrInput id="entreprise_site" required={false} legend={{ main: 'Site internet' }} type={{ type: 'text' }} valueChanged={urlChange} initialValue={url.value} />
 
       {isSuper(props.user) ? <DsfrInputCheckbox id="archive" class="fr-mt-2w" legend={{ main: 'Archivée' }} initialValue={archive.value} valueChanged={archiveChange} /> : null}
     </form>

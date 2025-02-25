@@ -117,7 +117,14 @@ const DownloadPopup = defineComponent(<T extends DownloadRestRoutes>(props: Down
   }
   const content = () => (
     <form>
-      <DsfrInputRadio legend={{ main: 'Choisissez le format du fichier que vous souhaitez' }} required={true} orientation="horizontal" valueChanged={fileTypeSelected} elements={items} />
+      <DsfrInputRadio
+        id="file_format"
+        legend={{ main: 'Choisissez le format du fichier que vous souhaitez' }}
+        required={true}
+        orientation="horizontal"
+        valueChanged={fileTypeSelected}
+        elements={items}
+      />
       <Alert small={true} type="info" title={'Une fois le téléchargement effectué, cette fenêtre se fermera automatiquement'} />
     </form>
   )

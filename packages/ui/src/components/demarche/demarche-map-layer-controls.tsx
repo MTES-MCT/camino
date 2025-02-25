@@ -102,6 +102,7 @@ export const LayersControl = defineComponent<LayersControlProps>(props => {
     <div class="maplibregl-ctrl-top-right" id={props.id} style={props.style} onMouseleave={props.onMouseleave}>
       <div class="maplibregl-ctrl maplibregl-ctrl-group fr-p-2w" style={{ zIndex: 3 }}>
         <DsfrInputRadio
+          id="base_layers"
           style={{ marginBottom: 0 }}
           elements={getEntriesHardcore(baseMapNames).map(([name, layer]) => {
             return { itemId: layer, legend: { main: name } }
@@ -113,7 +114,15 @@ export const LayersControl = defineComponent<LayersControlProps>(props => {
           initialValue={defaultBaseLayer}
         />
         <DsfrSeparator size="sm" />
-        <DsfrInputCheckboxes style={{ marginBottom: 0 }} elements={elements.value} legend={{ main: '' }} valueChanged={checkboxValueChanged} size="sm" initialCheckedValue={selectedLayers.value} />
+        <DsfrInputCheckboxes
+          id="layers"
+          style={{ marginBottom: 0 }}
+          elements={elements.value}
+          legend={{ main: '' }}
+          valueChanged={checkboxValueChanged}
+          size="sm"
+          initialCheckedValue={selectedLayers.value}
+        />
       </div>
     </div>
   )

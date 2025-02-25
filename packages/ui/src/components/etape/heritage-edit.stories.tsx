@@ -21,7 +21,7 @@ export const HeritageDisabled: StoryFn = () => (
     hasHeritageValue={true}
     prop={{ value: null, heritee: false, etapeHeritee: { date: toCaminoDate('2024-01-01'), etapeTypeId: 'mfr', value: toCaminoDate('2022-01-01') } }}
     label="Date de début"
-    write={() => <DsfrInput required={true} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
+    write={() => <DsfrInput id="test" required={true} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
     read={heritagePropEtape => <div class="border p-s mb-s bold">{heritagePropEtape?.value !== undefined ? dateFormat(heritagePropEtape.value) : 'Pas de date'}</div>}
   />
 )
@@ -33,7 +33,7 @@ export const HeritageEnabled: StoryFn = () => (
     hasHeritageValue={true}
     prop={{ value: toCaminoDate('2022-01-01'), heritee: true, etapeHeritee: { date: toCaminoDate('2024-01-01'), etapeTypeId: 'mfr', value: toCaminoDate('2022-01-01') } }}
     label="Date de début"
-    write={() => <DsfrInput required={true} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
+    write={() => <DsfrInput id="test" required={true} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
     read={heritagePropEtape => <div class="border p-s mb-s bold">{heritagePropEtape?.value !== undefined ? dateFormat(heritagePropEtape.value) : 'Pas de date'}</div>}
   />
 )
@@ -45,7 +45,7 @@ export const HeritageEnabledWithoutValue: StoryFn = () => (
     hasHeritageValue={false}
     prop={{ value: toCaminoDate('2024-01-01'), heritee: true, etapeHeritee: { date: toCaminoDate('2024-01-01'), etapeTypeId: 'mfr', value: null } }}
     label="Date de début"
-    write={() => <DsfrInput required={true} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
+    write={() => <DsfrInput id="test" required={true} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
     read={heritagePropEtape => <div class="border p-s mb-s bold">{heritagePropEtape?.value !== undefined ? dateFormat(heritagePropEtape.value) : 'Pas de date'}</div>}
   />
 )
@@ -57,7 +57,7 @@ export const NoHeritage: StoryFn = () => (
     hasHeritageValue={false}
     prop={{ value: null, heritee: false, etapeHeritee: null }}
     label="Date de début"
-    write={() => <DsfrInput required={true} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
+    write={() => <DsfrInput id="test" required={true} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
     read={() => <div class="border p-s mb-s bold">Pas de date</div>}
   />
 )
@@ -69,7 +69,7 @@ export const Optional: StoryFn = () => (
     hasHeritageValue={false}
     prop={{ value: null, heritee: false, etapeHeritee: null }}
     label="Date de début"
-    write={() => <DsfrInput required={false} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
+    write={() => <DsfrInput id="test" required={false} legend={{ main: '' }} type={{ type: 'date' }} valueChanged={dateChangedAction} class="mb-s" />}
     read={() => <div class="border p-s mb-s bold">Pas de date</div>}
   />
 )

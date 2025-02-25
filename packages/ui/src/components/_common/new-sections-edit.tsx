@@ -126,6 +126,7 @@ const InnerComponent: FunctionalComponent<SectionElementEditProps> = props => {
       return (
         <div>
           <DsfrInput
+            id={element.id}
             type={{ type: 'number', min: 0 }}
             required={required}
             initialValue={element.value}
@@ -138,6 +139,7 @@ const InnerComponent: FunctionalComponent<SectionElementEditProps> = props => {
       return (
         <div>
           <DsfrInput
+            id={element.id}
             type={{ type: 'date' }}
             required={required}
             initialValue={element.value}
@@ -152,6 +154,7 @@ const InnerComponent: FunctionalComponent<SectionElementEditProps> = props => {
       return (
         <div>
           <DsfrTextarea
+            id={element.id}
             required={required}
             initialValue={element.value ?? undefined}
             valueChanged={(e: string) => props.onValueChange({ ...element, value: e })}
@@ -165,6 +168,7 @@ const InnerComponent: FunctionalComponent<SectionElementEditProps> = props => {
       return (
         <div>
           <DsfrInput
+            id={element.id}
             required={required}
             type={{ type: 'text' }}
             initialValue={element.value}
@@ -207,6 +211,7 @@ const InnerComponent: FunctionalComponent<SectionElementEditProps> = props => {
       return (
         <div>
           <DsfrInputCheckboxes
+            id={element.id}
             legend={{ main: element.nom ?? '', description: element.description }}
             elements={element.options.map(option => {
               return { itemId: option.id, legend: { main: capitalize(option.nom) } }
@@ -222,6 +227,7 @@ const InnerComponent: FunctionalComponent<SectionElementEditProps> = props => {
         return (
           <div>
             <DsfrSelect
+              id={element.id}
               required={required}
               legend={{ main: element.nom ?? '', description: element.description }}
               items={options}

@@ -1,21 +1,18 @@
-import { random } from '@/utils/vue-tsx-utils'
 import { DsfrInputCheckbox, Props as InputCheckboxProps } from './dsfr-input-checkbox'
 import { Ref, defineComponent, ref, watch } from 'vue'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 
 type Props<T extends string> = {
-  id?: string
+  id: string
   legend: { main: string; description?: string }
   disabled?: boolean
-  valueChanged: (values: T[]) => void
+  valueChanged: (values: NoInfer<T>[]) => void
   size?: 'sm' | 'md'
   elements: (Omit<InputCheckboxProps, 'disabled' | 'id' | 'valueChanged' | 'initialValue'> & { itemId: T })[]
-  initialCheckedValue: NoInfer<T[]>
+  initialCheckedValue: NoInfer<T>[]
 }
 
 export const DsfrInputCheckboxes = defineComponent(<T extends string>(props: Props<T>) => {
-  const id = props.id ?? `checkboxes_${(random() * 1000).toFixed()}`
-
   const values = ref<T[]>(props.elements.filter(element => props.initialCheckedValue.includes(element.itemId)).map(({ itemId }) => itemId)) as Ref<T[]>
   watch(
     () => props.elements,
@@ -47,9 +44,9 @@ export const DsfrInputCheckboxes = defineComponent(<T extends string>(props: Pro
   }
 
   return () => (
-    <fieldset class="fr-fieldset" id={id} aria-labelledby={`${id}-legend`} disabled={props.disabled ?? false} style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+    <fieldset class="fr-fieldset" id={props.id} aria-labelledby={`${props.id}-legend`} disabled={props.disabled ?? false} style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
       {isNotNullNorUndefinedNorEmpty(props.legend.main) ? (
-        <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id={`${id}-legend`}>
+        <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id={`${props.id}-legend`}>
           {props.legend.main}
           {isNotNullNorUndefinedNorEmpty(props.legend.description) ? <span class="fr-hint-text">{props.legend.description}</span> : null}
         </legend>
@@ -57,7 +54,13 @@ export const DsfrInputCheckboxes = defineComponent(<T extends string>(props: Pro
 
       {props.elements.map((element, index) => (
         <div key={index} class={['fr-fieldset__element', props.size === 'sm' ? 'fr-mb-1v' : null]}>
-          <DsfrInputCheckbox {...element} initialValue={props.initialCheckedValue.includes(element.itemId)} size={props.size} id={`${id}_${index}`} valueChanged={updateCheckbox(element.itemId)} />
+          <DsfrInputCheckbox
+            {...element}
+            initialValue={props.initialCheckedValue.includes(element.itemId)}
+            size={props.size}
+            id={`${props.id}_${index}`}
+            valueChanged={updateCheckbox(element.itemId)}
+          />
         </div>
       ))}
     </fieldset>

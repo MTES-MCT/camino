@@ -207,7 +207,7 @@ export const PureTitreCreation = defineComponent<Props>(props => {
         ) : null}
 
         {isNotNullNorUndefined(titreDemande.value.titreTypeId) ? (
-          <DsfrInput required={true} initialValue={titreDemande.value.nom} legend={{ main: 'Nom du titre' }} type={{ type: 'text' }} valueChanged={onTitreNomChanged} />
+          <DsfrInput id="titre_nom" required={true} initialValue={titreDemande.value.nom} legend={{ main: 'Nom du titre' }} type={{ type: 'text' }} valueChanged={onTitreNomChanged} />
         ) : null}
 
         {isNotNullNorUndefined(titreDemande.value.titreTypeId) && !entrepriseOuBureauDEtudeCheck.value ? (

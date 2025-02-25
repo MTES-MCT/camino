@@ -13,6 +13,7 @@ const valueChangedAction = action('valueChanged')
 
 export const Checked: StoryFn = () => (
   <DsfrInputCheckboxes
+    id="test"
     legend={{ main: 'Label', description: 'Description' }}
     valueChanged={valueChangedAction}
     elements={
@@ -27,6 +28,7 @@ export const Checked: StoryFn = () => (
 )
 export const NotChecked: StoryFn = () => (
   <DsfrInputCheckboxes
+    id="test"
     legend={{ main: 'Label' }}
     valueChanged={valueChangedAction}
     elements={
@@ -41,6 +43,7 @@ export const NotChecked: StoryFn = () => (
 )
 export const Small: StoryFn = () => (
   <DsfrInputCheckboxes
+    id="test"
     legend={{ main: 'Label' }}
     valueChanged={valueChangedAction}
     size="sm"
@@ -56,6 +59,7 @@ export const Small: StoryFn = () => (
 )
 export const Disabled: StoryFn = () => (
   <DsfrInputCheckboxes
+    id="test"
     legend={{ main: 'C’est désactivé' }}
     disabled={true}
     valueChanged={valueChangedAction}

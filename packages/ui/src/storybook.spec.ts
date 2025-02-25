@@ -3,7 +3,6 @@ import type { Meta, StoryFn } from '@storybook/vue3'
 import { render } from '@testing-library/vue'
 import { composeStories } from '@storybook/vue3'
 import { h } from 'vue'
-import { setSeed } from './utils/vue-tsx-utils'
 import { sleep } from 'camino-common/src/typescript-tools'
 
 type StoryFile = {
@@ -47,7 +46,6 @@ describe('Storybook Tests', async () => {
         .map(([name, story]) => ({ name, story }))
         .filter(env => (name ?? '').includes('NoStoryshots') || !(env.name ?? '').includes('NoSnapshot'))
     )('$name', async value => {
-      setSeed(12)
       let html: string | undefined = undefined
       try {
         // @ts-ignore

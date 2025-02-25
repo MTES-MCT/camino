@@ -186,6 +186,7 @@ const PermissionEdit = defineComponent<PermissionEditProps>(props => {
               title="Administration"
               item={
                 <DsfrSelect
+                  id="administration_utilisateur"
                   required={true}
                   items={map(sortedAdministrations, admin => ({ id: admin.id, label: admin.abreviation }))}
                   initialValue={updatingUtilisateur.value.administrationId}

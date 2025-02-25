@@ -49,10 +49,11 @@ export const PerimetreImportPopup = defineComponent<Props>(props => {
     <form>
       <fieldset class="fr-fieldset fr-mt-2w" id="geographic">
         <div class="fr-fieldset__element">
-          <GeoSystemeTypeahead geoSystemeSelected={onSelectGeographicSystem} disabled={false} />
+          <GeoSystemeTypeahead id="perimetre_geosysteme" geoSystemeSelected={onSelectGeographicSystem} disabled={false} />
         </div>
       </fieldset>
       <DsfrInputRadio
+        id="perimetre_type_de_fichier"
         required={true}
         legend={{ main: 'Type de fichier' }}
         orientation="horizontal"

@@ -39,11 +39,12 @@ export const ForagesImportPopup = defineComponent<Props>(props => {
             <label class="fr-label" for="type">
               Système géographique
             </label>
-            <GeoSystemeTypeahead geoSystemeId={props.geoSystemeId} disabled={true} />
+            <GeoSystemeTypeahead id={`forages_${props.geoSystemeId}`} geoSystemeId={props.geoSystemeId} disabled={true} />
           </div>
         </div>
       </fieldset>
       <DsfrInputRadio
+        id="forages_type_de_fichier"
         required={true}
         legend={{ main: 'Type de fichier' }}
         orientation="horizontal"

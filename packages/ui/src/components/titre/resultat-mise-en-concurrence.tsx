@@ -168,7 +168,15 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
 
       <h1 class="fr-mt-4w">{capitalize(EtapesTypes[ETAPES_TYPES.resultatMiseEnConcurrence].nom)}</h1>
 
-      <DsfrInput required={true} class="fr-pb-2w" legend={{ main: 'Date' }} type={{ type: 'date' }} initialValue={date.value} valueChanged={(newDate: CaminoDate | null) => setDate(newDate)} />
+      <DsfrInput
+        id="mise_en_concurrence_date"
+        required={true}
+        class="fr-pb-2w"
+        legend={{ main: 'Date' }}
+        type={{ type: 'date' }}
+        initialValue={date.value}
+        valueChanged={(newDate: CaminoDate | null) => setDate(newDate)}
+      />
       <LoadingElement
         data={possibleEtapes.value}
         renderItem={() => (
@@ -177,6 +185,7 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
               Pour la demande {props.pivot.titreNom} du titulaire {entreprisesIndex[props.pivot.titulaireId]} quelle est la décision ?
             </span>
             <DsfrInputRadio
+              id="mise_en_concurrence_decision"
               legend={{ main: 'Décision' }}
               initialValue={decision.value}
               required={true}
@@ -187,6 +196,7 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
               {decision.value === 'acc' ? (
                 <div>
                   <DsfrInputRadio
+                    id="mise_en_concurrence_perimetre"
                     required={true}
                     legend={{ main: 'Quel périmètre acceptez-vous ?' }}
                     elements={[
@@ -209,6 +219,7 @@ export const ResultatMiseEnConcurrence = defineComponent<Props>(props => {
                         class="fr-mt-2w"
                         calculateNeighbours={false}
                         perimetre={perimetre.value}
+                        id="perimetre_final"
                         titreSlug={props.pivot.titreSlug}
                         titreTypeId={props.pivot.titreTypeId}
                         initTab={props.initTab ?? 'carte'}

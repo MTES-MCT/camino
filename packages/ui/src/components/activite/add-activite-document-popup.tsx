@@ -38,7 +38,7 @@ export const AddActiviteDocumentPopup = defineComponent<Props>(props => {
           />
         </div>
         <div class="fr-fieldset__element">
-          <DsfrInput required={false} legend={{ main: 'Description' }} initialValue={documentDescription.value} type={{ type: 'text' }} valueChanged={descriptionChange} />
+          <DsfrInput id="activite_description" required={false} legend={{ main: 'Description' }} initialValue={documentDescription.value} type={{ type: 'text' }} valueChanged={descriptionChange} />
         </div>
       </fieldset>
     </form>

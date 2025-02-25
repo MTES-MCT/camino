@@ -11,5 +11,7 @@ export default meta
 
 const substanceLegaleSelected = action('substanceLegaleSelected')
 
-export const Default: StoryFn = () => <SubstanceLegaleTypeahead substanceLegaleIds={['auru', 'aloh']} substanceLegaleSelected={substanceLegaleSelected} alwaysOpen={true} />
-export const WithSubstanceTypeAlreadySelected: StoryFn = () => <SubstanceLegaleTypeahead substanceLegaleIds={['auru', 'aloh']} initialValue="auru" substanceLegaleSelected={substanceLegaleSelected} />
+export const Default: StoryFn = () => <SubstanceLegaleTypeahead id="test" substanceLegaleIds={['auru', 'aloh']} substanceLegaleSelected={substanceLegaleSelected} alwaysOpen={true} />
+export const WithSubstanceTypeAlreadySelected: StoryFn = () => (
+  <SubstanceLegaleTypeahead id="test" substanceLegaleIds={['auru', 'aloh']} initialValue="auru" substanceLegaleSelected={substanceLegaleSelected} />
+)

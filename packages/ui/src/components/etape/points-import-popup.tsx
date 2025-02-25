@@ -35,7 +35,7 @@ export const PointsImportPopup = defineComponent<Props>(props => {
             <label class="fr-label" for="type">
               Système géographique
             </label>
-            <GeoSystemeTypeahead geoSystemeId={props.geoSystemeId} disabled={true} />
+            <GeoSystemeTypeahead id={`points_geosysteme_${props.geoSystemeId}`} geoSystemeId={props.geoSystemeId} disabled={true} />
           </div>
         </div>
       </fieldset>

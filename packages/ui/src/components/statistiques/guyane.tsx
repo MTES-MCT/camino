@@ -421,7 +421,7 @@ export const PureGuyane = defineComponent<Props>(props => {
 
       <LoadingElement
         data={data.value}
-        renderItem={() => (isNotNullNorUndefined(tabs.value) ? <Tabs initTab={tabActive.value} tabClicked={tabToggle} tabs={tabs.value} tabsTitle="Années" /> : null)}
+        renderItem={() => (isNotNullNorUndefined(tabs.value) ? <Tabs id="statistiques_guyane_annees" initTab={tabActive.value} tabClicked={tabToggle} tabs={tabs.value} tabsTitle="Années" /> : null)}
       />
 
       <div id="evolution" class="my-xxl">

@@ -85,10 +85,11 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         </div>
 
         <div class="fr-fieldset__element">
-          <DsfrInput legend={{ main: 'Date' }} required={true} type={{ type: 'date' }} initialValue={avisDate.value} valueChanged={setAvisDate} />
+          <DsfrInput id="nouvel_avis_date" legend={{ main: 'Date' }} required={true} type={{ type: 'date' }} initialValue={avisDate.value} valueChanged={setAvisDate} />
         </div>
         <div class="fr-fieldset__element">
           <DsfrSelect
+            id="nouvel_avis_statut"
             legend={{ main: 'Statut' }}
             disabled={isNullOrUndefined(etapeAvisTypeId.value)}
             required={true}
@@ -99,10 +100,23 @@ export const AddEtapeAvisPopup = defineComponent<Props>(props => {
         </div>
 
         <div class="fr-fieldset__element">
-          <DsfrInputRadio legend={{ main: 'Visibilité' }} required={true} elements={visibilityChoices.value} initialValue={avisVisibilityId.value} valueChanged={visibilityChange} />
+          <DsfrInputRadio
+            id="avis_visibility"
+            legend={{ main: 'Visibilité' }}
+            required={true}
+            elements={visibilityChoices.value}
+            initialValue={avisVisibilityId.value}
+            valueChanged={visibilityChange}
+          />
         </div>
         <div class="fr-fieldset__element" style={{ order: etapeAvisTypeId.value === AVIS_TYPES.autreAvis ? -1 : undefined }}>
-          <DsfrTextarea required={etapeAvisTypeId.value === AVIS_TYPES.autreAvis} legend={{ main: 'Description' }} initialValue={avisDescription.value} valueChanged={descriptionChange} />
+          <DsfrTextarea
+            id="avis_description"
+            required={etapeAvisTypeId.value === AVIS_TYPES.autreAvis}
+            legend={{ main: 'Description' }}
+            initialValue={avisDescription.value}
+            valueChanged={descriptionChange}
+          />
         </div>
       </fieldset>
     </form>

@@ -169,6 +169,7 @@ export const PureEntrepriseDashboard = defineComponent<Props>(props => {
               ) : null}
               {autresTitres(titres).length > 0 ? (
                 <DsfrAccordion
+                  id="accordion_autres_titres"
                   expandedByDefault={titresValidesEtEnCours(titres).length === 0}
                   title="Autres titres"
                   content={<TableSimple caption={{ value: 'Autres titres', visible: false }} columns={columns} rows={entrepriseTitres(autresTitres(titres))} />}

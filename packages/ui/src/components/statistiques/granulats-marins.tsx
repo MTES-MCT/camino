@@ -396,7 +396,14 @@ export const PureGranulatsMarins = defineComponent<Props>(props => {
               const anneesLabel = map(annees, annee => ({ id: annee.id, label: annee.nom }))
               return (
                 <>
-                  <DsfrSelect required={true} legend={{ main: 'Sélectionner une année' }} items={anneesLabel} initialValue={anneeActive.value} valueChanged={anneeSelect} />
+                  <DsfrSelect
+                    id="statistiques_granulats_marins_annees"
+                    required={true}
+                    legend={{ main: 'Sélectionner une année' }}
+                    items={anneesLabel}
+                    initialValue={anneeActive.value}
+                    valueChanged={anneeSelect}
+                  />
                   <GranulatsMarinsActivite statistiqueGranulatsMarins={item.statistiques[anneeActive.value]} enConstruction={annees.find(t => t.id === anneeActive.value)?.enConstruction} />
                 </>
               )

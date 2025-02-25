@@ -53,9 +53,17 @@ export const DemarcheEditPopup = defineComponent<Props>(props => {
   const content = () => (
     <form>
       {isNonEmptyArray(typesLabel.value) ? (
-        <DsfrSelect legend={{ main: 'Type de la démarche' }} required={true} disabled={!!props.demarche.id} items={typesLabel.value} initialValue={typeId.value} valueChanged={selectDemarcheTypeId} />
+        <DsfrSelect
+          id="demarche_type"
+          legend={{ main: 'Type de la démarche' }}
+          required={true}
+          disabled={!!props.demarche.id}
+          items={typesLabel.value}
+          initialValue={typeId.value}
+          valueChanged={selectDemarcheTypeId}
+        />
       ) : null}
-      <DsfrInput required={false} legend={{ main: 'Description' }} type={{ type: 'text' }} valueChanged={descriptionChange} initialValue={description.value} />
+      <DsfrInput id="demarche_description" required={false} legend={{ main: 'Description' }} type={{ type: 'text' }} valueChanged={descriptionChange} initialValue={description.value} />
 
       {error.value !== null ? <CaminoApiAlert class="fr-mt-2w" caminoApiError={error.value} /> : null}
     </form>

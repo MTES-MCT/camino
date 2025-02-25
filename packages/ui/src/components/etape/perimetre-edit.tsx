@@ -62,6 +62,7 @@ const DisplayPerimetre: FunctionalComponent<DisplayPerimetreProps> = props => {
           }}
           titreSlug={props.titreSlug}
           titreTypeId={props.titreTypeId}
+          id="perimetre_edit"
           initTab={props.initTab ?? 'carte'}
         />
       </div>
@@ -144,7 +145,7 @@ export const PerimetreEdit = defineComponent<Props>(props => {
         prop={props.etape.perimetre}
         updateHeritage={updateHeritage}
         hasHeritageValue={isNotNullNorUndefined(props.etape.perimetre.etapeHeritee?.value?.geojson4326Perimetre)}
-        label={null}
+        label="Périmètre"
         write={() => (
           <div>
             <DsfrButton onClick={openPerimetrePopup} title="Importer un périmètre" />

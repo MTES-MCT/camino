@@ -1,9 +1,9 @@
-import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefinedNorEmpty } from 'camino-common/src/typescript-tools'
 import { defineComponent } from 'vue'
 
 type Props = {
-  id?: string
+  id: string
   legend: { main: string; description?: string }
   valueChanged: (value: string) => void
   initialValue?: string | null
@@ -11,8 +11,6 @@ type Props = {
 }
 
 export const DsfrTextarea = defineComponent<Props>(props => {
-  const id = props.id ?? `textarea_${(random() * 1000).toFixed()}`
-
   const updateFromEvent = (e: Event) => {
     if (isEventWithTarget(e)) {
       props.valueChanged(e.target.value)
@@ -21,11 +19,11 @@ export const DsfrTextarea = defineComponent<Props>(props => {
 
   return () => (
     <div class="fr-input-group">
-      <label class="fr-label" for={id}>
+      <label class="fr-label" for={props.id}>
         {props.legend.main} {!props.required ? (isNotNullNorUndefinedNorEmpty(props.legend.main) ? ' (optionnel)' : 'Champ optionnel') : null}
         {isNotNullNorUndefinedNorEmpty(props.legend.description) ? <span class="fr-hint-text" v-html={props.legend.description}></span> : null}
       </label>
-      <textarea onInput={updateFromEvent} value={props.initialValue ?? undefined} class="fr-input" name={id} id={id} required={props.required} />
+      <textarea onInput={updateFromEvent} value={props.initialValue ?? undefined} class="fr-input" name={props.id} id={props.id} required={props.required} />
     </div>
   )
 })

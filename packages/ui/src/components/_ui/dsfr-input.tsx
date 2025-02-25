@@ -1,5 +1,5 @@
 import { createDebounce } from '@/utils/debounce'
-import { isEventWithTarget, random } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { CaminoDate, caminoDateValidator } from 'camino-common/src/date'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { defineComponent, ref } from 'vue'
@@ -18,7 +18,7 @@ type NumberInputType = {
   max?: number
 }
 type BaseProps = {
-  id?: string
+  id: string
   legend: { main: string; visible?: boolean; description?: string; placeholder?: string; info?: { type: 'info' | 'error'; value: string } }
   disabled?: boolean
   required: boolean
@@ -49,8 +49,6 @@ const isNumberProps = (props: Props): props is BaseProps & NumberProps => props.
 const isDateProps = (props: Props): props is BaseProps & DateProps => props.type.type === 'date'
 
 export const DsfrInput = defineComponent<Props>(props => {
-  const id = props.id ?? `input_${(random() * 1000).toFixed()}`
-
   const debounce = createDebounce()
 
   const value = ref(props.initialValue)
@@ -82,7 +80,7 @@ export const DsfrInput = defineComponent<Props>(props => {
       style={{ marginBottom: 0 }}
     >
       {(props.legend.visible ?? true) ? (
-        <label class="fr-label" for={id}>
+        <label class="fr-label" for={props.id}>
           {props.legend.main}
           {!props.required ? ' (optionnel)' : null}
           {props.type.type === 'date' ? <span class="fr-hint-text">au format jj/mm/aaaa</span> : null}
@@ -94,15 +92,15 @@ export const DsfrInput = defineComponent<Props>(props => {
         placeholder={props.legend.placeholder}
         value={value.value}
         class={['fr-input', isNotNullNorUndefined(props.legend.info) && props.legend.info.type === 'error' ? 'fr-input--error' : null]}
-        name={id}
-        id={id}
+        name={props.id}
+        id={props.id}
         disabled={props.disabled ?? false}
         required={props.required}
         {...(props.type ?? { type: 'text' })}
-        aria-describedby={isNotNullNorUndefined(props.legend.info) && props.legend.info.value !== '' ? `${id}-info` : undefined}
+        aria-describedby={isNotNullNorUndefined(props.legend.info) && props.legend.info.value !== '' ? `${props.id}-info` : undefined}
       />
       {isNotNullNorUndefined(props.legend.info) && props.legend.info.value !== '' ? (
-        <p id={`${id}-info`} class={`fr-${props.legend.info.type}-text`}>
+        <p id={`${props.id}-info`} class={`fr-${props.legend.info.type}-text`}>
           {props.legend.info.value}
         </p>
       ) : null}

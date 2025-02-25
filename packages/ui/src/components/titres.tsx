@@ -217,6 +217,7 @@ export const Titres = defineComponent({
             />{' '}
             {tabId.value ? (
               <Tabs
+                id="titres_vues"
                 initTab={tabId.value}
                 tabs={vues}
                 tabsTitle={'Affichage des titres en vue carte ou tableau'}

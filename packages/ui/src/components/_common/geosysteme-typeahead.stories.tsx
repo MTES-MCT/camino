@@ -11,5 +11,5 @@ export default meta
 
 const geoSystemeSelected = action('geoSystemeSelected')
 
-export const Default: StoryFn = () => <GeoSystemeTypeahead geoSystemeSelected={geoSystemeSelected} disabled={false} alwaysOpen={true} />
-export const WithGeoSystemeAlreadySelected: StoryFn = () => <GeoSystemeTypeahead geoSystemeId="2154" disabled={true} />
+export const Default: StoryFn = () => <GeoSystemeTypeahead id="test" geoSystemeSelected={geoSystemeSelected} disabled={false} alwaysOpen={true} />
+export const WithGeoSystemeAlreadySelected: StoryFn = () => <GeoSystemeTypeahead id="test" geoSystemeId="2154" disabled={true} />

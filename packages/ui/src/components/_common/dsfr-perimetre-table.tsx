@@ -147,7 +147,7 @@ const TableForages: FunctionalComponent<NotNullableKeys<Pick<Props, 'geo_systeme
 export const TabCaminoTable = defineComponent<Props>(props => {
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <GeoSystemeTypeahead disabled={true} geoSystemeId={props.geo_systeme_id} />
+      <GeoSystemeTypeahead id={props.geo_systeme_id} disabled={true} geoSystemeId={props.geo_systeme_id} />
 
       <TablePoints caption="Points" {...props} />
 

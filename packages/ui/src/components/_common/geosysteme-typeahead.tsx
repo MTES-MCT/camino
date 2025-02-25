@@ -4,12 +4,11 @@ import { GeoSysteme, GeoSystemes, GeoSystemeId, sortedGeoSystemes } from 'camino
 import { capitalize } from 'camino-common/src/strings'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
-import { random } from '@/utils/vue-tsx-utils'
 // https://gitlab-forge.din.developpement-durable.gouv.fr/pub/pnm-public/camino/issues/917
 const mainGeoSystemeIds = ['4326', '2154', '5490', '2972', '2975', '4471', '4467'] as const satisfies readonly GeoSystemeId[]
 
 // TODO 2024-02-26, attention, vue rajoute tous les champs qui sont dans GeoSystemeTypeahead.props et les met à undefined, donc le typage n'est pas tout à fait correct par rapport à la réalité :(
-type Props = { alwaysOpen?: boolean } & (
+type Props = { id: string; alwaysOpen?: boolean } & (
   | {
       geoSystemeSelected: (geoSysteme: GeoSystemeId | null) => void
       disabled: false
@@ -41,7 +40,6 @@ const sortedByUs = [...sortedGeoSystemes].sort((a, b) => {
   return a.nom.localeCompare(b.nom)
 })
 export const GeoSystemeTypeahead = defineComponent<Props>(props => {
-  const id = `typeahead_geosysteme_${(random() * 1000).toFixed()}`
   const geoSystemSelected = ref<GeoSysteme<GeoSystemeId> | undefined>(GeoSystemes[4326])
   const geoSystemUpdate = async (geoSysteme: GeoSysteme<GeoSystemeId> | undefined) => {
     geoSystemSelected.value = geoSysteme
@@ -70,14 +68,14 @@ export const GeoSystemeTypeahead = defineComponent<Props>(props => {
 
   return () => (
     <div class="fr-select-group">
-      <label class="fr-label" for={id}>
+      <label class="fr-label" for={props.id}>
         Système géographique
       </label>
 
       <TypeAheadSingle
         overrideItem={defaultGeoSysteme}
         props={{
-          id,
+          id: props.id,
           items: geoSystemeFiltered.value,
           itemChipLabel: item => `${item.nom} - (${item.id})`,
           itemKey: 'id',
@@ -95,4 +93,4 @@ export const GeoSystemeTypeahead = defineComponent<Props>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-GeoSystemeTypeahead.props = ['geoSystemeSelected', 'geoSystemeId', 'disabled', 'alwaysOpen']
+GeoSystemeTypeahead.props = ['id', 'geoSystemeSelected', 'geoSystemeId', 'disabled', 'alwaysOpen']

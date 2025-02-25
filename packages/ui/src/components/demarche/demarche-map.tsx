@@ -2,7 +2,6 @@ import { HTMLAttributes, defineComponent, onMounted, ref, Ref, computed, watch, 
 import { FullscreenControl, Map, NavigationControl, StyleSpecification, LayerSpecification, LngLatBounds, SourceSpecification, Popup } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { FeatureCollectionForages, FeatureCollectionPoints, FeatureMultiPolygon, ForageType, featureForagePropertiesValidator } from 'camino-common/src/perimetre'
-import { random } from '@/utils/vue-tsx-utils'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { TitreSlug } from 'camino-common/src/validators/titres'
 import { TitreApiClient } from '../titre/titre-api-client'
@@ -35,6 +34,7 @@ import {
 import { CaminoRouter } from '@/typings/vue-router'
 
 type Props = {
+  id: string
   perimetre: { geojson4326_perimetre: FeatureMultiPolygon; geojson4326_points: FeatureCollectionPoints; geojson4326_forages: FeatureCollectionForages | null }
   maxMarkers: number
   style?: HTMLAttributes['style']
@@ -426,7 +426,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
       mapLibre.addControl(new NavigationControl({ showCompass: false }), 'top-left')
       mapLibre.addControl(new FullscreenControl(), 'top-left')
 
-      const layersControlId = `layers-control-${random()}`
+      const layersControlId = `layers-control-${props.id}`
       mapLibre.addControl(
         {
           onAdd: function () {
@@ -562,8 +562,6 @@ export const DemarcheMap = defineComponent<Props>(props => {
     layersControlVisible.value = false
   }
 
-  const id = `${random()}`
-
   const possibleOverlayLayers = computed<OverlayName[]>(() => {
     return overlayNames.filter(name => {
       if (isNullOrUndefined(props.neighbours) && name === 'Titres valides') {
@@ -579,7 +577,7 @@ export const DemarcheMap = defineComponent<Props>(props => {
   return () => (
     <div ref={mapRef} class={props.class} style={{ minHeight: '400px' }}>
       <LayersControl
-        id={id}
+        id={props.id}
         style={{ display: layersControlVisible.value ? 'block' : 'none', zIndex: 3 }}
         onMouseleave={layerControlOnMouseleave}
         setLayer={selectLayer}
@@ -591,4 +589,4 @@ export const DemarcheMap = defineComponent<Props>(props => {
   )
 })
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DemarcheMap.props = ['perimetre', 'class', 'style', 'maxMarkers', 'neighbours', 'router', 'titreTypeId']
+DemarcheMap.props = ['id', 'perimetre', 'class', 'style', 'maxMarkers', 'neighbours', 'router', 'titreTypeId']

@@ -9,6 +9,7 @@ export default meta
 
 export const Default: StoryFn = () => (
   <DsfrAccordion
+    id="test"
     expandedByDefault={false}
     title="Un accordéon"
     content={
@@ -20,6 +21,7 @@ export const Default: StoryFn = () => (
 )
 export const Expanded: StoryFn = () => (
   <DsfrAccordion
+    id="test"
     expandedByDefault
     title="Un accordéon"
     content={

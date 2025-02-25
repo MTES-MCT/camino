@@ -84,6 +84,7 @@ export const FiltresEtapes = defineComponent<Props>(props => {
           {value.typeId ? (
             <>
               <DsfrSelect
+                id={`filtres_etapes_par_statut_${value.typeId}`}
                 class="fr-mb-0"
                 required={false}
                 initialValue={value.statutId ?? null}
@@ -91,8 +92,22 @@ export const FiltresEtapes = defineComponent<Props>(props => {
                 items={map(getEtapesStatuts(value.typeId), ({ id, nom }) => ({ id, label: nom }))}
                 valueChanged={statutValueSelected(n)}
               />
-              <DsfrInput required={false} initialValue={value.dateDebut} legend={{ main: 'Après le' }} type={{ type: 'date' }} valueChanged={dateDebutChanged(n)} />
-              <DsfrInput required={false} initialValue={value.dateFin} legend={{ main: 'Avant le' }} type={{ type: 'date' }} valueChanged={dateFinChanged(n)} />
+              <DsfrInput
+                id={`filtres_etapes_apres_le_${value.typeId}`}
+                required={false}
+                initialValue={value.dateDebut}
+                legend={{ main: 'Après le' }}
+                type={{ type: 'date' }}
+                valueChanged={dateDebutChanged(n)}
+              />
+              <DsfrInput
+                id={`filtres_etapes_avant_le_${value.typeId}`}
+                required={false}
+                initialValue={value.dateFin}
+                legend={{ main: 'Avant le' }}
+                type={{ type: 'date' }}
+                valueChanged={dateFinChanged(n)}
+              />
             </>
           ) : null}
         </div>

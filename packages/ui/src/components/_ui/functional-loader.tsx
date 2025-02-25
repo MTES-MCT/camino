@@ -14,7 +14,7 @@ export const LoadingElement = <T,>(props: Props<T>): JSX.Element => {
       {props.data.status === 'LOADED' ? (
         props.renderItem(props.data.value)
       ) : (
-        <div class={`${props.data.status === 'LOADING' ? styles['top-level'] : ''} ${props.class}`} style={'display: flex; justify-content: center'}>
+        <div class={[props.data.status === 'LOADING' ? styles['top-level'] : '', props.class ?? '']} style={'display: flex; justify-content: center'}>
           {props.data.status === 'ERROR' ? <Alert small={true} title={props.data.message} type="error" /> : null}
           {props.data.status === 'NEW_ERROR' ? <CaminoApiAlert caminoApiError={props.data.error} /> : null}
           {props.data.status === 'LOADING' ? <div class={styles.spinner}></div> : null}

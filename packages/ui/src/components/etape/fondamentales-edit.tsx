@@ -153,6 +153,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             write={() => (
               <div style={{ display: 'flex' }}>
                 <DsfrInput
+                  id="fondamentale_duree_annees"
                   legend={{ main: 'Durée (années)', info: !dureeValid.value.valid ? { type: 'error', value: dureeValid.value.message } : undefined }}
                   required={!dureeOptionalCheck.value}
                   type={{ type: 'number' }}
@@ -160,6 +161,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
                   initialValue={ans.value}
                 />
                 <DsfrInput
+                  id="fondamentale_duree_mois"
                   legend={{ main: 'Durée (mois)' }}
                   required={!dureeOptionalCheck.value}
                   type={{ type: 'number' }}
@@ -172,6 +174,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
             read={heritagePropEtape => (
               <div style={{ display: 'flex' }}>
                 <DsfrInput
+                  id="fondamentale_duree_annees_heritee"
                   legend={{ main: 'Durée (années)' }}
                   required={!dureeOptionalCheck.value}
                   type={{ type: 'number' }}
@@ -180,6 +183,7 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
                   initialValue={dureeToAns(heritagePropEtape?.value)}
                 />
                 <DsfrInput
+                  id="fondamentale_duree_mois_heritee"
                   legend={{ main: 'Durée (mois)' }}
                   required={!dureeOptionalCheck.value}
                   type={{ type: 'number' }}
@@ -202,10 +206,18 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
               prop={editedEtape.value.dateDebut}
               label="Date de début"
               write={() => (
-                <DsfrInput required={datesRequiredCheck.value} type={{ type: 'date' }} legend={{ main: 'Date de début' }} initialValue={props.etape.dateDebut.value} valueChanged={dateDebutChanged} />
+                <DsfrInput
+                  id="fondamentale_date_de_debut"
+                  required={datesRequiredCheck.value}
+                  type={{ type: 'date' }}
+                  legend={{ main: 'Date de début' }}
+                  initialValue={props.etape.dateDebut.value}
+                  valueChanged={dateDebutChanged}
+                />
               )}
               read={heritagePropEtape => (
                 <DsfrInput
+                  id="fondamentale_date_de_debut_heritee"
                   required={datesRequiredCheck.value}
                   type={{ type: 'date' }}
                   legend={{ main: 'Date de début' }}
@@ -220,15 +232,23 @@ export const FondamentalesEdit = defineComponent<Props>(props => {
               updateHeritage={updateDateFinHeritage}
               hasHeritageValue={isNotNullNorUndefined(props.etape.dateFin.etapeHeritee?.value)}
               prop={editedEtape.value.dateFin}
-              label="Date d’échéance"
+              label="Date d'échéance"
               write={() => (
-                <DsfrInput required={datesRequiredCheck.value} type={{ type: 'date' }} legend={{ main: 'Date d’échéance' }} initialValue={props.etape.dateFin.value} valueChanged={dateFinChanged} />
-              )}
-              read={heritagePropEtape => (
                 <DsfrInput
+                  id="fondamentale_date_echeance"
                   required={datesRequiredCheck.value}
                   type={{ type: 'date' }}
                   legend={{ main: 'Date d’échéance' }}
+                  initialValue={props.etape.dateFin.value}
+                  valueChanged={dateFinChanged}
+                />
+              )}
+              read={heritagePropEtape => (
+                <DsfrInput
+                  id="fondamentale_date_echeance_heritee"
+                  required={datesRequiredCheck.value}
+                  type={{ type: 'date' }}
+                  legend={{ main: "Date d'échéance" }}
                   initialValue={heritagePropEtape?.value}
                   valueChanged={() => {}}
                   disabled={true}

@@ -26,6 +26,7 @@ type Props = {
   }
   titreSlug: TitreSlug
   titreTypeId: TitreTypeId
+  id: string
   initTab?: TabId
   class?: HTMLAttributes['class']
 } & ({ calculateNeighbours: true; router: Pick<CaminoRouter, 'push'>; apiClient: Pick<ApiClient, 'getTitresWithPerimetreForCarte'> } | { calculateNeighbours: false })
@@ -76,7 +77,7 @@ export const DsfrPerimetre = defineComponent<Props>((props: Props) => {
     },
   ] as const satisfies readonly Tab<TabId>[]
 
-  return () => <Tabs initTab={props.initTab ?? 'carte'} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={_newTabId => {}} />
+  return () => <Tabs id={props.id} initTab={props.initTab ?? 'carte'} tabs={vues} tabsTitle={'Affichage des titres en vue carte ou tableau'} tabClicked={_newTabId => {}} />
 })
 
 type TabCaminoMapProps = OmitDistributive<Props, 'perimetre'> & {
@@ -115,7 +116,7 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
 
   return () => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <DemarcheMap perimetre={props.perimetre} titreTypeId={props.titreTypeId} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} />
+      <DemarcheMap perimetre={props.perimetre} id={props.id} titreTypeId={props.titreTypeId} style={{ minHeight: '400px' }} class="fr-mb-1w" maxMarkers={maxRows} neighbours={neighbours} />
       <div style={{ display: 'flex' }}>
         {isNotNullNorUndefined(props.perimetre.surface) ? <div class="fr-text--md">Surface : {props.perimetre.surface} Km²</div> : null}
         <div style={{ marginLeft: 'auto' }}>
@@ -145,7 +146,7 @@ const TabCaminoMap = defineComponent<TabCaminoMapProps>(props => {
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-DsfrPerimetre.props = ['perimetre', 'apiClient', 'titreSlug', 'titreTypeId', 'router', 'initTab', 'calculateNeighbours']
+DsfrPerimetre.props = ['id', 'perimetre', 'apiClient', 'titreSlug', 'titreTypeId', 'router', 'initTab', 'calculateNeighbours']
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-TabCaminoMap.props = ['perimetre', 'apiClient', 'titreSlug', 'titreTypeId', 'router', 'initTab', 'calculateNeighbours']
+TabCaminoMap.props = ['id', 'perimetre', 'apiClient', 'titreSlug', 'titreTypeId', 'router', 'initTab', 'calculateNeighbours']

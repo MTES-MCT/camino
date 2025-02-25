@@ -99,12 +99,23 @@ export const ActivitesTypesEmails = defineComponent<Props>(props => {
         columns: {
           type: {
             type: 'jsx',
-            jsxElement: <DsfrSelect required={false} legend={{ main: 'Activité' }} items={activitesTypes} valueChanged={updateActiviteTypeId} initialValue={activiteType.value.activiteTypeId} />,
+            jsxElement: (
+              <DsfrSelect
+                id="activites_type"
+                required={false}
+                legend={{ main: 'Activité' }}
+                items={activitesTypes}
+                valueChanged={updateActiviteTypeId}
+                initialValue={activiteType.value.activiteTypeId}
+              />
+            ),
             value: 'type',
           },
           email: {
             type: 'jsx',
-            jsxElement: <DsfrInput required={false} type={{ type: 'email' }} legend={{ main: 'Email' }} valueChanged={updateActiviteTypeEmail} initialValue={activiteType.value.email} />,
+            jsxElement: (
+              <DsfrInput id="activites_email" required={false} type={{ type: 'email' }} legend={{ main: 'Email' }} valueChanged={updateActiviteTypeEmail} initialValue={activiteType.value.email} />
+            ),
             value: 'email',
           },
           action: {

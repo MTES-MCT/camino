@@ -68,7 +68,7 @@ export const EntrepriseFiscalite = defineComponent<Props>(props => {
         <>
           <h2>Fiscalité</h2>
           Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère)
-          <Tabs class="fr-mt-2w" tabs={tabs.value} tabsTitle="Années" initTab={tabId.value} tabClicked={tabUpdate} />
+          <Tabs class="fr-mt-2w" id="fiscalite_annees" tabs={tabs.value} tabsTitle="Années" initTab={tabId.value} tabClicked={tabUpdate} />
         </>
       ) : null}
     </div>

@@ -44,20 +44,27 @@ export const AddEntrepriseDocumentPopup = defineComponent<Props>(props => {
       {props.lockedEntrepriseDocumentTypeId ? null : (
         <fieldset class="fr-fieldset" id="text">
           <div class="fr-fieldset__element">
-            <DsfrSelect required={true} legend={{ main: 'Type de document', placeholder: 'Selectionnez un type de document' }} initialValue={null} items={documentsTypes} valueChanged={typeChange} />
+            <DsfrSelect
+              id="nouveau_document_type"
+              required={true}
+              legend={{ main: 'Type de document', placeholder: 'Selectionnez un type de document' }}
+              initialValue={null}
+              items={documentsTypes}
+              valueChanged={typeChange}
+            />
           </div>
         </fieldset>
       )}
 
       <fieldset class="fr-fieldset" id="text">
         <div class="fr-fieldset__element">
-          <DsfrInput required={true} legend={{ main: 'Date de délivrance du document' }} type={{ type: 'date' }} valueChanged={dateChange} />
+          <DsfrInput id="nouveau_document_date" required={true} legend={{ main: 'Date de délivrance du document' }} type={{ type: 'date' }} valueChanged={dateChange} />
         </div>
         <div class="fr-fieldset__element">
           <InputFile required={true} accept={['pdf']} uploadFile={fileChange} />
         </div>
         <div class="fr-fieldset__element">
-          <DsfrInput required={true} legend={{ main: 'Description' }} type={{ type: 'text' }} valueChanged={descriptionChange} />
+          <DsfrInput id="nouveau_document_description" required={true} legend={{ main: 'Description' }} type={{ type: 'text' }} valueChanged={descriptionChange} />
         </div>
       </fieldset>
     </form>

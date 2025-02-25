@@ -50,7 +50,7 @@ export const Statistiques = defineComponent(() => {
   return () => (
     <>
       <h1>Statistiques</h1>
-      <Tabs tabsTitle="Statistiques" tabs={tabs} initTab={initTab} tabClicked={tabId => routerReplaceTabId(tabId, router)} />
+      <Tabs tabsTitle="Statistiques" id="statistiques" tabs={tabs} initTab={initTab} tabClicked={tabId => routerReplaceTabId(tabId, router)} />
     </>
   )
 })

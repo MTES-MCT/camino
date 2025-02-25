@@ -439,6 +439,7 @@ export const DemarcheEtape = defineComponent<Props>(props => {
           initTab={props.initTab}
           titreSlug={props.titre.slug}
           titreTypeId={props.titre.typeId}
+          id={props.etape.id}
           calculateNeighbours={false}
           perimetre={{
             geojson4326_perimetre: props.etape.fondamentale.perimetre.geojson4326_perimetre,

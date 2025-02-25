@@ -70,11 +70,11 @@ export const TitreTypeSelect = defineComponent<Props>(props => {
   return () => (
     <>
       {isNotNullNorUndefined(domainesFiltered.value) ? (
-        <DsfrSelect required={true} initialValue={domaineRef.value} items={domainesFiltered.value} valueChanged={domaineUpdate} legend={{ main: 'Domaine' }} />
+        <DsfrSelect id="titre_domaine" required={true} initialValue={domaineRef.value} items={domainesFiltered.value} valueChanged={domaineUpdate} legend={{ main: 'Domaine' }} />
       ) : null}
 
       {isNotNullNorUndefined(titresTypeTypes.value) ? (
-        <DsfrSelect required={true} initialValue={titreTypeType.value} items={titresTypeTypes.value} legend={{ main: 'Type' }} valueChanged={titreTypeTypeUpdate} />
+        <DsfrSelect id="titre_type" required={true} initialValue={titreTypeType.value} items={titresTypeTypes.value} legend={{ main: 'Type' }} valueChanged={titreTypeTypeUpdate} />
       ) : null}
     </>
   )

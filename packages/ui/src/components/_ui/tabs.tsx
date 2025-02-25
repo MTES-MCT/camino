@@ -3,11 +3,11 @@ import { Ref, computed, defineComponent, onBeforeUnmount, onMounted, ref } from 
 import { FrIconClassName } from '@codegouvfr/react-dsfr'
 
 import { NonEmptyArray, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { random } from '../../utils/vue-tsx-utils'
 import type { JSX } from 'vue/jsx-runtime'
 export type Tab<TabId extends string> = { icon: FrIconClassName | null; title: string; id: TabId; renderContent: () => JSX.Element }
 
 type Props<TabId extends string> = {
+  id: string
   tabsTitle: string
   tabs: Readonly<NonEmptyArray<Tab<TabId>>>
   initTab: TabId
@@ -18,9 +18,8 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
   const currentTabId = ref<TabId>(props.initTab) as Ref<TabId>
   const tabsListRef = ref<HTMLElement>()
 
-  const idSuffix = `${(random() * 1000).toFixed()}`
-  const getHtmlTabId = (tabId: TabId) => `tabpanel-${tabId}-${idSuffix}-panel`
-  const getButtonTabId = (tabId: TabId) => `tabpanel-${tabId}-${idSuffix}`
+  const getHtmlTabId = (tabId: TabId) => `tabpanel-${tabId}-${props.id}-panel`
+  const getButtonTabId = (tabId: TabId) => `tabpanel-${tabId}-${props.id}`
 
   const panelHeight = ref<number>(0)
 
@@ -88,7 +87,7 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
                 onKeydown={changeTabOnArrowKey}
                 aria-label={tab.title}
                 aria-selected={currentTabId.value === tab.id ? 'true' : 'false'}
-                aria-controls={`tabpanel-${tab.id}-${idSuffix}-panel`}
+                aria-controls={`tabpanel-${tab.id}-${props.id}-panel`}
               >
                 {tab.title}
               </button>
@@ -106,7 +105,7 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
             }}
             role="tabpanel"
             key={tab.id}
-            aria-labelledby={`tabpanel-${tab.id}-${idSuffix}`}
+            aria-labelledby={`tabpanel-${tab.id}-${props.id}`}
             tabindex="0"
           >
             {currentTabId.value === tab.id ? tab.renderContent() : null}
@@ -118,4 +117,4 @@ export const Tabs = defineComponent(<TabId extends string>(props: Props<TabId>) 
 })
 
 // @ts-ignore waiting for https://github.com/vuejs/core/issues/7833
-Tabs.props = ['tabsTitle', 'tabs', 'initTab', 'tabClicked']
+Tabs.props = ['id', 'tabsTitle', 'tabs', 'initTab', 'tabClicked']
