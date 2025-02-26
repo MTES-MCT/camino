@@ -41,33 +41,34 @@ describe("date de fin d'une démarche d'annulation", () => {
   // TODO 2025-01-15 cet id est ignoré explicitement dans la machine pour utiliser TDE, test à virer quand on arrête de faire des avenant dans les octrois mais qu'on fait des prolongations (tache à POH)
   const titreDemarcheIdExcluDesOctroisDArm = newDemarcheId('QauHUIPuv1a5neW3JqVEWh8n')
 
-  test.each<{ typeId: EtapeTypeId; statutId: EtapeStatutId }>([
-    { typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative, statutId: ETAPES_STATUTS.ACCEPTE },
-  ])("retourne la date de fin d'une démarche d'annulation si elle existe pour une $typeId", etape => {
-    const titreDemarcheId = newDemarcheId('demarcheIdRetrait')
-    const titreDemarcheAnnulationEtapesDateFin: NonEmptyArray<ITitreEtape> = [
-      {
-        id: newEtapeId('etapeId'),
-        titreDemarcheId,
-        ...etape,
-        isBrouillon: ETAPE_IS_NOT_BROUILLON,
-        ordre: 1,
-        date: toCaminoDate('1999-05-21'),
-        dateFin: toCaminoDate('2013-05-25'),
-        concurrence: { amIFirst: true },
-        hasTitreFrom: true,
-        demarcheIdsConsentement: [],
-      },
-    ]
-    expect(
-      titreDemarcheAnnulationDateFinFind(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, {
-        id: titreDemarcheId,
-        titreId: titreIdValidator.parse('titreId'),
-        typeId: DEMARCHES_TYPES_IDS.Octroi,
-        etapes: titreDemarcheAnnulationEtapesDateFin,
-      })
-    ).toEqual('2013-05-25')
-  })
+  test.each<{ typeId: EtapeTypeId; statutId: EtapeStatutId }>([{ typeId: ETAPES_TYPES.decisionDeLAutoriteAdministrative, statutId: ETAPES_STATUTS.ACCEPTE }])(
+    "retourne la date de fin d'une démarche d'annulation si elle existe pour une $typeId",
+    etape => {
+      const titreDemarcheId = newDemarcheId('demarcheIdRetrait')
+      const titreDemarcheAnnulationEtapesDateFin: NonEmptyArray<ITitreEtape> = [
+        {
+          id: newEtapeId('etapeId'),
+          titreDemarcheId,
+          ...etape,
+          isBrouillon: ETAPE_IS_NOT_BROUILLON,
+          ordre: 1,
+          date: toCaminoDate('1999-05-21'),
+          dateFin: toCaminoDate('2013-05-25'),
+          concurrence: { amIFirst: true },
+          hasTitreFrom: true,
+          demarcheIdsConsentement: [],
+        },
+      ]
+      expect(
+        titreDemarcheAnnulationDateFinFind(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, {
+          id: titreDemarcheId,
+          titreId: titreIdValidator.parse('titreId'),
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          etapes: titreDemarcheAnnulationEtapesDateFin,
+        })
+      ).toEqual('2013-05-25')
+    }
+  )
 
   test("retourne la date de fin d'un Avenant à l'autorisation de recherche minière si elle existe", () => {
     const titreDemarcheACOFaitEtapesDateFin: NonEmptyArray<ITitreEtape> = [
