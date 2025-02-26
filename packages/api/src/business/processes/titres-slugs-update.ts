@@ -4,9 +4,15 @@ import { titresGet } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
 
 import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update'
+import { TitreSlug } from 'camino-common/src/validators/titres'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
+export interface TitreSlugUpdate {
+  newSlug: TitreSlug
+  oldSlug: TitreSlug | undefined
+}
 // met à jour les slugs de titre
-const titreSlugsUpdate = async (titre: ITitre) => {
+const titreSlugsUpdate = async (titre: ITitre): Promise<TitreSlugUpdate | null> => {
   const titreOldSlug = titre.slug
 
   try {
@@ -16,7 +22,7 @@ const titreSlugsUpdate = async (titre: ITitre) => {
 
     console.info('titre : slug (mise à jour) ->', slug)
 
-    return { [slug]: titreOldSlug }
+    return { newSlug: slug, oldSlug: titreOldSlug }
   } catch (e) {
     console.error(`erreur: titreSlugsUpdate ${titreOldSlug}`, e)
 
@@ -24,7 +30,7 @@ const titreSlugsUpdate = async (titre: ITitre) => {
   }
 }
 
-export const titresSlugsUpdate = async (titresIds?: string[]): Promise<Record<string, string>> => {
+export const titresSlugsUpdate = async (titresIds?: string[]): Promise<TitreSlugUpdate[]> => {
   console.info()
   console.info('slugs de titres, démarches, étapes et activités')
 
@@ -43,13 +49,12 @@ export const titresSlugsUpdate = async (titresIds?: string[]): Promise<Record<st
     userSuper
   )
 
-  const titresUpdatedIndex: Record<string, string> = {}
+  const titresUpdatedIndex: TitreSlugUpdate[] = []
 
   for (const titre of titres) {
     const titreUpdatedIndex = await titreSlugsUpdate(titre)
-
-    if (titreUpdatedIndex) {
-      Object.assign(titresUpdatedIndex, titreUpdatedIndex)
+    if (isNotNullNorUndefined(titreUpdatedIndex)) {
+      titresUpdatedIndex.push(titreUpdatedIndex)
     }
   }
 

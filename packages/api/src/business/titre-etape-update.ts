@@ -16,7 +16,6 @@ import { titresEtapesAdministrationsLocalesUpdate } from './processes/titres-eta
 import { titresPropsEtapesIdsUpdate } from './processes/titres-props-etapes-ids-update'
 import { titresSlugsUpdate } from './processes/titres-slugs-update'
 import { titresPublicUpdate } from './processes/titres-public-update'
-import { logsUpdate } from './_logs-update'
 import { titresActivitesPropsUpdate } from './processes/titres-activites-props-update'
 import { userSuper } from '../database/user-super'
 import type { UserNotNull } from 'camino-common/src/roles'
@@ -49,50 +48,31 @@ export const titreEtapeUpdateTask = async (pool: Pool, titreEtapeId: EtapeId | n
       await callAndExit(etapeConsentementUpdate(pool, titreEtapeId))
     }
 
-    const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(pool, user, titreDemarcheId)
+    await titresEtapesOrdreUpdate(pool, user, titreDemarcheId)
     await callAndExit(etapesFondamentaleIdUpdate(pool, titreDemarcheId))
 
-    const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(user, [titreDemarcheId])
-    const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(pool, user, titreDemarcheId)
+    await titresEtapesHeritagePropsUpdate(user, [titreDemarcheId])
+    await titresEtapesHeritageContenuUpdate(pool, user, titreDemarcheId)
 
     const titreId = titreDemarche.titreId
-    const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(pool, titreId)
-    const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
-    const titresDemarchesDatesUpdated = await titresDemarchesDatesUpdate(pool, [titreId])
-    const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([titreId])
-    const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
-    const titresPublicUpdated = await titresPublicUpdate(pool, [titreId])
+    await titresDemarchesStatutIdUpdate(pool, titreId)
+    await titresDemarchesOrdreUpdate([titreId])
+    await titresDemarchesDatesUpdate(pool, [titreId])
+    await titresDemarchesPublicUpdate([titreId])
+    await titresStatutIdsUpdate([titreId])
+    await titresPublicUpdate(pool, [titreId])
 
     // si l'étape est supprimée, pas de mise à jour
     if (titreEtapeId) {
       await titresEtapesAreasUpdate(pool, [titreEtapeId])
     }
 
-    const titresEtapesAdministrationsLocalesUpdated = await titresEtapesAdministrationsLocalesUpdate(titreEtapeId ? [titreEtapeId] : undefined)
+    await titresEtapesAdministrationsLocalesUpdate(titreEtapeId ? [titreEtapeId] : undefined)
 
-    const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([titreId])
-
-    const titresActivitesCreated = await titresActivitesUpdate(pool, [titreId])
-    const titresActivitesPropsUpdated = await titresActivitesPropsUpdate([titreId])
-
-    const titresUpdatedIndex = await titresSlugsUpdate([titreId])
-
-    logsUpdate({
-      titresEtapesOrdreUpdated,
-      titresEtapesHeritagePropsUpdated,
-      titresEtapesHeritageContenuUpdated,
-      titresDemarchesStatutUpdated,
-      titresDemarchesPublicUpdated,
-      titresDemarchesOrdreUpdated,
-      titresStatutIdUpdated,
-      titresPublicUpdated,
-      titresDemarchesDatesUpdated,
-      titresEtapesAdministrationsLocalesUpdated: titresEtapesAdministrationsLocalesUpdated.map(({ titreEtapeId }) => titreEtapeId),
-      titresPropsEtapesIdsUpdated,
-      titresActivitesCreated,
-      titresActivitesPropsUpdated,
-      titresUpdatedIndex,
-    })
+    await titresPropsEtapesIdsUpdate([titreId])
+    await titresActivitesUpdate(pool, [titreId])
+    await titresActivitesPropsUpdate([titreId])
+    await titresSlugsUpdate([titreId])
   } catch (e) {
     console.error(`erreur: titreEtapeUpdate ${titreEtapeId}`)
     console.error(e)

@@ -5,7 +5,6 @@ import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-u
 import { titresGet } from '../../database/queries/titres'
 import { vi, describe, expect, test } from 'vitest'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 vi.mock('../utils/titre-slug-and-relations-update', () => ({
   __esModule: true,
   titreSlugAndRelationsUpdate: vi.fn(),
@@ -37,9 +36,15 @@ describe("mise à jour du slug d'un titre", () => {
     })
 
     const titresUpdatedIndex = await titresSlugsUpdate()
-    const titreSlug = isNotNullNorUndefined(titresUpdatedIndex) && Object.keys(titresUpdatedIndex)[0]
 
-    expect(titreSlug).toEqual(slug)
+    expect(titresUpdatedIndex).toMatchInlineSnapshot(`
+      [
+        {
+          "newSlug": "slug-new",
+          "oldSlug": "slug-old",
+        },
+      ]
+    `)
 
     expect(titreSlugAndRelationsUpdate).toHaveBeenCalled()
   })

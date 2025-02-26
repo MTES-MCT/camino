@@ -55,7 +55,7 @@ export const checkEtapeInContenuHeritage = (pool: Pool): Effect.Effect<ErrorInCo
     )
   )
 }
-export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId): Promise<string[]> => {
+export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNotNull, demarcheId?: DemarcheId): Promise<{ updated: EtapeId[]; errors: EtapeId[] }> => {
   console.info()
   console.info('héritage des contenus des étapes…')
 
@@ -65,7 +65,8 @@ export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNo
   // l'objet heritageContenu reçu ne contient pas d'id d'étape
   // l'étape est donc toujours mise à jour
 
-  const titresEtapesIdsUpdated = [] as string[]
+  const titresEtapesIdsUpdated: EtapeId[] = []
+  const titresEtapesIdsErrors: EtapeId[] = []
 
   for (const titreDemarche of Object.values(titresDemarches)) {
     if (isNotNullNorUndefinedNorEmpty(titreDemarche.etapes)) {
@@ -86,7 +87,7 @@ export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNo
           // TODO 2025-02-24 : à décommenter et à lancer en prod, puis à supprimer
           // prettier-ignore
           // await titreEtapeUpdate(etapePerdantLesSections.id, { contenu: null, heritageContenu: null, }, user, titreDemarche.titreId)
-          titresEtapesIdsUpdated.push(etapePerdantLesSections.id)
+          titresEtapesIdsErrors.push(etapePerdantLesSections.id)
         }
       }
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -122,5 +123,5 @@ export const titresEtapesHeritageContenuUpdate = async (pool: Pool, user: UserNo
     }
   }
 
-  return titresEtapesIdsUpdated
+  return { updated: titresEtapesIdsUpdated, errors: titresEtapesIdsErrors }
 }
