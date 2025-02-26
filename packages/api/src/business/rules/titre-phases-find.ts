@@ -16,7 +16,7 @@ import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { machineFind } from '../rules-demarches/machines'
 import { toMachineEtapes } from '../rules-demarches/machine-common'
 import { DemarcheStatus, getPhase } from '../rules-demarches/machine-helper'
-export const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
+const DATE_PAR_DEFAUT_TITRE_INFINI = toCaminoDate('2018-12-31')
 /**
  * trouve une démarche acceptée ou terminée qui est
  * - un retrait
