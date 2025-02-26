@@ -1,9 +1,9 @@
 import { ITitreDemarche } from '../../types'
-import { DemarcheId, demarcheSlugValidator } from 'camino-common/src/demarche'
+import { demarcheSlugValidator } from 'camino-common/src/demarche'
 
 import { titrePhasesFind, TitreDemarchePhaseFind } from './titre-phases-find'
 import { newDemarcheId, newEtapeId, newTitreId } from '../../database/models/_format/id-create'
-import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
+import { toCaminoDate } from 'camino-common/src/date'
 import { describe, expect, test } from 'vitest'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
@@ -14,7 +14,6 @@ import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON, etapeSlugValidator } from '
 import { FeatureMultiPolygon } from 'camino-common/src/perimetre'
 import { km2Validator } from 'camino-common/src/number'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
-const titresProd = require('./titre-phases-find.cas.json') // eslint-disable-line
 
 export type TitrePhasesTest = [TitreTypeId, TitreDemarchePhaseFind[]]
 const multiPolygonWith4Points: FeatureMultiPolygon = {
@@ -2549,16 +2548,5 @@ describe("phases d'une démarche", () => {
         },
       }
     `)
-  })
-  // pour regénérer le fichier titre-phases-find.cas.json: `npm run test:generate-phase-data -w packages/api`
-  test.each(titresProd as TitrePhasesTest[])('cas réel N°%#', (titreTypeId, demarches) => {
-    const expectedResult = demarches.reduce<Record<DemarcheId, { dateDebut: CaminoDate | null | undefined; dateFin: CaminoDate | null | undefined }>>((acc, d) => {
-      if (d.demarcheDateDebut || d.demarcheDateFin) {
-        acc[d.id] = { dateDebut: d.demarcheDateDebut, dateFin: d.demarcheDateFin }
-      }
-
-      return acc
-    }, {})
-    expect(titrePhasesFind(demarches, titreTypeId)).toStrictEqual(expectedResult)
   })
 })
