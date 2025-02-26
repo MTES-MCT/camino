@@ -3,6 +3,7 @@ import { titreStatutIdFind } from '../rules/titre-statut-id-find'
 import { userSuper } from '../../database/user-super'
 import { getCurrent } from 'camino-common/src/date'
 import { TitreId } from 'camino-common/src/validators/titres'
+import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 
 export const titresStatutIdsUpdate = async (titresIds?: string[]): Promise<TitreId[]> => {
   console.info()
@@ -29,7 +30,7 @@ export const titresStatutIdsUpdate = async (titresIds?: string[]): Promise<Titre
     if (titreStatutId !== titre.titreStatutId) {
       await titreUpdate(titre.id, { titreStatutId })
 
-      console.info('titre : statut (mise à jour) ->', `${titre.id} : ${titreStatutId}`)
+      console.info('titre : statut (mise à jour) : ', `https://camino.beta.gouv.fr/titres/${titre.slug} : ${TitresStatuts[titre.titreStatutId].nom} -> ${TitresStatuts[titreStatutId].nom}`)
 
       titresUpdated.push(titre.id)
     }
