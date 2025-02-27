@@ -7,6 +7,7 @@ const psPccOctMachine = new ProcedureSpecifiqueMachine('pcc', 'oct')
 const psCxmOctMachine = new ProcedureSpecifiqueMachine('cxm', 'oct')
 const psPrmProMachine = new ProcedureSpecifiqueMachine('prm', 'pro')
 const psArmProMachine = new ProcedureSpecifiqueMachine('arm', 'pro')
+const psArmOctMachine = new ProcedureSpecifiqueMachine('arm', 'oct')
 const psAxmProMachine = new ProcedureSpecifiqueMachine('axm', 'pro')
 const psCxwOctMachine = new ProcedureSpecifiqueMachine('cxw', 'oct')
 
@@ -211,9 +212,13 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                                              (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE,RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES]",
+        "[1999-04-15 -> null]",
         "RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+        "[1999-04-15 -> null]",
       ]
     `)
   })
@@ -304,12 +309,19 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_COLLECTIVITES        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_PREFET               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
+        "[1999-04-15 -> null]",
         "OUVRIR_PARTICIPATION_DU_PUBLIC   (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR]",
+        "[1999-04-15 -> null]",
       ]
     `)
   })
@@ -387,17 +399,25 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                                    (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_COLLECTIVITES               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_PREFET                      (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
+        "[1999-04-15 -> null]",
         "RENDRE_MESURES_DE_PUBLICITE             (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[1999-04-15 -> null]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF       (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR]",
-        "[1999-04-23 -> 2000-04-23]",
+        "[1999-04-15 -> 2000-04-15]",
         "NOTIFIER_DEMANDEUR                      (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
-        "[1999-04-23 -> 2000-04-23]",
+        "[1999-04-15 -> 2000-04-15]",
       ]
     `)
   })
@@ -422,12 +442,19 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                                   (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_COLLECTIVITES              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS       (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_PREFET                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
         "RENDRE_DECISION_ADMINISTRATION_REJETEE (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+        "[1999-04-15 -> null]",
       ]
     `)
   })
@@ -453,13 +480,21 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                                   (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                          (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_COLLECTIVITES              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS       (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_PREFET                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
         "RENDRE_DECISION_ADMINISTRATION_REJETEE (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,NOTIFIER_DEMANDEUR]",
+        "[1999-04-15 -> null]",
         "NOTIFIER_DEMANDEUR                     (confidentielle, rejeté                 ) -> []",
+        "[1999-04-15 -> 1999-04-22]",
       ]
     `)
   })
@@ -485,12 +520,19 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_COLLECTIVITES        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_PREFET               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
         "CLASSER_SANS_SUITE               (confidentielle, classé sans suite      ) -> []",
+        "[1999-04-15 -> 1999-04-21]",
       ]
     `)
   })
@@ -516,12 +558,19 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_COLLECTIVITES        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_PREFET               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
         "DESISTER_PAR_LE_DEMANDEUR        (confidentielle, désisté                ) -> []",
+        "[1999-04-15 -> 1999-04-21]",
       ]
     `)
   })
@@ -550,17 +599,63 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_COLLECTIVITES        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_PREFET               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
+        "[1999-04-15 -> null]",
         "OUVRIR_PARTICIPATION_DU_PUBLIC   (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
         "DEMANDER_INFORMATION             (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RECEVOIR_INFORMATION,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
         "RECEVOIR_INFORMATION             (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
         "DEMANDER_INFORMATION             (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RECEVOIR_INFORMATION,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
       ]
     `)
+  })
+  test("réalise une demande d'octroi d'ARM rejetée suite à une décision implicite", () => {
+    const { dateFin, machine, etapes } = setDateAndOrderAndInterpretMachine(psArmOctMachine, '1999-04-14', [
+      {
+        ...ETES.demande.FAIT,
+        consentement: 'non-applicable',
+        concurrence: { amIFirst: true },
+        paysId: 'FR',
+        surface: hectareToKm2(hectareValidator.parse(10)),
+      },
+      ETES.enregistrementDeLaDemande.FAIT,
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, hasTitreFrom: false },
+      ETES.avisDeMiseEnConcurrenceAuJORF.TERMINE,
+      ETES.resultatMiseEnConcurrence.ACCEPTE,
+      ETES.avisDesCollectivites.FAIT,
+      ETES.avisDesServicesEtCommissionsConsultatives.FAIT,
+      ETES.avisDuPrefet.FAVORABLE,
+      ETES.decisionDeLAutoriteAdministrative.REJETE_DECISION_IMPLICITE,
+    ])
+
+    expect(machine.possibleNextEtapes(etapes, dateFin)).toStrictEqual([])
+    expect(machine.demarcheStatut(etapes)).toMatchInlineSnapshot(`
+       {
+         "demarcheDateDebut": {
+           "dateDebut": null,
+           "dateEtape": null,
+         },
+         "demarcheDateFin": {
+           "dateFin": null,
+           "duree": null,
+         },
+         "demarcheStatut": "rej",
+         "demarcheTypeId": "oct",
+         "publique": true,
+       }
+     `)
   })
   test("réalise une demande de prolongation d'ARM rejetée suite à une décision implicite", () => {
     const { dateFin, machine, etapes } = setDateAndOrderAndInterpretMachine(psArmProMachine, '1999-04-14', [
@@ -584,10 +679,10 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       {
         "demarcheDateDebut": {
           "dateDebut": null,
-          "dateEtape": null,
+          "dateEtape": "1999-04-15",
         },
         "demarcheDateFin": {
-          "dateFin": null,
+          "dateFin": "1999-04-21",
           "duree": null,
         },
         "demarcheStatut": "rej",
@@ -624,21 +719,31 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                                                       (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE                                        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE                               (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_CONSENTEMENT]",
+        "[1999-04-15 -> null]",
         "FAIRE_DEMANDE_DE_CONSENTEMENT                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_COLLECTIVITES                                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS                           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_PREFET                                         (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC]",
+        "[1999-04-15 -> null]",
         "OUVRIR_PARTICIPATION_DU_PUBLIC                             (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE                    (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
+        "[1999-04-15 -> null]",
         "RENDRE_MESURES_DE_PUBLICITE                                (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
+        "[1999-04-15 -> null]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                          (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR]",
-        "[1999-04-25 -> 2000-04-25]",
+        "[1999-04-15 -> 2000-04-15]",
         "NOTIFIER_DEMANDEUR                                         (publique      , accepté et publié      ) -> [FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES]",
-        "[1999-04-25 -> 2000-04-25]",
+        "[1999-04-15 -> 2000-04-15]",
         "FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
-        "[1999-04-25 -> 2000-04-25]",
+        "[1999-04-15 -> 2000-04-15]",
       ]
     `)
   })
@@ -661,9 +766,13 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                          (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                 (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_CONSENTEMENT]",
+        "[1999-04-15 -> null]",
         "FAIRE_DEMANDE_DE_CONSENTEMENT (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
       ]
     `)
   })
@@ -686,9 +795,13 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                          (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                 (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE           (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_CONSENTEMENT]",
+        "[1999-04-15 -> null]",
         "FAIRE_DEMANDE_DE_CONSENTEMENT (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_ENQUETE_PUBLIQUE,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
       ]
     `)
   })
@@ -751,7 +864,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "FAIRE_ABROGATION                                  (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "[1999-05-02 -> 1999-05-04]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                 (publique      , rejeté après abrogation) -> []",
-        "[1999-05-02 -> 1999-05-04]",
+        "[1999-05-02 -> 1999-05-05]",
       ]
     `)
   })
@@ -816,7 +929,7 @@ describe('vérifie l’arbre des procédures spécifique', () => {
         "FAIRE_ABROGATION                                  (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
         "[1999-05-03 -> 1999-05-05]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                 (publique      , rejeté après abrogation) -> []",
-        "[1999-05-03 -> 1999-05-05]",
+        "[1999-05-03 -> 1999-05-06]",
       ]
     `)
   })
@@ -846,22 +959,29 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                                                 (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                                        (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE                                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_FAVORABLE                         (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_COLLECTIVITES                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_SERVICES_COMMISSIONS                     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_AVIS_PREFET]",
+        "[1999-04-15 -> null]",
         "RENDRE_AVIS_PREFET                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,OUVRIR_PARTICIPATION_DU_PUBLIC,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[1999-04-15 -> null]",
         "RENDRE_DECISION_ADMINISTRATION_ACCEPTEE              (publique      , accepté                ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS,RENDRE_MESURES_DE_PUBLICITE]",
+        "[1999-04-15 -> null]",
         "PUBLIER_DECISION_ACCEPTEE_AU_JORF                    (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR,RENDRE_MESURES_DE_PUBLICITE]",
-        "[1999-04-22 -> 2000-04-22]",
+        "[1999-04-15 -> 2000-04-15]",
         "RENDRE_MESURES_DE_PUBLICITE                          (publique      , accepté et publié      ) -> [NOTIFIER_DEMANDEUR]",
-        "[1999-04-22 -> 2000-04-22]",
+        "[1999-04-15 -> 2000-04-15]",
         "NOTIFIER_DEMANDEUR                                   (publique      , accepté et publié      ) -> [FAIRE_ABROGATION]",
-        "[1999-04-22 -> 2000-04-22]",
+        "[1999-04-15 -> 2000-04-15]",
         "FAIRE_ABROGATION                                     (publique      , accepté et publié      ) -> [PUBLIER_DECISION_ACCEPTEE_AU_JORF,PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS]",
-        "[1999-04-22 -> 1999-04-25]",
+        "[1999-04-15 -> 1999-04-25]",
         "PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS (publique      , rejeté après abrogation) -> []",
-        "[1999-04-22 -> 1999-04-25]",
+        "[1999-04-15 -> 1999-04-26]",
       ]
     `)
   })
@@ -886,11 +1006,17 @@ describe('vérifie l’arbre des procédures spécifique', () => {
       [
         "RIEN                             (confidentielle, en construction        ) -> [FAIRE_DEMANDE]",
         "FAIRE_DEMANDE                    (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE]",
+        "[1999-04-15 -> null]",
         "ENREGISTRER_DEMANDE              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_RECEVABILITE_DEFAVORABLE   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DEMANDE_DE_COMPLEMENTS]",
+        "[1999-04-15 -> null]",
         "FAIRE_DEMANDE_DE_COMPLEMENTS     (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DECLARATION_IRRECEVABILITE,RECEVOIR_COMPLEMENTS]",
+        "[1999-04-15 -> null]",
         "RECEVOIR_COMPLEMENTS             (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,FAIRE_DECLARATION_IRRECEVABILITE,FAIRE_RECEVABILITE_DEFAVORABLE,FAIRE_RECEVABILITE_FAVORABLE]",
+        "[1999-04-15 -> null]",
         "FAIRE_DECLARATION_IRRECEVABILITE (confidentielle, rejeté                 ) -> []",
+        "[1999-04-15 -> 1999-04-20]",
       ]
     `)
   })

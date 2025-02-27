@@ -4,7 +4,7 @@ import { CaminoCommonContext, Concurrence, DBEtat, Etape, getDemarcheDateDebut, 
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeProlongations, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeProlongations, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { hectareToKm2, hectareValidator, KM2, km2Validator } from 'camino-common/src/number'
@@ -16,28 +16,34 @@ import { PAYS_IDS, PaysId } from 'camino-common/src/static/pays'
 
 type ParticipationDuPublic = {
   status: EtapeStatutId
+  date: CaminoDate
   type: 'OUVRIR_PARTICIPATION_DU_PUBLIC'
 }
 
 type EnqueteDuPublic = {
   status: EtapeStatutId
+  date: CaminoDate
   type: 'OUVRIR_ENQUETE_PUBLIQUE'
 }
 
 type FaireMiseEnConcurrence = {
   status: EtapeStatutId
+  date: CaminoDate
   type: 'FAIRE_MISE_EN_CONCURRENCE'
 }
 
 type FaireDemande = {
   concurrence: Concurrence
   consentement: Consentement
+  date: CaminoDate
   paysId: PaysId
   surface: KM2
+  dateDebut: CaminoDate | null
   type: 'FAIRE_DEMANDE'
 }
 type FaireRecevabiliteFavorable = {
   type: 'FAIRE_RECEVABILITE_FAVORABLE'
+  date: CaminoDate
   hasTitreFrom: boolean
 }
 
@@ -61,41 +67,41 @@ type FaireAbrogation = {
 }
 type ProcedureSpecifiqueXStateEvent =
   | FaireDemande
-  | { type: 'ENREGISTRER_DEMANDE' }
+  | { type: 'ENREGISTRER_DEMANDE'; date: CaminoDate }
   | FaireRecevabiliteFavorable
-  | { type: 'FAIRE_RECEVABILITE_DEFAVORABLE' }
-  | { type: 'FAIRE_DEMANDE_DE_COMPLEMENTS' }
-  | { type: 'RECEVOIR_COMPLEMENTS' }
-  | { type: 'FAIRE_DECLARATION_IRRECEVABILITE' }
+  | { type: 'FAIRE_RECEVABILITE_DEFAVORABLE'; date: CaminoDate }
+  | { type: 'FAIRE_DEMANDE_DE_COMPLEMENTS'; date: CaminoDate }
+  | { type: 'RECEVOIR_COMPLEMENTS'; date: CaminoDate }
+  | { type: 'FAIRE_DECLARATION_IRRECEVABILITE'; date: CaminoDate }
   | FaireMiseEnConcurrence
-  | { type: 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE' }
-  | { type: 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE' }
-  | { type: 'NOTIFIER_DEMANDEUR' }
-  | { type: 'RECEVOIR_REPONSE_DEMANDEUR' }
-  | { type: 'RENDRE_AVIS_CGE_IGEDD' }
-  | { type: 'FAIRE_DEMANDE_MODIFICATION_AES' }
-  | { type: 'FAIRE_LETTRE_SAISINE_PREFET' }
-  | { type: 'RENDRE_AVIS_COLLECTIVITES' }
-  | { type: 'RENDRE_AVIS_SERVICES_COMMISSIONS' }
-  | { type: 'RENDRE_AVIS_PREFET' }
-  | { type: 'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES' }
+  | { type: 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE'; date: CaminoDate }
+  | { type: 'RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE'; date: CaminoDate }
+  | { type: 'NOTIFIER_DEMANDEUR'; date: CaminoDate }
+  | { type: 'RECEVOIR_REPONSE_DEMANDEUR'; date: CaminoDate }
+  | { type: 'RENDRE_AVIS_CGE_IGEDD'; date: CaminoDate }
+  | { type: 'FAIRE_DEMANDE_MODIFICATION_AES'; date: CaminoDate }
+  | { type: 'FAIRE_LETTRE_SAISINE_PREFET'; date: CaminoDate }
+  | { type: 'RENDRE_AVIS_COLLECTIVITES'; date: CaminoDate }
+  | { type: 'RENDRE_AVIS_SERVICES_COMMISSIONS'; date: CaminoDate }
+  | { type: 'RENDRE_AVIS_PREFET'; date: CaminoDate }
+  | { type: 'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES'; date: CaminoDate }
   | ParticipationDuPublic
   | EnqueteDuPublic
-  | { type: 'FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES' }
-  | { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE' }
-  | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE' }
-  | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE' }
+  | { type: 'FAIRE_CONSULTATION_DES_ADMINISTRATIONS_CENTRALES'; date: CaminoDate }
+  | { type: 'RENDRE_DECISION_ADMINISTRATION_ACCEPTEE'; date: CaminoDate }
+  | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE'; date: CaminoDate }
+  | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE'; date: CaminoDate }
   | PublierDecisionAccepteeAuJORF
   | PublierDecisionAuRecueilDesActesAdministratifs
-  | { type: 'RENDRE_MESURES_DE_PUBLICITE' }
+  | { type: 'RENDRE_MESURES_DE_PUBLICITE'; date: CaminoDate }
   | FaireAbrogation
-  | { type: 'FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES' }
-  | { type: 'CLASSER_SANS_SUITE' }
-  | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
-  | { type: 'DEMANDER_INFORMATION' }
-  | { type: 'RECEVOIR_INFORMATION' }
-  | { type: 'FAIRE_DEMANDE_DE_CONSENTEMENT' }
-  | { type: 'RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES' }
+  | { type: 'FAIRE_ATTESTATION_DE_CONSTITUTION_DE_GARANTIES_FINANCIERES'; date: CaminoDate }
+  | { type: 'CLASSER_SANS_SUITE'; date: CaminoDate }
+  | { type: 'DESISTER_PAR_LE_DEMANDEUR'; date: CaminoDate }
+  | { type: 'DEMANDER_INFORMATION'; date: CaminoDate }
+  | { type: 'RECEVOIR_INFORMATION'; date: CaminoDate }
+  | { type: 'FAIRE_DEMANDE_DE_CONSENTEMENT'; date: CaminoDate }
+  | { type: 'RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES'; date: CaminoDate }
 
 type Event = ProcedureSpecifiqueXStateEvent['type']
 
@@ -144,16 +150,16 @@ const keys = {
   consentement: ['non-applicable', 'à faire'],
   paysId: ['FR', 'GF'],
   surface: [hectareToKm2(hectareValidator.parse(LIMITE_SURFACE_AXM - 1)), hectareToKm2(hectareValidator.parse(LIMITE_SURFACE_AXM + 1))],
-} as const satisfies { [key in keyof Omit<FaireDemande, 'type'>]: FaireDemande[key][] }
+} as const satisfies { [key in keyof Omit<FaireDemande, 'type' | 'dateDebut' | 'date'>]: FaireDemande[key][] }
 
-const getCombinaisonsFaireDemande = (): FaireDemande[] => {
+const getCombinaisonsFaireDemande = (date: CaminoDate): FaireDemande[] => {
   return getEntriesHardcore(keys).reduce<FaireDemande[]>(
     (acc, [key, array]) => {
       const value = acc.flatMap(d => array.map(e => ({ ...d, [key]: e })))
       return value
     },
     // on initialise les valeurs ici parce qu'on est obligés par le typage mais elles seront écrasées par la boucle du reduce
-    [{ type: 'FAIRE_DEMANDE', concurrence: { amIFirst: true }, consentement: 'non-applicable', paysId: 'FR', surface: km2Validator.parse(0) }]
+    [{ type: 'FAIRE_DEMANDE', concurrence: { amIFirst: true }, consentement: 'non-applicable', paysId: 'FR', surface: km2Validator.parse(0), dateDebut: null, date }]
   )
 }
 
@@ -179,7 +185,15 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
         if (isNullOrUndefined(etape.surface)) {
           throw new Error("L'attribut surface est obligatoire pour faire la demande")
         }
-        return { type: eventFromEntry, concurrence: etape.concurrence, consentement: etape.consentement, paysId: etape.paysId, surface: etape.surface }
+        return {
+          type: eventFromEntry,
+          date: etape.date,
+          dateDebut: etape.dateDebut ?? null,
+          concurrence: etape.concurrence,
+          consentement: etape.consentement,
+          paysId: etape.paysId,
+          surface: etape.surface,
+        }
       }
       case 'PUBLIER_DECISION_ACCEPTEE_AU_JORF':
       case 'PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS':
@@ -188,7 +202,7 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
         if (isNullOrUndefined(etape.hasTitreFrom)) {
           throw new Error("L'attribut hasTitreFrom est obligatoire pour faire la recevabilité")
         }
-        return { type: eventFromEntry, hasTitreFrom: etape.hasTitreFrom }
+        return { type: eventFromEntry, hasTitreFrom: etape.hasTitreFrom, date: etape.date }
       }
       default:
         return super.eventFromEntry(eventFromEntry, etape)
@@ -198,24 +212,24 @@ export class ProcedureSpecifiqueMachine extends CaminoMachine<ProcedureSpecifiqu
   override toPotentialCaminoXStateEvent(event: ProcedureSpecifiqueXStateEvent['type'], date: CaminoDate): ProcedureSpecifiqueXStateEvent[] {
     switch (event) {
       case 'FAIRE_DEMANDE':
-        return getCombinaisonsFaireDemande()
+        return getCombinaisonsFaireDemande(date)
       case 'OUVRIR_ENQUETE_PUBLIQUE':
       case 'OUVRIR_PARTICIPATION_DU_PUBLIC':
         return [
-          { type: event, status: ETAPES_STATUTS.PROGRAMME },
-          { type: event, status: ETAPES_STATUTS.EN_COURS },
-          { type: event, status: ETAPES_STATUTS.TERMINE },
+          { type: event, status: ETAPES_STATUTS.PROGRAMME, date },
+          { type: event, status: ETAPES_STATUTS.EN_COURS, date },
+          { type: event, status: ETAPES_STATUTS.TERMINE, date },
         ]
       case 'FAIRE_MISE_EN_CONCURRENCE':
         return [
-          { type: event, status: ETAPES_STATUTS.PROGRAMME },
-          { type: event, status: ETAPES_STATUTS.EN_COURS },
-          { type: event, status: ETAPES_STATUTS.TERMINE },
+          { type: event, status: ETAPES_STATUTS.PROGRAMME, date },
+          { type: event, status: ETAPES_STATUTS.EN_COURS, date },
+          { type: event, status: ETAPES_STATUTS.TERMINE, date },
         ]
       case 'FAIRE_RECEVABILITE_FAVORABLE':
         return [
-          { type: event, hasTitreFrom: true },
-          { type: event, hasTitreFrom: false },
+          { type: event, hasTitreFrom: true, date },
+          { type: event, hasTitreFrom: false, date },
         ]
       default:
         return super.toPotentialCaminoXStateEvent(event, date)
@@ -325,6 +339,8 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         target: '.finDeMachine',
         actions: assign({
           demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+          demarcheDateFin: ({ context, event }) => (isDemarcheTypeProlongations(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : { duree: null, dateFin: null }),
+          demarcheDateDebut: ({ context }) => (isDemarcheTypeOctroi(context.demarcheTypeId) ? { dateDebut: null, dateEtape: null } : context.demarcheDateDebut),
         }),
       },
       DESISTER_PAR_LE_DEMANDEUR: {
@@ -332,6 +348,8 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         target: '.finDeMachine',
         actions: assign({
           demarcheStatut: DemarchesStatutsIds.Desiste,
+          demarcheDateFin: ({ context, event }) => (isDemarcheTypeProlongations(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : { duree: null, dateFin: null }),
+          demarcheDateDebut: ({ context }) => (isDemarcheTypeOctroi(context.demarcheTypeId) ? { dateDebut: null, dateEtape: null } : context.demarcheDateDebut),
         }),
       },
       DEMANDER_INFORMATION: {
@@ -349,6 +367,8 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
           FAIRE_DEMANDE: {
             target: 'enregistrementDeLaDemandeAFaire',
             actions: assign({
+              demarcheDateDebut: ({ context, event }) =>
+                isDemarcheTypeProlongations(context.demarcheTypeId) ? getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event) : context.demarcheDateDebut,
               demarcheStatut: DemarchesStatutsIds.EnInstruction,
               concurrence: ({ event }) => event.concurrence,
               paysId: ({ event }) => event.paysId,
@@ -463,7 +483,9 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
                   RENDRE_RESULTAT_MISE_EN_CONCURRENCE_ACCEPTEE: 'fin',
                   RENDRE_RESULTAT_MISE_EN_CONCURRENCE_REJETEE: {
                     target: '#finDeMachine',
-                    actions: assign({ demarcheStatut: DemarchesStatutsIds.Rejete }),
+                    actions: assign({
+                      demarcheStatut: DemarchesStatutsIds.Rejete,
+                    }),
                   },
                 },
               },
@@ -672,6 +694,8 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
             target: 'finDeMachine',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.Rejete,
+              demarcheDateFin: ({ context, event }) => (isDemarcheTypeProlongations(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : { duree: null, dateFin: null }),
+              demarcheDateDebut: ({ context }) => (isDemarcheTypeOctroi(context.demarcheTypeId) ? { dateDebut: null, dateEtape: null } : context.demarcheDateDebut),
               visibilite: 'publique',
               decisionAdministrationFaite: true,
             }),
@@ -745,11 +769,17 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         on: {
           PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
             target: 'finDeMachine',
-            actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation,
+              demarcheDateFin: ({ context, event }) => (isDemarcheTypeWithPhase(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : context.demarcheDateFin),
+            }),
           },
           PUBLIER_DECISION_AU_RECUEIL_DES_ACTES_ADMINISTRATIFS: {
             target: 'finDeMachine',
-            actions: assign({ demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation }),
+            actions: assign({
+              demarcheStatut: DemarchesStatutsIds.RejeteApresAbrogation,
+              demarcheDateFin: ({ context, event }) => (isDemarcheTypeWithPhase(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : context.demarcheDateFin),
+            }),
           },
         },
       },
@@ -762,7 +792,11 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
         id: 'finDeMachineIrrecevable',
         always: {
           target: 'finDeMachine',
-          actions: assign({ demarcheStatut: DemarchesStatutsIds.Rejete }),
+          actions: assign({
+            demarcheStatut: DemarchesStatutsIds.Rejete,
+            demarcheDateFin: ({ context, event }) => (isDemarcheTypeProlongations(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : { duree: null, dateFin: null }),
+            demarcheDateDebut: ({ context }) => (isDemarcheTypeOctroi(context.demarcheTypeId) ? { dateDebut: null, dateEtape: null } : context.demarcheDateDebut),
+          }),
         },
       },
       finDeMachine: {

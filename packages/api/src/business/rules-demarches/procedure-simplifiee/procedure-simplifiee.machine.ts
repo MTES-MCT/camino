@@ -68,7 +68,7 @@ type ProcedureSimplifieeXStateEvent =
   | SaisirInformationHistoriqueIncomplete
   | PublierDecisionAccepteeAuJORF
   | PublierDecisionAuRecueilDesActesAdministratifs
-  | { type: 'CLASSER_SANS_SUITE' }
+  | { type: 'CLASSER_SANS_SUITE'; date: CaminoDate }
   | DesisterParLeDemandeur
   | { type: 'DEMANDER_INFORMATION' }
   | { type: 'RECEVOIR_INFORMATION' }
@@ -257,6 +257,12 @@ const procedureSimplifieeMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: D
         target: '.finDeMachine',
         actions: assign({
           demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+          demarcheDateFin: ({ context, event }) => {
+            if (isDemarcheTypeProlongations(context.demarcheTypeId)) {
+              return { dateFin: event.date, duree: null }
+            }
+            return { dateFin: null, duree: null }
+          },
         }),
       },
       DESISTER_PAR_LE_DEMANDEUR: {
