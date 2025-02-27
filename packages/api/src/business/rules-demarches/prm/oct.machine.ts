@@ -1,7 +1,7 @@
 import { assign, setup } from 'xstate'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, Etape, getDemarcheDateDebut, getDemarcheDateFin, globalGuards } from '../machine-common'
+import { CaminoCommonContext, DBEtat, demarcheDateMiseAJourRejet, demarcheDateMiseAJourTous, demarcheDateSuiteAClassementSansSuiteOuDesistement, Etape, globalGuards } from '../machine-common'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date'
 import { PAYS_IDS, PaysId, isGuyane, isMetropole, isOutreMer } from 'camino-common/src/static/pays'
@@ -79,7 +79,7 @@ type XStateEvent =
   | { type: 'RENDRE_AVIS_CONSEIL_GENERAL_CHARGE_DES_MINES' }
   | { type: 'FAIRE_SAISINE_AUTORITE_SIGNATAIRE' }
   | RendreDecisionAdministrationAcceptee
-  | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE' }
+  | { type: 'RENDRE_DECISION_ADMINISTRATION_REJETE'; date: CaminoDate }
   | FairePublicationAuJORF
   | { type: 'RENDRE_INFORMATION_DU_PREFET_ET_DES_COLLECTIVITES' }
   | { type: 'NOTIFIER_DEMANDEUR' }
@@ -88,8 +88,8 @@ type XStateEvent =
   | { type: 'NOTIFIER_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF' }
   | { type: 'RENDRE_DECISION_ABROGATION' }
-  | { type: 'DESISTER_PAR_LE_DEMANDEUR' }
-  | { type: 'CLASSER_SANS_SUITE' }
+  | { type: 'DESISTER_PAR_LE_DEMANDEUR'; date: CaminoDate }
+  | { type: 'CLASSER_SANS_SUITE'; date: CaminoDate }
   | { type: 'MODIFIER_DEMANDE' }
   | { type: 'DEMANDER_INFORMATIONS' }
   | { type: 'RECEVOIR_INFORMATIONS' }
@@ -145,6 +145,7 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 
 const SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF = 50
 
+// FIXME Prendre la publication de décision au JORF comme date de début de la phase de l'octroi
 export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
   constructor(titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) {
     super(prmOctMachine(titreTypeId, demarcheTypeId), trad)
@@ -241,9 +242,11 @@ const prmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
       visibilite: 'confidentielle',
       demarcheStatut: DemarchesStatutsIds.EnConstruction,
       demarcheTypeId,
-      demarcheDateEffet: null,
-      demarcheDateDebut: { dateDebut: null, dateEtape: null },
-      demarcheDateFin: { dateFin: null, duree: null },
+      demarcheDates: {
+        debut: { dateDebut: null, dateEtape: null },
+        fin: { dateFin: null, duree: null },
+        effet: null,
+      },
       paysId: null,
       surface: null,
       participationPublicStatutId: null,
@@ -267,6 +270,7 @@ const prmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
         actions: assign({
           demarcheStatut: DemarchesStatutsIds.Desiste,
           visibilite: 'publique',
+          demarcheDates: ({context, event}) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event)
         }),
       },
       CLASSER_SANS_SUITE: {
@@ -275,6 +279,7 @@ const prmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
         actions: assign({
           demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
           visibilite: ({ context }) => (context.demarcheStatut === DemarchesStatutsIds.Depose ? 'confidentielle' : 'publique'),
+          demarcheDates: ({context, event}) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
         }),
       },
     },
@@ -487,17 +492,13 @@ const prmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
       },
       decisionDeLAutoriteAdministrativeARendre: {
         on: {
-          RENDRE_DECISION_ADMINISTRATION_ACCEPTE: {
-            target: 'publicationAuJORFAFaire',
-            actions: assign({
-              demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(context.demarcheTypeId, context.demarcheDateDebut, event),
-              demarcheDateFin: ({ context, event }) => getDemarcheDateFin(context.demarcheTypeId, context.demarcheDateFin, event),
-            }),
-          },
+          RENDRE_DECISION_ADMINISTRATION_ACCEPTE: 'publicationAuJORFAFaire',
           RENDRE_DECISION_ADMINISTRATION_REJETE: {
             target: 'decisionsEtNotificationsRejetAFaire',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.Rejete,
+              // la date de début sert uniquement pour les prolongation, or nous sommes dans une machine d'octroi, donc on peut la mettre à null sans souci
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourRejet(context, { ...event, dateDebut: null }),
             }),
           },
         },
@@ -507,8 +508,7 @@ const prmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
           FAIRE_PUBLICATION_AU_JORF: {
             target: 'notificationsAFaire',
             actions: assign({
-              demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(context.demarcheTypeId, context.demarcheDateDebut, event),
-              demarcheDateFin: ({ context, event }) => getDemarcheDateFin(context.demarcheTypeId, context.demarcheDateFin, event),
+              demarcheDates: ({context, event}) => demarcheDateMiseAJourTous(context, event),
               demarcheStatut: DemarchesStatutsIds.Accepte,
             }),
           },

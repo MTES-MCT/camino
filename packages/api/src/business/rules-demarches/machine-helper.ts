@@ -257,8 +257,8 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
 
       if (isDemarcheTypeWithPhase(value.state.context.demarcheTypeId)) {
         if (
-          isDemarcheDateFinInfinie(value.state.context.demarcheDateFin) &&
-          isBefore(DATE_PAR_DEFAUT_TITRE_INFINI, value.state.context.demarcheDateDebut.dateDebut ?? value.state.context.demarcheDateDebut.dateEtape ?? DATE_PAR_DEFAUT_TITRE_INFINI)
+          isDemarcheDateFinInfinie(value.state.context.demarcheDates.fin) &&
+          isBefore(DATE_PAR_DEFAUT_TITRE_INFINI, value.state.context.demarcheDates.debut.dateDebut ?? value.state.context.demarcheDates.debut.dateEtape ?? DATE_PAR_DEFAUT_TITRE_INFINI)
         ) {
           throw new Error('La date de début de la démarche est APRÈS sa date de fin')
         }
@@ -266,15 +266,15 @@ export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, C
           demarcheStatut,
           publique,
           demarcheTypeId: value.state.context.demarcheTypeId,
-          demarcheDateFin: isDemarcheDateFinInfinie(value.state.context.demarcheDateFin) ? { dateFin: DATE_PAR_DEFAUT_TITRE_INFINI, duree: null } : value.state.context.demarcheDateFin,
-          demarcheDateDebut: value.state.context.demarcheDateDebut,
+          demarcheDateFin: isDemarcheDateFinInfinie(value.state.context.demarcheDates.fin) ? { dateFin: DATE_PAR_DEFAUT_TITRE_INFINI, duree: null } : value.state.context.demarcheDates.fin,
+          demarcheDateDebut: value.state.context.demarcheDates.debut,
         }
       } else if (isDemarcheTypeAnnulation(value.state.context.demarcheTypeId)) {
         return {
           demarcheStatut,
           publique,
           demarcheTypeId: value.state.context.demarcheTypeId,
-          demarcheDateEffet: value.state.context.demarcheDateEffet,
+          demarcheDateEffet: value.state.context.demarcheDates.effet,
         }
       }
 

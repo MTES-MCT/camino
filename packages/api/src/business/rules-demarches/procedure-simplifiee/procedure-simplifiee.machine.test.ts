@@ -6,6 +6,7 @@ import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 
 const psMachine = new ProcedureSimplifieeMachine(TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE, DEMARCHES_TYPES_IDS.Octroi)
+const psProMachine = new ProcedureSimplifieeMachine(TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE, DEMARCHES_TYPES_IDS.Prolongation)
 const psRetMachine = new ProcedureSimplifieeMachine(TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE, DEMARCHES_TYPES_IDS.RenonciationTotale)
 
 describe('vérifie l’arbre des procédures historiques et simplifiées', () => {
@@ -159,6 +160,21 @@ describe('vérifie l’arbre des procédures historiques et simplifiées', () =>
         "FAIRE_DEMANDE                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
         "OUVRIR_PARTICIPATION_DU_PUBLIC (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RECEVOIR_INFORMATION,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
         "CLASSER_SANS_SUITE             (publique      , classé sans suite      ) -> []",
+      ]
+    `)
+  })
+
+  test('peut classer la demande sans suite après une ouverture de la participation du publique sur une prolongation', () => {
+    const { tree } = setDateAndOrderAndInterpretMachine(psProMachine, '2022-04-15', [ETES.demande.FAIT, ETES.participationDuPublic.EN_COURS, ETES.classementSansSuite.FAIT])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                           (confidentielle, en construction        ) -> [FAIRE_DEMANDE,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "FAIRE_DEMANDE                  (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,ENREGISTRER_DEMANDE,OUVRIR_PARTICIPATION_DU_PUBLIC,RECEVOIR_INFORMATION,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS,RENDRE_DECISION_ADMINISTRATION_ACCEPTEE,RENDRE_DECISION_ADMINISTRATION_REJETEE,RENDRE_DECISION_ADMINISTRATION_REJETEE_DECISION_IMPLICITE]",
+        "[2022-04-16 -> null]",
+        "OUVRIR_PARTICIPATION_DU_PUBLIC (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DEMANDER_INFORMATION,DESISTER_PAR_LE_DEMANDEUR,RECEVOIR_INFORMATION,RENDRE_AVIS_COLLECTIVITES,RENDRE_AVIS_SERVICES_COMMISSIONS]",
+        "[2022-04-16 -> null]",
+        "CLASSER_SANS_SUITE             (publique      , classé sans suite      ) -> []",
+        "[2022-04-16 -> 2022-04-18]",
       ]
     `)
   })

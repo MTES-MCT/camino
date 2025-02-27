@@ -1,6 +1,6 @@
 import { and, assign, not, or, setup } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, Concurrence, DBEtat, Etape, getDemarcheDateDebut, getDemarcheDateFin, globalGuards } from '../machine-common'
+import { CaminoCommonContext, Concurrence, DBEtat, demarcheDateSuiteAClassementSansSuiteOuDesistement, Etape, getDemarcheDateDebut, getDemarcheDateFin, globalGuards } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { TITRES_TYPES_IDS, TitreTypeId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
@@ -252,6 +252,11 @@ const defaultDemarcheStatut = DemarchesStatutsIds.EnConstruction
 const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) =>
   setup({
     types: {} as { context: ProcedureSpecifiqueContext; events: ProcedureSpecifiqueXStateEvent },
+    actions: {
+      demarcheDateSuiteAClassementSansSuiteOuDesistement: assign({
+        demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
+      }),
+    },
     guards: {
       isParticipationDuPublicFaite: ({ context }) => context.participationDuPublicFaite,
       isDecisionAdministrationFaite: ({ context }) => context.decisionAdministrationFaite,
@@ -304,10 +309,12 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       surface: 'inconnu',
       demarcheStatut: defaultDemarcheStatut,
       visibilite: 'confidentielle',
-      demarcheDateDebut: { dateDebut: null, dateEtape: null },
+      demarcheDates: {
+        debut: { dateDebut: null, dateEtape: null },
+        fin: { dateFin: null, duree: null },
+        effet: null,
+      },
       demarcheTypeId,
-      demarcheDateFin: { dateFin: null, duree: null },
-      demarcheDateEffet: null,
       concurrence: 'inconnu',
       hasTitreFrom: 'inconnu',
       paysId: 'inconnu',
@@ -337,11 +344,9 @@ const procedureSpecifiqueMachine = (titreTypeId: TitreTypeId, demarcheTypeId: De
       CLASSER_SANS_SUITE: {
         guard: 'isDemarcheEnInstruction',
         target: '.finDeMachine',
-        actions: assign({
+        actions: [assign({
           demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
-          demarcheDateFin: ({ context, event }) => (isDemarcheTypeProlongations(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : { duree: null, dateFin: null }),
-          demarcheDateDebut: ({ context }) => (isDemarcheTypeOctroi(context.demarcheTypeId) ? { dateDebut: null, dateEtape: null } : context.demarcheDateDebut),
-        }),
+        }), "demarcheDateSuiteAClassementSansSuiteOuDesistement"],
       },
       DESISTER_PAR_LE_DEMANDEUR: {
         guard: 'isDemarcheEnInstruction',

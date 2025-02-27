@@ -7,7 +7,7 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate } from 'camino-common/src/date'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-
+// FIXME gérer les dates de fin pour les avenants
 type FaireDemandeEvent = {
   mecanise: boolean
   franchissements: number | null

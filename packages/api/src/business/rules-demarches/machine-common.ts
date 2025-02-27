@@ -15,7 +15,7 @@ import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined
 import { KM2, km2Validator } from 'camino-common/src/number'
 import { concurrenceValidator, Consentement, DemarcheVisibilite } from 'camino-common/src/etape-form'
 import { demarcheIdValidator } from 'camino-common/src/demarche'
-import { DemarcheTypeId, isDemarcheTypeAnnulation, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes'
+import { DemarcheTypeId, isDemarcheTypeAnnulation, isDemarcheTypeProlongations, isDemarcheTypeWithPhase } from 'camino-common/src/static/demarchesTypes'
 
 export type Concurrence = z.infer<typeof concurrenceValidator>
 export interface Etape {
@@ -43,12 +43,61 @@ export const globalGuards = {
   isDemarcheStatutEnConstruction: ({ context }) => context.demarcheStatut === DemarchesStatutsIds.EnConstruction,
 } as const satisfies Record<string, (value: { context: CaminoCommonContext }) => boolean>
 
+type EventWithDateDebutFinAndDuree = {
+  date: CaminoDate
+  dateDebut: CaminoDate | null
+  dateFin: CaminoDate | null
+  duree: number | null
+}
+type EventWithDateDebut = {
+  date: CaminoDate
+  dateDebut: CaminoDate | null
+}
+type EventWithDate = {
+  date: CaminoDate
+}
+
+export const demarcheDateMiseAJourAbrogation =  (context: CaminoCommonContext, event: EventWithDate): CaminoCommonContextDemarcheDates => ({
+  debut: context.demarcheDates.debut,
+  fin: isDemarcheTypeWithPhase(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : context.demarcheDates.fin,
+  effet: context.demarcheDates.effet,
+})
+
+export const demarcheDateMiseAJourRejet = (context: CaminoCommonContext, event: EventWithDateDebut): CaminoCommonContextDemarcheDates => ({
+  debut: isDemarcheTypeProlongations(context.demarcheTypeId) ? getDemarcheDateDebut(context.demarcheTypeId, context.demarcheDates.debut, event) : context.demarcheDates.debut,
+  fin: isDemarcheTypeProlongations(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : context.demarcheDates.fin,
+  effet: null,
+})
+export const demarcheDateMiseAJourDemande = (context: CaminoCommonContext, event: EventWithDate): CaminoCommonContextDemarcheDates => ({
+  debut: isDemarcheTypeProlongations(context.demarcheTypeId) ? { dateEtape: event.date, dateDebut: null } : { dateDebut: null, dateEtape: null },
+  fin: context.demarcheDates.fin,
+  effet: context.demarcheDates.effet,
+})
+export const demarcheDateMiseAJourTous = (context: CaminoCommonContext, event: EventWithDateDebutFinAndDuree): CaminoCommonContextDemarcheDates => {
+  return {
+    debut: getDemarcheDateDebut(context.demarcheTypeId, context.demarcheDates.debut, event),
+    fin: getDemarcheDateFin(context.demarcheTypeId, context.demarcheDates.fin, event),
+    effet: getDemarcheDateEffet(context.demarcheTypeId, context.demarcheDates.effet, event),
+  }
+}
+
+export const demarcheDateSuiteAClassementSansSuiteOuDesistement = (context: CaminoCommonContext, event: { date: CaminoDate }): CaminoCommonContextDemarcheDates => {
+  return {
+    debut: context.demarcheDates.debut,
+    fin: isDemarcheTypeProlongations(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : { dateFin: null, duree: null },
+    effet: null,
+  }
+}
+
+interface CaminoCommonContextDemarcheDates {
+  debut: CaminoMachineDateDebut
+  fin: CaminoMachineDateFin | CaminoMachineDateFinInfini
+  effet: CaminoDate | null
+}
 export interface CaminoCommonContext {
   demarcheStatut: DemarcheStatutId
   demarcheTypeId: DemarcheTypeId
-  demarcheDateEffet: CaminoDate | null
-  demarcheDateDebut: CaminoMachineDateDebut
-  demarcheDateFin: CaminoMachineDateFin | CaminoMachineDateFinInfini
+  demarcheDates: CaminoCommonContextDemarcheDates
   visibilite: DemarcheVisibilite
 }
 
