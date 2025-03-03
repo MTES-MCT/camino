@@ -21,10 +21,6 @@ export const EtapesTypesEtapesStatuts = {
   },
 
   saisineEtAvisDuConseilGeneralDeLeconomie: {
-    FAVORABLE: { etapeTypeId: 'acg', etapeStatutId: 'fav' },
-    DEFAVORABLE: { etapeTypeId: 'acg', etapeStatutId: 'def' },
-    FAVORABLE_AVEC_RESERVE: { etapeTypeId: 'acg', etapeStatutId: 'fre' },
-    DEFAVORABLE_AVEC_RESERVES: { etapeTypeId: 'acg', etapeStatutId: 'dre' },
     FAIT: { etapeStatutId: 'fai', etapeTypeId: 'acg' },
   },
   avisDesCollectivites: {

@@ -7,7 +7,7 @@ interface Definition<T> {
   statutIds: AvisStatutId[]
 }
 // prettier-ignore
-const AVIS_TYPES_IDS_WITHOUT_AUTRE = [ "confirmationAccordProprietaireDuSol", "avisDirectionRegionaleDesAffairesCulturelles", "avisDirectionAlimentationAgricultureForet", "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques", "avisDirectionsRégionalesEconomieEmploiTravailSolidarités", "avisDirectionRegionaleFinancesPubliques", "avisGendarmerieNationale", "avisParcNaturelMarin", "avisIFREMER", "avisInstitutNationalOrigineQualite", "avisEtatMajorOrpaillagePecheIllicite", "avisServiceAdministratifLocal", "avisAutoriteMilitaire", "avisParcNational", "avisDirectionDepartementaleTerritoiresMer", "avisAgenceRegionaleSante", "avisCaisseGeneraleSecuriteSociale", "avisServiceMilieuxNaturelsBiodiversiteSitesPaysages", "avisOfficeNationalDesForets", "expertiseOfficeNationalDesForets", "avisDUneCollectivite", "avisDeLaMissionAutoriteEnvironnementale", "avisProprietaireDuSol", "avisCasParCas"] as const
+const AVIS_TYPES_IDS_WITHOUT_AUTRE = [ "confirmationAccordProprietaireDuSol", "avisDirectionRegionaleDesAffairesCulturelles", "avisDirectionAlimentationAgricultureForet", "avisConseilDepartementalEnvironnementRisquesSanitairesTechnologiques", "avisDirectionsRégionalesEconomieEmploiTravailSolidarités", "avisDirectionRegionaleFinancesPubliques", "avisGendarmerieNationale", "avisParcNaturelMarin", "avisIFREMER", "avisInstitutNationalOrigineQualite", "avisEtatMajorOrpaillagePecheIllicite", "avisServiceAdministratifLocal", "avisAutoriteMilitaire", "avisParcNational", "avisDirectionDepartementaleTerritoiresMer", "avisAgenceRegionaleSante", "avisCaisseGeneraleSecuriteSociale", "avisServiceMilieuxNaturelsBiodiversiteSitesPaysages", "avisOfficeNationalDesForets", "expertiseOfficeNationalDesForets", "avisDUneCollectivite", "avisDeLaMissionAutoriteEnvironnementale", "avisProprietaireDuSol", "avisCasParCas", "avisDuConseilGeneralDeLEconomie"] as const
 const AVIS_TYPE_IDS_AUTRE = ['autreAvis'] as const
 
 const AVIS_TYPES_IDS = [...AVIS_TYPES_IDS_WITHOUT_AUTRE, ...AVIS_TYPE_IDS_AUTRE] as const
@@ -45,6 +45,7 @@ export const AVIS_TYPES = {
   avisDeLaMissionAutoriteEnvironnementale: 'avisDeLaMissionAutoriteEnvironnementale',
   avisProprietaireDuSol: 'avisProprietaireDuSol',
   avisCasParCas: 'avisCasParCas',
+  avisDuConseilGeneralDeLEconomie: 'avisDuConseilGeneralDeLEconomie',
   autreAvis: 'autreAvis',
 } as const satisfies { [key in AvisTypeId]: AvisTypeId }
 const AvisTypes = {
@@ -96,6 +97,7 @@ const AvisTypes = {
   avisDeLaMissionAutoriteEnvironnementale: { id: 'avisDeLaMissionAutoriteEnvironnementale', nom: 'avis de la mission autorité environnementale', statutIds: ['Exempté', 'Requis'] },
   avisProprietaireDuSol: { id: 'avisProprietaireDuSol', nom: 'avis du propriétaire du sol', statutIds: defaultStatutIds },
   avisCasParCas: { id: 'avisCasParCas', nom: 'Décision au cas par cas', statutIds: ['Exempté', 'Requis'] },
+  avisDuConseilGeneralDeLEconomie: { id: 'avisDuConseilGeneralDeLEconomie', nom: "Avis du conseil général de l'économie (CGE)", statutIds: defaultStatutIds },
   autreAvis: { id: 'autreAvis', nom: 'Autre avis', statutIds: defaultStatutIds },
 } as const satisfies { [key in AvisTypeId]: Definition<key> }
 
