@@ -102,13 +102,6 @@ test('getAdministrationTitresTypesEtapesTypes', () => {
       },
       {
         "creationInterdit": true,
-        "etapeTypeId": "rcg",
-        "lectureInterdit": false,
-        "modificationInterdit": true,
-        "titreTypeId": "cxm",
-      },
-      {
-        "creationInterdit": true,
         "etapeTypeId": "rpe",
         "lectureInterdit": false,
         "modificationInterdit": true,
@@ -117,13 +110,6 @@ test('getAdministrationTitresTypesEtapesTypes', () => {
       {
         "creationInterdit": true,
         "etapeTypeId": "sas",
-        "lectureInterdit": false,
-        "modificationInterdit": true,
-        "titreTypeId": "cxm",
-      },
-      {
-        "creationInterdit": true,
-        "etapeTypeId": "scg",
         "lectureInterdit": false,
         "modificationInterdit": true,
         "titreTypeId": "cxm",
@@ -235,21 +221,7 @@ test('getAdministrationTitresTypesEtapesTypes', () => {
       },
       {
         "creationInterdit": true,
-        "etapeTypeId": "rcg",
-        "lectureInterdit": false,
-        "modificationInterdit": true,
-        "titreTypeId": "prm",
-      },
-      {
-        "creationInterdit": true,
         "etapeTypeId": "sas",
-        "lectureInterdit": false,
-        "modificationInterdit": true,
-        "titreTypeId": "prm",
-      },
-      {
-        "creationInterdit": true,
-        "etapeTypeId": "scg",
         "lectureInterdit": false,
         "modificationInterdit": true,
         "titreTypeId": "prm",
