@@ -227,7 +227,7 @@ describe('vérifie l’arbre d’octroi de PRM', () => {
     ]
 
     expect(() => setDateAndOrderAndInterpretMachine(prmOctMachine, '2022-04-13', etapes)).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-05-28"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter","asc_fai","ppu_ter","apd_fav","app_fav","acg_fav","sas_fai","dex_rej","ipc_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS","date":"2022-05-28","status":"fai"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
+      `[Error: Error: cannot execute step: '{"etapeTypeId":"rpu","etapeStatutId":"fai","date":"2022-05-28"}' after '["mfr_fai","men_fai","spp_fai","mcr_fav","anf_ter","asc_fai","ppu_ter","apd_fav","app_fav","acg_fai","sas_fai","dex_rej","ipc_fai","mno_fai"]'. The event {"type":"PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS","date":"2022-05-28","status":"fai"} should be one of 'RENDRE_DECISION_ABROGATION,RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF']`
     )
   })
 

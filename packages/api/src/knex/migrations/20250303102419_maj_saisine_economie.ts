@@ -50,103 +50,57 @@ export const up = async (knex: Knex): Promise<void> => {
   }, [])
 
   for (const demarche of toBeMerged) {
-    if (demarche.etapes.length === 1) {
-      const etape = demarche.etapes[0]
+    let acgId = demarche.etapes.find(({ type_id }) => type_id === 'acg')?.id ?? null
+    if (isNullOrUndefined(acgId)) {
+      acgId = demarche.etapes[0].id
+    }
+    await knex.raw(`UPDATE titres_etapes SET type_id = 'acg', statut_id = 'fai' WHERE id = ?`, [acgId])
 
-      // algo :
-      // Si scg --> update du type de l'étape
-      // Sinon si ACG/RCG --> pour chaque document (non autre document), créer un etape_avis avec le statut de l'ACG puis update du type de l'étape
-      if (['acg', 'rcg'].includes(etape.type_id)) {
-        const documents: {
-          rows: { id: EtapeDocumentId; etape_document_type_id: DocumentTypeId; description: string; public_lecture: boolean; entreprises_lecture: boolean; largeobject_id: LargeObjectId }[]
-        } = await knex.raw('SELECT * FROM etapes_documents WHERE etape_id = ?', [etape.id])
+    const etapesAvecDocumentsAMigrer = demarche.etapes.filter(({ type_id }) => ['acg', 'rcg'].includes(type_id))
+    for (const etape of etapesAvecDocumentsAMigrer) {
+      const documents: {
+        rows: { id: EtapeDocumentId; etape_document_type_id: DocumentTypeId; description: string; public_lecture: boolean; entreprises_lecture: boolean; largeobject_id: LargeObjectId }[]
+      } = await knex.raw('SELECT * FROM etapes_documents WHERE etape_id = ?', [etape.id])
 
-        if (isNullOrUndefinedOrEmpty(documents.rows)) {
-          const id = newEtapeAvisId(etape.type_id === 'acg' ? AVIS_TYPES.avisDuConseilGeneralDeLEconomie : AVIS_TYPES.autreAvis)
-          await knex.raw('INSERT INTO etape_avis(id, avis_type_id, avis_statut_id, avis_visibility_id, etape_id, description, date) VALUES (?, ?, ?, ?, ?, ?, ?)', [
-            id,
-            etape.type_id === 'acg' ? AVIS_TYPES.avisDuConseilGeneralDeLEconomie : AVIS_TYPES.autreAvis,
+      if (isNullOrUndefinedOrEmpty(documents.rows)) {
+        const id = newEtapeAvisId(etape.type_id === 'acg' ? AVIS_TYPES.avisDuConseilGeneralDeLEconomie : AVIS_TYPES.autreAvis)
+        await knex.raw('INSERT INTO etape_avis(id, avis_type_id, avis_statut_id, avis_visibility_id, etape_id, description, date) VALUES (?, ?, ?, ?, ?, ?, ?)', [
+          id,
+          etape.type_id === 'acg' ? AVIS_TYPES.avisDuConseilGeneralDeLEconomie : AVIS_TYPES.autreAvis,
+          convertEtapeStatutToAvisStatut(etape.statut_id),
+          AvisVisibilityIds.Administrations,
+          acgId,
+          // @ts-ignore
+          `${OLD_ETAPES_TYPES_NAMES[etape.type_id] ?? ''}`,
+          etape.date,
+        ])
+      } else {
+        for (const document of documents.rows) {
+          await knex.raw('INSERT INTO etape_avis(id, avis_type_id, avis_statut_id, avis_visibility_id, etape_id, description, date, largeobject_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
+            document.id,
+            document.etape_document_type_id === DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge ? AVIS_TYPES.avisDuConseilGeneralDeLEconomie : AVIS_TYPES.autreAvis,
             convertEtapeStatutToAvisStatut(etape.statut_id),
-            AvisVisibilityIds.Administrations,
-            etape.id,
-            // @ts-ignore
-            `${OLD_ETAPES_TYPES_NAMES[etape.type_id] ?? ''}`,
-            etape.date,
-          ])
-        } else {
-          for (const document of documents.rows) {
-            await knex.raw('INSERT INTO etape_avis(id, avis_type_id, avis_statut_id, avis_visibility_id, etape_id, description, date, largeobject_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
-              document.id,
-              document.etape_document_type_id === DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge ? AVIS_TYPES.avisDuConseilGeneralDeLEconomie : AVIS_TYPES.autreAvis,
-              convertEtapeStatutToAvisStatut(etape.statut_id),
-              document.public_lecture ? AvisVisibilityIds.Public : document.entreprises_lecture ? AvisVisibilityIds.TitulairesEtAdministrations : AvisVisibilityIds.Administrations,
-              etape.id,
-              document.description + `\n${DocumentsTypes[document.etape_document_type_id].nom}`,
-              etape.date,
-              document.largeobject_id,
-            ])
-          }
-        }
-
-        await knex.raw('DELETE FROM etapes_documents WHERE etape_id = ?', [etape.id])
-      }
-
-      await knex.raw(`UPDATE titres_etapes SET type_id = 'acg', statut_id = 'fai' WHERE id = ?`, [etape.id])
-    } else {
-      let acgId = demarche.etapes.find(({ type_id }) => type_id === 'acg')?.id ?? null
-      if (isNullOrUndefined(acgId)) {
-        acgId = demarche.etapes[0].id
-      }
-      await knex.raw(`UPDATE titres_etapes SET type_id = 'acg', statut_id = 'fai' WHERE id = ?`, [acgId])
-
-      const etapesAvecDocumentsAMigrer = demarche.etapes.filter(({ type_id }) => ['acg', 'rcg'].includes(type_id))
-      for (const etape of etapesAvecDocumentsAMigrer) {
-        const documents: {
-          rows: { id: EtapeDocumentId; etape_document_type_id: DocumentTypeId; description: string; public_lecture: boolean; entreprises_lecture: boolean; largeobject_id: LargeObjectId }[]
-        } = await knex.raw('SELECT * FROM etapes_documents WHERE etape_id = ?', [etape.id])
-
-        if (isNullOrUndefinedOrEmpty(documents.rows)) {
-          const id = newEtapeAvisId(etape.type_id === 'acg' ? AVIS_TYPES.avisDuConseilGeneralDeLEconomie : AVIS_TYPES.autreAvis)
-          await knex.raw('INSERT INTO etape_avis(id, avis_type_id, avis_statut_id, avis_visibility_id, etape_id, description, date) VALUES (?, ?, ?, ?, ?, ?, ?)', [
-            id,
-            etape.type_id === 'acg' ? AVIS_TYPES.avisDuConseilGeneralDeLEconomie : AVIS_TYPES.autreAvis,
-            convertEtapeStatutToAvisStatut(etape.statut_id),
-            AvisVisibilityIds.Administrations,
+            document.public_lecture ? AvisVisibilityIds.Public : document.entreprises_lecture ? AvisVisibilityIds.TitulairesEtAdministrations : AvisVisibilityIds.Administrations,
             acgId,
-            // @ts-ignore
-            `${OLD_ETAPES_TYPES_NAMES[etape.type_id] ?? ''}`,
+            document.description + `\n${DocumentsTypes[document.etape_document_type_id].nom}`,
             etape.date,
+            document.largeobject_id,
           ])
-        } else {
-          for (const document of documents.rows) {
-            await knex.raw('INSERT INTO etape_avis(id, avis_type_id, avis_statut_id, avis_visibility_id, etape_id, description, date, largeobject_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
-              document.id,
-              document.etape_document_type_id === DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge ? AVIS_TYPES.avisDuConseilGeneralDeLEconomie : AVIS_TYPES.autreAvis,
-              convertEtapeStatutToAvisStatut(etape.statut_id),
-              document.public_lecture ? AvisVisibilityIds.Public : document.entreprises_lecture ? AvisVisibilityIds.TitulairesEtAdministrations : AvisVisibilityIds.Administrations,
-              acgId,
-              document.description + `\n${DocumentsTypes[document.etape_document_type_id].nom}`,
-              etape.date,
-              document.largeobject_id,
-            ])
-          }
         }
-
-        await knex.raw('DELETE FROM etapes_documents WHERE etape_id = ?', [etape.id])
       }
 
-      // @ts-ignore
-      const scg = demarche.etapes.filter(({ id, type_id }) => type_id === 'scg' && id !== acgId)
-      for (const etape of scg) {
-        await knex.raw('UPDATE etapes_documents SET etape_id = ? WHERE etape_id = ?', [acgId, etape.id])
-      }
+      await knex.raw('DELETE FROM etapes_documents WHERE etape_id = ?', [etape.id])
+    }
 
-      for (const etapeId of demarche.etapes.filter(({ id }) => id !== acgId).map(({ id }) => id)) {
-        await knex.raw('UPDATE titres_etapes SET etape_fondamentale_id = ? WHERE etape_fondamentale_id = ?', [acgId, etapeId])
-        await knex.raw(`DELETE FROM titres_etapes WHERE id = ?`, [etapeId])
-      }
+    // @ts-ignore
+    const scg = demarche.etapes.filter(({ id, type_id }) => type_id === 'scg' && id !== acgId)
+    for (const etape of scg) {
+      await knex.raw('UPDATE etapes_documents SET etape_id = ? WHERE etape_id = ?', [acgId, etape.id])
+    }
 
-      // await knex.raw(`UPDATE titres_etapes SET note = note || '\n' || ? WHERE id = ?`, [note.join(`\n`), acgId])
+    for (const etapeId of demarche.etapes.filter(({ id }) => id !== acgId).map(({ id }) => id)) {
+      await knex.raw('UPDATE titres_etapes SET etape_fondamentale_id = ? WHERE etape_fondamentale_id = ?', [acgId, etapeId])
+      await knex.raw(`DELETE FROM titres_etapes WHERE id = ?`, [etapeId])
     }
   }
 }
