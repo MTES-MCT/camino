@@ -1,12 +1,21 @@
 import { assign, setup } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, getDemarcheDateDebut, getDemarcheDateFin, globalGuards, tags } from '../machine-common'
+import {
+  CaminoCommonContext,
+  DBEtat,
+  demarcheDateMiseAJourDemande,
+  demarcheDateMiseAJourRejet,
+  demarcheDateMiseAJourTous,
+  demarcheDateSuiteAClassementSansSuiteOuDesistement,
+  globalGuards,
+  tags,
+} from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { CaminoDate, dateAddMonths, daysBetween } from 'camino-common/src/date'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DemarcheTypeId, isDemarcheTypeProlongations } from 'camino-common/src/static/demarchesTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 
 type RendreAvisDesServicesEtCommissionsConsultatives = {
   date: CaminoDate
@@ -38,7 +47,7 @@ type FaireDemande = {
   date: CaminoDate
 }
 
-type RendreDecisionImpliciteRejet = { type: 'RENDRE_DECISION_IMPLICITE_REJET'; date: CaminoDate }
+type RendreDecisionImpliciteRejet = { type: 'RENDRE_DECISION_IMPLICITE_REJET'; date: CaminoDate; dateDebut: CaminoDate | null }
 type FaireDesistementDemandeur = { type: 'FAIRE_DESISTEMENT_DEMANDEUR'; date: CaminoDate }
 type FaireClassementSansSuite = { type: 'FAIRE_CLASSEMENT_SANS_SUITE'; date: CaminoDate }
 type AXMProXStateEvent =
@@ -187,9 +196,11 @@ const axmProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
     initial: 'demandeAFaire',
     context: {
       demarcheStatut: DemarchesStatutsIds.EnConstruction,
-      demarcheDateDebut: { dateDebut: null, dateEtape: null },
-      demarcheDateFin: { dateFin: null, duree: null },
-      demarcheDateEffet: null,
+      demarcheDates: {
+        debut: { dateDebut: null, dateEtape: null },
+        fin: { dateFin: null, duree: null },
+        effet: null,
+      },
       demarcheTypeId,
       notificationDuDemandeurFaite: false,
       notificationDesCollectivitesLocalesFaite: false,
@@ -204,14 +215,14 @@ const axmProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
         guard: ({ context }) => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
         target: '.desistementDuDemandeurRendu',
         actions: assign({
-          demarcheDateFin: ({ event }) => ({ dateFin: event.date, duree: null }),
+          demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
         }),
       },
       FAIRE_CLASSEMENT_SANS_SUITE: {
         guard: ({ context }) => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
         target: '.classementSansSuiteRendu',
         actions: assign({
-          demarcheDateFin: ({ event }) => ({ dateFin: event.date, duree: null }),
+          demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
         }),
       },
       RENDRE_DECISION_IMPLICITE_REJET: {
@@ -220,7 +231,7 @@ const axmProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
         actions: assign({
           demarcheStatut: DemarchesStatutsIds.Rejete,
           visibilite: 'publique',
-          demarcheDateFin: ({ event }) => ({ dateFin: event.date, duree: null }),
+          demarcheDates: ({ context, event }) => demarcheDateMiseAJourRejet(context, event),
         }),
       },
     },
@@ -230,7 +241,7 @@ const axmProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
           FAIRE_DEMANDE: {
             target: 'enregistrementDeLaDemandeAFaire',
             actions: assign({
-              demarcheDateDebut: ({ event }) => ({ dateEtape: event.date, dateDebut: null }),
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourDemande(context, event),
             }),
           },
         },
@@ -387,17 +398,14 @@ const axmProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
             target: 'decisionAdministrationRendue',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.Accepte,
-              demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(context.demarcheTypeId, context.demarcheDateDebut, event),
-              demarcheDateFin: ({ context, event }) => getDemarcheDateFin(context.demarcheTypeId, context.demarcheDateFin, event),
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event),
             }),
           },
           RENDRE_DECISION_ADMINISTRATION_REJETE: {
             target: 'decisionAdministrationRendue',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.Rejete,
-              demarcheDateDebut: ({ context, event }) =>
-                isDemarcheTypeProlongations(context.demarcheTypeId) ? getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event) : context.demarcheDateDebut,
-              demarcheDateFin: ({ context, event }) => (isDemarcheTypeProlongations(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : context.demarcheDateFin),
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourRejet(context, event),
             }),
           },
         },
@@ -408,17 +416,14 @@ const axmProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
             target: 'decisionAdministrationRendue',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.Accepte,
-              demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(context.demarcheTypeId, context.demarcheDateDebut, event),
-              demarcheDateFin: ({ context, event }) => getDemarcheDateFin(context.demarcheTypeId, context.demarcheDateFin, event),
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event),
             }),
           },
           RENDRE_DECISION_ADMINISTRATION_REJETE: {
             target: 'decisionAdministrationRendue',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.Rejete,
-              demarcheDateDebut: ({ context, event }) =>
-                isDemarcheTypeProlongations(context.demarcheTypeId) ? getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event) : context.demarcheDateDebut,
-              demarcheDateFin: ({ context, event }) => (isDemarcheTypeProlongations(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : context.demarcheDateFin),
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourRejet(context, event),
             }),
           },
         },

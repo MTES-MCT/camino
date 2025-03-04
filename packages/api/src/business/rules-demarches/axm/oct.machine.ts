@@ -1,6 +1,6 @@
 import { assign, setup } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, getDemarcheDateDebut, getDemarcheDateFin, globalGuards, tags } from '../machine-common'
+import { CaminoCommonContext, DBEtat, demarcheDateMiseAJourTous, globalGuards, tags } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
@@ -163,9 +163,11 @@ const axmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
     initial: 'demandeAFaire',
     context: {
       demarcheStatut: DemarchesStatutsIds.EnConstruction,
-      demarcheDateDebut: { dateDebut: null, dateEtape: null },
-      demarcheDateFin: { dateFin: null, duree: null },
-      demarcheDateEffet: null,
+      demarcheDates: {
+        debut: { dateDebut: null, dateEtape: null },
+        fin: { dateFin: null, duree: null },
+        effet: null,
+      },
       demarcheTypeId,
       demandeFaite: false,
       notificationDuDemandeurFaite: false,
@@ -354,8 +356,7 @@ const axmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
             target: 'decisionAdministrationRendue',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.Accepte,
-              demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(context.demarcheTypeId, context.demarcheDateDebut, event),
-              demarcheDateFin: ({ context, event }) => getDemarcheDateFin(context.demarcheTypeId, context.demarcheDateFin, event),
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event),
             }),
           },
           RENDRE_DECISION_ADMINISTRATION_REJETE: {
@@ -372,8 +373,7 @@ const axmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
             target: 'decisionAdministrationRendue',
             actions: assign({
               demarcheStatut: DemarchesStatutsIds.Accepte,
-              demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(context.demarcheTypeId, context.demarcheDateDebut, event),
-              demarcheDateFin: ({ context, event }) => getDemarcheDateFin(context.demarcheTypeId, context.demarcheDateFin, event),
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event),
             }),
           },
           RENDRE_DECISION_ADMINISTRATION_REJETE: {
