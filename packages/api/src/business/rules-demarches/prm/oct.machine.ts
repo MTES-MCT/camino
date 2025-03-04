@@ -145,7 +145,6 @@ const trad: { [key in Event]: { db: DBEtat; mainStep: boolean } } = {
 
 const SUPERFICIE_MAX_POUR_EXONERATION_AVIS_MISE_EN_CONCURRENCE_AU_JORF = 50
 
-// FIXME Prendre la publication de décision au JORF comme date de début de la phase de l'octroi
 export class PrmOctMachine extends CaminoMachine<PrmOctContext, XStateEvent> {
   constructor(titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId) {
     super(prmOctMachine(titreTypeId, demarcheTypeId), trad)
@@ -270,7 +269,7 @@ const prmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
         actions: assign({
           demarcheStatut: DemarchesStatutsIds.Desiste,
           visibilite: 'publique',
-          demarcheDates: ({context, event}) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event)
+          demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
         }),
       },
       CLASSER_SANS_SUITE: {
@@ -279,7 +278,7 @@ const prmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
         actions: assign({
           demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
           visibilite: ({ context }) => (context.demarcheStatut === DemarchesStatutsIds.Depose ? 'confidentielle' : 'publique'),
-          demarcheDates: ({context, event}) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
+          demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
         }),
       },
     },
@@ -508,7 +507,7 @@ const prmOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
           FAIRE_PUBLICATION_AU_JORF: {
             target: 'notificationsAFaire',
             actions: assign({
-              demarcheDates: ({context, event}) => demarcheDateMiseAJourTous(context, event),
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event),
               demarcheStatut: DemarchesStatutsIds.Accepte,
             }),
           },

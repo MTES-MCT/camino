@@ -43,7 +43,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
         "[2021-02-21 -> null]",
         "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
         "[2021-02-21 -> 2022-02-21]",
-        "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> []",
         "[2021-02-21 -> 2022-02-21]",
       ]
     `)

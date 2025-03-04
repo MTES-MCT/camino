@@ -2,11 +2,12 @@ import { assign, setup } from 'xstate'
 import { IContenu } from '../../../types'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, Etape, getDemarcheDateDebut, getDemarcheDateFin, globalGuards, tags } from '../machine-common'
+import { CaminoCommonContext, DBEtat, demarcheDateMiseAJourTous, Etape, getDemarcheDateFin, globalGuards, tags } from '../machine-common'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
-import { CaminoDate } from 'camino-common/src/date'
+import { CaminoDate, dateAddMonths } from 'camino-common/src/date'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 // FIXME gérer les dates de fin pour les avenants
 type FaireDemandeEvent = {
   mecanise: boolean
@@ -30,6 +31,13 @@ type RefuserRDE = {
 
 type SignerAutorisationDeRechercheMiniere = {
   type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE'
+  date: CaminoDate
+  dateDebut: CaminoDate | null
+  dateFin: CaminoDate | null
+  duree: number | null
+}
+type FaireAvenantArm = {
+  type: 'FAIRE_AVENANT_ARM'
   date: CaminoDate
   dateDebut: CaminoDate | null
   dateFin: CaminoDate | null
@@ -79,7 +87,7 @@ type XStateEvent =
   | { type: 'RECEVOIR_COMPLEMENTS_MCR' }
   | { type: 'RECEVOIR_EXPERTISE' }
   | { type: 'NOTIFIER_DEMANDEUR_SIGNATURE_ARM' }
-  | { type: 'FAIRE_AVENANT_ARM' }
+  | FaireAvenantArm
   | { type: 'NOTIFIER_AVENANT_ARM' }
 
 type Event = XStateEvent['type']
@@ -233,6 +241,7 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
 
         return { type: eventFromEntry, mecanise, franchissements }
       }
+      case 'FAIRE_AVENANT_ARM':
       case 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE':
         return { type: eventFromEntry, date: etape.date, dateDebut: etape.dateDebut ?? null, dateFin: etape.dateFin ?? null, duree: etape.duree ?? null }
       case 'ACCEPTER_RDE':
@@ -406,12 +415,14 @@ const armOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
     context: {
       mecanisation: 'inconnu',
       visibilite: 'confidentielle',
+      demarcheDates: {
+        debut: { dateDebut: null, dateEtape: null },
+        fin: { dateFin: null, duree: null },
+        effet: null,
+      },
       avisDesServicesEtCommissionsConsultativesFait: false,
       demarcheStatut: DemarchesStatutsIds.EnConstruction,
-      demarcheDateDebut: { dateDebut: null, dateEtape: null },
       demarcheTypeId,
-      demarcheDateFin: { dateFin: null, duree: null },
-      demarcheDateEffet: null,
       paiementFraisDossierValide: false,
     },
     on: {
@@ -875,8 +886,7 @@ const armOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
               target: 'avenantARMAFaire',
               actions: assign({
                 demarcheStatut: DemarchesStatutsIds.Accepte,
-                demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event),
-                demarcheDateFin: ({ context, event }) => getDemarcheDateFin(demarcheTypeId, context.demarcheDateFin, event),
+                demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event),
               }),
               guard: ({ context }) => isMecanise(context.mecanisation),
             },
@@ -884,8 +894,7 @@ const armOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
               target: 'notificationSignatureARMAFaire',
               actions: assign({
                 demarcheStatut: DemarchesStatutsIds.Accepte,
-                demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event),
-                demarcheDateFin: ({ context, event }) => getDemarcheDateFin(demarcheTypeId, context.demarcheDateFin, event),
+                demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event),
               }),
               guard: ({ context }) => isNonMecanise(context.mecanisation),
             },
@@ -896,7 +905,27 @@ const armOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
         on: { NOTIFIER_DEMANDEUR_SIGNATURE_ARM: 'avenantARMAFaire' },
       },
       avenantARMAFaire: {
-        on: { FAIRE_AVENANT_ARM: 'notificationAvenantARMAFaire' },
+        on: {
+          FAIRE_AVENANT_ARM: {
+            target: 'notificationAvenantARMAFaire',
+            actions: assign({
+              demarcheDates: ({ context, event }) => ({
+                debut: isNotNullNorUndefined(event.dateDebut)
+                  ? {
+                      dateDebut: event.dateDebut,
+                      dateEtape: null,
+                    }
+                  : context.demarcheDates.debut,
+                // si il y'a une durée il faut la rajouter à la date de l'étape pour ne pas fausser le calcul
+                fin:
+                  isNotNullNorUndefined(event.duree) && event.duree !== 0
+                    ? { dateFin: dateAddMonths(event.date, event.duree), duree: null }
+                    : getDemarcheDateFin(context.demarcheTypeId, context.demarcheDates.fin, event),
+                effet: null,
+              }),
+            }),
+          },
+        },
       },
       notificationAvenantARMAFaire: {
         on: { NOTIFIER_AVENANT_ARM: 'avenantARMAFaire' },

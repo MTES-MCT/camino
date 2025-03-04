@@ -1,7 +1,7 @@
 import { assign, setup } from 'xstate'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, getDemarcheDateDebut, getDemarcheDateEffet, getDemarcheDateFin, globalGuards } from '../machine-common'
+import { CaminoCommonContext, DBEtat, demarcheDateMiseAJourDemande, demarcheDateMiseAJourTous, demarcheDateSuiteAClassementSansSuiteOuDesistement, globalGuards } from '../machine-common'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate } from 'camino-common/src/date'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -104,9 +104,11 @@ const armRenProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTyp
       visibilite: 'confidentielle',
       demarcheStatut: DemarchesStatutsIds.EnConstruction,
       demarcheTypeId,
-      demarcheDateDebut: { dateDebut: null, dateEtape: null },
-      demarcheDateFin: { dateFin: null, duree: null },
-      demarcheDateEffet: null,
+      demarcheDates: {
+        debut: { dateDebut: null, dateEtape: null },
+        fin: { dateFin: null, duree: null },
+        effet: null,
+      },
     },
     on: {
       DESISTER_PAR_LE_DEMANDEUR: {
@@ -115,7 +117,7 @@ const armRenProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTyp
         actions: assign({
           demarcheStatut: DemarchesStatutsIds.Desiste,
           visibilite: 'publique',
-          demarcheDateFin: ({ event }) => ({ dateFin: event.date, duree: null }),
+          demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
         }),
       },
       CLASSER_SANS_SUITE: {
@@ -124,7 +126,7 @@ const armRenProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTyp
         actions: assign({
           demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
           visibilite: 'publique',
-          demarcheDateFin: ({ event }) => ({ dateFin: event.date, duree: null }),
+          demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
         }),
       },
     },
@@ -134,7 +136,7 @@ const armRenProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTyp
           FAIRE_DEMANDE: {
             target: 'enregistrementDeLaDemandeAFaire',
             actions: assign({
-              demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event),
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourDemande(context, event),
             }),
           },
         },
@@ -195,15 +197,13 @@ const armRenProMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTyp
           FAIRE_AVENANT_ARM: {
             target: 'notificationAvenantARMAFaire',
             actions: assign({
-              demarcheDateDebut: ({ context, event }) => getDemarcheDateDebut(demarcheTypeId, context.demarcheDateDebut, event),
-              demarcheDateFin: ({ context, event }) => getDemarcheDateFin(demarcheTypeId, context.demarcheDateFin, event),
-              demarcheDateEffet: ({ context, event }) => getDemarcheDateEffet(demarcheTypeId, context.demarcheDateEffet, event),
+              demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event),
             }),
           },
         },
       },
       notificationAvenantARMAFaire: {
-        on: { NOTIFIER_AVENANT_ARM: 'avenantARMAFaire' },
+        on: { NOTIFIER_AVENANT_ARM: 'done' },
       },
       notificationDuDemandeurApresClassementSansSuiteAFaire: {
         on: { NOTIFIER_DEMANDEUR_APRES_CLASSEMENT_SANS_SUITE: 'done' },

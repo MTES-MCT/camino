@@ -599,9 +599,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
       { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: 'pfc', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: 'sco', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -754,9 +754,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     `)
   })
 
-  test('peut réaliser une demande d’ARM non mécanisée et un avenant', () => {
+  test("peut réaliser une demande d'ARM non mécanisée et un avenant", () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-03', [
-      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 4 },
       { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
@@ -765,10 +765,10 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
-      { etapeTypeId: 'sco', etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: 'mns', etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: 'aco', etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: 'mnv', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { addDays: 120, etapeTypeId: ETAPES_TYPES.avenantALautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 4 },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -787,16 +787,16 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "NOTIFIER_DEMANDEUR_SIGNATURE_ARM                      (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
         "[2020-09-13 -> 2021-09-13]",
         "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
-        "[2020-09-13 -> 2021-09-13]",
+        "[2020-09-13 -> 2021-05-12]",
         "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
-        "[2020-09-13 -> 2021-09-13]",
+        "[2020-09-13 -> 2021-05-12]",
       ]
     `)
   })
 
   test('peut réaliser une demande d’ARM mécanisée et un avenant', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
-      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 12, contenu: { arm: { mecanise: true } } },
       { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
       { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
@@ -807,11 +807,11 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
       { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: 'pfc', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: 'sco', etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: 'aco', etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: 'mnv', etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { addDays: 350, etapeTypeId: ETAPES_TYPES.avenantALautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 4 },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
@@ -832,9 +832,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
         "[2021-03-11 -> 2022-03-11]",
         "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
-        "[2021-03-11 -> 2022-03-11]",
+        "[2021-03-11 -> 2022-06-24]",
         "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
-        "[2021-03-11 -> 2022-03-11]",
+        "[2021-03-11 -> 2022-06-24]",
       ]
     `)
   })
@@ -846,8 +846,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
-      { etapeTypeId: 'mcb', etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: 'rcb', etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { franchissements: 4 } } },
+      { etapeTypeId: ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { franchissements: 4 } } },
     ])
     expect(tree).toMatchInlineSnapshot(`
       [
