@@ -7,6 +7,7 @@ import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+import { toCaminoDate } from 'camino-common/src/date'
 
 describe('vérifie l’arbre d’octroi d’ARM', () => {
   const armOctMachine = new ArmOctMachine(TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX, DEMARCHES_TYPES_IDS.Octroi)
@@ -756,7 +757,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test("peut réaliser une demande d'ARM non mécanisée et un avenant", () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-03', [
-      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 4 },
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
@@ -765,7 +766,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
-      { etapeTypeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 4 },
       { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_, etapeStatutId: ETAPES_STATUTS.FAIT },
       { addDays: 120, etapeTypeId: ETAPES_TYPES.avenantALautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 4 },
       { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, etapeStatutId: ETAPES_STATUTS.FAIT },
@@ -783,20 +784,100 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
         "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE]",
         "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR_SIGNATURE_ARM]",
-        "[2020-09-13 -> 2021-09-13]",
+        "[2020-09-13 -> 2021-01-13]",
         "NOTIFIER_DEMANDEUR_SIGNATURE_ARM                      (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
-        "[2020-09-13 -> 2021-09-13]",
+        "[2020-09-13 -> 2021-01-13]",
         "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
-        "[2020-09-13 -> 2021-05-12]",
+        "[2020-09-13 -> 2021-05-13]",
         "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
-        "[2020-09-13 -> 2021-05-12]",
+        "[2020-09-13 -> 2021-05-13]",
+      ]
+    `)
+  })
+
+  test('peut réaliser un avenant avec une durée et une date de début', () => {
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-03', [
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 4 },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { addDays: 120, etapeTypeId: ETAPES_TYPES.avenantALautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 8, dateDebut: toCaminoDate('2020-09-03') },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, etapeStatutId: ETAPES_STATUTS.FAIT },
+    ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+        "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE]",
+        "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR_SIGNATURE_ARM]",
+        "[2020-09-13 -> 2021-01-13]",
+        "NOTIFIER_DEMANDEUR_SIGNATURE_ARM                      (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "[2020-09-13 -> 2021-01-13]",
+        "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
+        "[2020-09-03 -> 2021-05-03]",
+        "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "[2020-09-03 -> 2021-05-03]",
+      ]
+    `)
+  })
+
+  test('peut réaliser un avenant avec une durée et une date de fin déjà mise précédemment', () => {
+    const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2020-09-03', [
+      { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.completudeDeLaDemande, etapeStatutId: ETAPES_STATUTS.COMPLETE },
+      { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.recevabiliteDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.avisDesServicesEtCommissionsConsultatives, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_, etapeStatutId: ETAPES_STATUTS.FAVORABLE },
+      { etapeTypeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT, dateFin: toCaminoDate('2020-12-01') },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { addDays: 120, etapeTypeId: ETAPES_TYPES.avenantALautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 4 },
+      { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, etapeStatutId: ETAPES_STATUTS.FAIT },
+    ])
+    expect(tree).toMatchInlineSnapshot(`
+      [
+        "RIEN                                                  (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,PAYER_FRAIS_DE_DOSSIER,REFUSER_RDE]",
+        "PAYER_FRAIS_DE_DOSSIER                                (confidentielle, en construction        ) -> [ACCEPTER_RDE,DEMANDER_MODIFICATION_DE_LA_DEMANDE,EXEMPTER_DAE,FAIRE_DEMANDE,REFUSER_RDE]",
+        "FAIRE_DEMANDE                                         (confidentielle, en construction        ) -> [ENREGISTRER_DEMANDE]",
+        "ENREGISTRER_DEMANDE                                   (confidentielle, en instruction         ) -> [ACCEPTER_COMPLETUDE,CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,REFUSER_COMPLETUDE]",
+        "ACCEPTER_COMPLETUDE                                   (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,VALIDER_FRAIS_DE_DOSSIER]",
+        "VALIDER_FRAIS_DE_DOSSIER                              (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DECLARER_DEMANDE_DEFAVORABLE,DECLARER_DEMANDE_FAVORABLE,DEMANDER_COMPLEMENTS_MCR,DEMANDER_INFORMATION_MCR,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE]",
+        "DECLARER_DEMANDE_FAVORABLE                            (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE,RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES]",
+        "RENDRE_AVIS_DES_SERVICES_ET_COMMISSIONS_CONSULTATIVES (confidentielle, en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,FAIRE_SAISINE_CARM,MODIFIER_DEMANDE,RECEVOIR_EXPERTISE]",
+        "FAIRE_SAISINE_CARM                                    (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,RENDRE_AVIS_AJOURNE_CARM,RENDRE_AVIS_DEFAVORABLE_CARM,RENDRE_AVIS_FAVORABLE_CARM]",
+        "RENDRE_AVIS_FAVORABLE_CARM                            (publique      , en instruction         ) -> [CLASSER_SANS_SUITE,DESISTER_PAR_LE_DEMANDEUR,SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE]",
+        "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [NOTIFIER_DEMANDEUR_SIGNATURE_ARM]",
+        "[2020-09-13 -> 2020-12-01]",
+        "NOTIFIER_DEMANDEUR_SIGNATURE_ARM                      (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "[2020-09-13 -> 2020-12-01]",
+        "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
+        "[2020-09-13 -> 2021-04-01]",
+        "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
+        "[2020-09-13 -> 2021-04-01]",
       ]
     `)
   })
 
   test('peut réaliser une demande d’ARM mécanisée et un avenant', () => {
     const { tree } = setDateAndOrderAndInterpretMachine(armOctMachine, '2021-02-25', [
-      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 12, contenu: { arm: { mecanise: true } } },
+      { etapeTypeId: ETAPES_TYPES.demande, etapeStatutId: ETAPES_STATUTS.FAIT, contenu: { arm: { mecanise: true } } },
       { etapeTypeId: ETAPES_TYPES.enregistrementDeLaDemande, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_, etapeStatutId: ETAPES_STATUTS.EXEMPTE },
       { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossier, etapeStatutId: ETAPES_STATUTS.FAIT },
@@ -809,7 +890,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.paiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
       { etapeTypeId: ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires, etapeStatutId: ETAPES_STATUTS.FAIT },
-      { etapeTypeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT },
+      { etapeTypeId: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 12 },
       { addDays: 350, etapeTypeId: ETAPES_TYPES.avenantALautorisationDeRechercheMiniere, etapeStatutId: ETAPES_STATUTS.FAIT, duree: 4 },
       { etapeTypeId: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_, etapeStatutId: ETAPES_STATUTS.FAIT },
     ])
@@ -832,9 +913,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         "SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE              (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
         "[2021-03-11 -> 2022-03-11]",
         "FAIRE_AVENANT_ARM                                     (publique      , accepté                ) -> [NOTIFIER_AVENANT_ARM]",
-        "[2021-03-11 -> 2022-06-24]",
+        "[2021-03-11 -> 2022-07-11]",
         "NOTIFIER_AVENANT_ARM                                  (publique      , accepté                ) -> [FAIRE_AVENANT_ARM]",
-        "[2021-03-11 -> 2022-06-24]",
+        "[2021-03-11 -> 2022-07-11]",
       ]
     `)
   })

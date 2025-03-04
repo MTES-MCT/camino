@@ -83,5 +83,5 @@ export const setDateAndOrderAndInterpretMachine = <T extends EventObject, C exte
 
   machine.interpretMachine(fullEtapes)
 
-  return { machine, dateFin: dateAddDays(firstDate, etapes.length), etapes: fullEtapes, tree: getEventsTree(machine, initDate, fullEtapes) }
+  return { machine, dateFin: dateAddDays(firstDate, index), etapes: fullEtapes, tree: getEventsTree(machine, initDate, fullEtapes) }
 }
