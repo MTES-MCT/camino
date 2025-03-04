@@ -22,6 +22,7 @@ import { qgisTokenRestValidator, utilisateurToEdit, utilisateursSearchParamsVali
 import {
   editableTitreValidator,
   getDemarcheByIdOrSlugValidator,
+  superTitreValidator,
   titreAdministrationValidator,
   titreDemandeOutputValidator,
   titreDemandeValidator,
@@ -97,6 +98,7 @@ const IDS = [
   '/rest/titres/:titreId',
   '/rest/titres/:titreId/abonne',
   '/rest/titresAdministrations',
+  '/rest/titresSuper',
   '/rest/titres/:id/titreLiaisons',
   '/rest/demarches',
   '/rest/demarches/:demarcheIdOrSlug',
@@ -171,6 +173,7 @@ export const CaminoRestRoutes = {
   '/rest/titres/:titreId': { params: z.object({ titreId: titreIdOrSlugValidator }), get: { output: titreGetValidator }, delete: true, post: { output: z.void(), input: editableTitreValidator } },
   '/rest/titres/:titreId/abonne': { params: z.object({ titreId: titreIdValidator }), post: { input: utilisateurTitreAbonneValidator, output: z.void() }, newGet: { output: z.boolean() } },
   '/rest/titresAdministrations': { params: noParamsValidator, get: { output: z.array(titreAdministrationValidator) } },
+  '/rest/titresSuper': { params: noParamsValidator, newGet: { output: z.array(superTitreValidator) } },
   '/rest/titres/:id/titreLiaisons': { params: z.object({ id: titreIdValidator }), newGet: { output: titreLinksValidator }, newPost: { input: z.array(titreIdValidator), output: titreLinksValidator } },
   '/rest/demarches': { params: noParamsValidator, newPost: { input: demarcheCreationInputValidator, output: demarcheCreationOutputValidator } },
   '/rest/demarches/:demarcheIdOrSlug': { params: z.object({ demarcheIdOrSlug: demarcheIdOrSlugValidator }), newGet: { output: getDemarcheByIdOrSlugValidator }, delete: true },

@@ -23,7 +23,7 @@ export const nomColumn: Column<'nom'> = {
   id: 'nom',
   contentTitle: 'Nom',
 }
-const domaineColumn: Column<'domaine'> = {
+export const domaineColumn: Column<'domaine'> = {
   id: 'domaine',
   contentTitle: '',
 }
@@ -123,7 +123,7 @@ export const titulairesCell = (titre: { titulaireIds?: EntrepriseId[] }, entrepr
     value: titre.titulaireIds?.map(id => entreprisesIndex[id] ?? '').join(', '),
   }
 }
-const domaineCell = (titre: { domaineId: DomaineId }): ComponentColumnData => ({
+export const domaineCell = (titre: { domaineId: DomaineId }): ComponentColumnData => ({
   type: 'component',
   component: markRaw(CaminoDomaine),
   props: { domaineId: titre.domaineId },

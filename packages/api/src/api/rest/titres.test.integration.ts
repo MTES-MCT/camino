@@ -8,7 +8,7 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ITitreDemarche, ITitreEtape } from '../../types'
 import { entreprisesUpsert } from '../../database/queries/entreprises'
 import { Knex } from 'knex'
-import { toCaminoDate } from 'camino-common/src/date'
+import { caminoDateValidator, toCaminoDate } from 'camino-common/src/date'
 import { afterAll, beforeAll, beforeEach, describe, test, expect, vi } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 import type { Pool } from 'pg'
@@ -20,9 +20,13 @@ import { titreSlugValidator } from 'camino-common/src/validators/titres'
 import TitresDemarches from '../../database/models/titres-demarches'
 import TitresEtapes from '../../database/models/titres-etapes'
 import Titres from '../../database/models/titres'
-import { ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
+import { ETAPE_IS_BROUILLON, ETAPE_IS_NOT_BROUILLON } from 'camino-common/src/etape'
 import { insertTitreGraph } from '../../../tests/integration-test-helper'
 import { DemarcheId } from 'camino-common/src/demarche'
+import { testBlankUser } from 'camino-common/src/tests-utils'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -578,4 +582,100 @@ test('getUtilisateurTitreAbonner', async () => {
       "status": 403,
     }
   `)
+})
+
+describe('titresSuper', () => {
+  test('ne peut pas appeler si pas super', async () => {
+    const tested = await restNewCall(dbPool, '/rest/titresSuper', {}, { ...testBlankUser, role: 'defaut' })
+    expect(tested.body).toMatchInlineSnapshot(`
+      {
+        "message": "Seuls les super peuvent accéder à ces données",
+        "status": 403,
+      }
+    `)
+  })
+
+  test('récupère une liste vide', async () => {
+    const tested = await restNewCall(dbPool, '/rest/titresSuper', {}, userSuper)
+    expect(tested.body).toMatchInlineSnapshot(`
+    []
+  `)
+  })
+
+  test('récupère la liste des titres avec une étape en brouillon', async () => {
+    const id = newTitreId('titreIdAvecBrouillon')
+    const demarcheId = newDemarcheId('demarcheIdAvecBrouillon')
+    const etapeId = newEtapeId('etapeIdEnBrouillon')
+    const idSansBrouillon = newTitreId('titreIdSansBrouillon')
+    const demarcheIdSansBrouillon = newDemarcheId('demarcheIdSansBrouillon')
+    const etapeIdSansBrouillon = newEtapeId('etapeIdNonBrouillon')
+    await insertTitreGraph({
+      id,
+      nom: 'mon titre avec brouillon',
+      typeId: 'arm',
+      slug: titreSlugValidator.parse('slug'),
+      titreStatutId: 'val',
+      propsTitreEtapesIds: {},
+      demarches: [
+        {
+          id: demarcheId,
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          titreId: id,
+          etapes: [
+            {
+              id: etapeId,
+              typeId: ETAPES_TYPES.demande,
+              titreDemarcheId: demarcheId,
+              statutId: ETAPES_STATUTS.FAIT,
+              isBrouillon: ETAPE_IS_BROUILLON,
+              date: caminoDateValidator.parse('2025-01-10'),
+            },
+          ],
+        },
+      ],
+    })
+
+    await insertTitreGraph({
+      id: idSansBrouillon,
+      nom: 'mon titre sans brouillon',
+      typeId: 'arm',
+      slug: titreSlugValidator.parse('slug-sans-brouillon'),
+      titreStatutId: 'val',
+      propsTitreEtapesIds: {},
+      demarches: [
+        {
+          id: demarcheIdSansBrouillon,
+          typeId: DEMARCHES_TYPES_IDS.Octroi,
+          titreId: idSansBrouillon,
+          etapes: [
+            {
+              id: etapeIdSansBrouillon,
+              typeId: ETAPES_TYPES.demande,
+              titreDemarcheId: demarcheIdSansBrouillon,
+              statutId: ETAPES_STATUTS.FAIT,
+              isBrouillon: ETAPE_IS_NOT_BROUILLON,
+              date: caminoDateValidator.parse('2025-02-28'),
+            },
+          ],
+        },
+      ],
+    })
+
+    const tested = await restNewCall(dbPool, '/rest/titresSuper', {}, userSuper)
+    expect(tested.body).toMatchInlineSnapshot(`
+      [
+        {
+          "demarche_slug": "titreIdAvecBrouillon-oct99",
+          "demarche_type_id": "oct",
+          "etape_date": "2025-01-10",
+          "etape_slug": "demarcheIdAvecBrouillon-mfr99",
+          "etape_type_id": "mfr",
+          "titre_nom": "mon titre avec brouillon",
+          "titre_slug": "slug",
+          "titre_statut_id": "val",
+          "titre_type_id": "arm",
+        },
+      ]
+    `)
+  })
 })

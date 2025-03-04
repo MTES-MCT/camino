@@ -7,7 +7,7 @@ import { inspect } from 'node:util'
 
 import { activites, demarches, entreprises, titre, titres, travaux } from '../api/rest/index'
 import { NewDownload, avisDocumentDownload, etapeDocumentDownload, etapeTelecharger, streamLargeObjectInResponse } from '../api/rest/fichiers'
-import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations, updateTitre, utilisateurTitreAbonner, getTitre, getUtilisateurTitreAbonner } from '../api/rest/titres'
+import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresAdministrations, updateTitre, utilisateurTitreAbonner, getTitre, getUtilisateurTitreAbonner, titresSuper } from '../api/rest/titres'
 import {
   creerEntreprise,
   fiscalite,
@@ -195,6 +195,7 @@ const restRouteImplementations: Readonly<{ [key in CaminoRestRoute]: Transform<k
   '/rest/titres/:titreId': { deleteCall: removeTitre, postCall: updateTitre, getCall: getTitre, ...CaminoRestRoutes['/rest/titres/:titreId'] },
   '/rest/titres/:titreId/abonne': { postCall: utilisateurTitreAbonner, newGetCall: getUtilisateurTitreAbonner, ...CaminoRestRoutes['/rest/titres/:titreId/abonne'] },
   '/rest/titresAdministrations': { getCall: titresAdministrations, ...CaminoRestRoutes['/rest/titresAdministrations'] },
+  '/rest/titresSuper': { newGetCall: titresSuper, ...CaminoRestRoutes['/rest/titresSuper'] },
   '/rest/statistiques/minerauxMetauxMetropole': { getCall: getMinerauxMetauxMetropolesStats, ...CaminoRestRoutes['/rest/statistiques/minerauxMetauxMetropole'] }, // UNTESTED YET
   '/rest/statistiques/guyane': { getCall: getGuyaneStats, ...CaminoRestRoutes['/rest/statistiques/guyane'] },
   '/rest/statistiques/guyane/:annee': { getCall: getGuyaneStats, ...CaminoRestRoutes['/rest/statistiques/guyane/:annee'] },

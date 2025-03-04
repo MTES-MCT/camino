@@ -1,6 +1,6 @@
 import { titreArchive, titresGet, titreGet, titreUpdate } from '../../database/queries/titres'
 import { HTTP_STATUS } from 'camino-common/src/http'
-import { CommonTitreAdministration, editableTitreValidator, TitreLink, TitreLinks, TitreGet, utilisateurTitreAbonneValidator, titreGetValidator } from 'camino-common/src/titres'
+import { CommonTitreAdministration, editableTitreValidator, TitreLink, TitreLinks, TitreGet, utilisateurTitreAbonneValidator, titreGetValidator, SuperTitre } from 'camino-common/src/titres'
 import { CaminoRequest, CustomResponse } from './express-type'
 import { userSuper } from '../../database/user-super'
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty, isNullOrUndefined, onlyUnique } from 'camino-common/src/typescript-tools'
@@ -15,14 +15,14 @@ import { titreEtapeForMachineValidator, toMachineEtapes } from '../../business/r
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { CaminoDate, getCurrent } from 'camino-common/src/date'
-import { isAdministration, User, UserNotNull } from 'camino-common/src/roles'
+import { isAdministration, isSuper, User, UserNotNull } from 'camino-common/src/roles'
 import { canEditDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs-titres'
 import { titreUpdateTask } from '../../business/titre-update'
 import { getDoublonsByTitreId, getTitre as getTitreDb } from './titres.queries'
 import type { Pool } from 'pg'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
-import { getTitreUtilisateur } from '../../database/queries/titres-utilisateurs.queries'
+import { accesSuperSeulementError, getTitresWithBrouillons, GetTitresWithBrouillonsErrors, getTitreUtilisateur } from '../../database/queries/titres-utilisateurs.queries'
 import { titreIdValidator, titreIdOrSlugValidator, TitreId } from 'camino-common/src/validators/titres'
 import { RestNewGetCall, RestNewPostCall } from '../../server/rest'
 import { Effect, Match, pipe } from 'effect'
@@ -32,6 +32,29 @@ import { CaminoMachines, machineFind } from '../../business/rules-demarches/mach
 import { demarcheEnregistrementDemandeDateFind } from 'camino-common/src/demarche'
 
 const etapesAMasquer = [ETAPES_TYPES.classementSansSuite, ETAPES_TYPES.desistementDuDemandeur, ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]
+
+type TitresSuperErrors = GetTitresWithBrouillonsErrors
+export const titresSuper: RestNewGetCall<'/rest/titresSuper'> = (rootPipe): Effect.Effect<SuperTitre[], CaminoApiError<TitresSuperErrors>> =>
+  rootPipe.pipe(
+    Effect.filterOrFail(
+      ({ user }) => isSuper(user),
+      () => ({ message: accesSuperSeulementError })
+    ),
+    Effect.flatMap(({ pool, user }) => getTitresWithBrouillons(pool, user)),
+    Effect.mapError(caminoError =>
+      Match.value(caminoError.message).pipe(
+        Match.whenOr("Impossible d'exécuter la requête dans la base de données", 'Les données en base ne correspondent pas à ce qui est attendu', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        })),
+        Match.whenOr('Seuls les super peuvent accéder à ces données', () => ({
+          ...caminoError,
+          status: HTTP_STATUS.FORBIDDEN,
+        })),
+        Match.exhaustive
+      )
+    )
+  )
 
 export const titresAdministrations =
   (_pool: Pool) =>

@@ -1,14 +1,16 @@
 import { apiGraphQLFetch } from '@/api/_client'
-import { getWithJson } from '@/api/client-rest'
+import { getWithJson, newGetWithJson } from '@/api/client-rest'
 import { EntrepriseId, TitreEntreprise } from 'camino-common/src/entreprise'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { CommonTitreAdministration } from 'camino-common/src/titres'
+import { CommonTitreAdministration, SuperTitre } from 'camino-common/src/titres'
+import { CaminoError } from 'camino-common/src/zod-tools'
 import gql from 'graphql-tag'
 
 export interface DashboardApiClient {
   getAdministrationTitres: () => Promise<CommonTitreAdministration[]>
   getDgtmStats: () => Promise<StatistiquesDGTM>
   getEntreprisesTitres: (entreprisesIds: EntrepriseId[]) => Promise<TitreEntreprise[]>
+  getTitresAvecEtapeEnBrouillon: () => Promise<SuperTitre[] | CaminoError<string>>
 }
 const titres = apiGraphQLFetch(gql`
   query Titres(
@@ -77,4 +79,5 @@ export const dashboardApiClient: DashboardApiClient = {
   getEntreprisesTitres: async (entreprisesIds: EntrepriseId[]) => {
     return (await titres({ entreprisesIds })).elements
   },
+  getTitresAvecEtapeEnBrouillon: async (): Promise<SuperTitre[] | CaminoError<string>> => newGetWithJson('/rest/titresSuper', {}),
 }

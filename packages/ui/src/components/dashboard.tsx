@@ -1,7 +1,7 @@
 import { FunctionalComponent, defineAsyncComponent, defineComponent, inject, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { dashboardApiClient } from './dashboard/dashboard-api-client'
-import { User, isAdministration, isEntrepriseOrBureauDEtude } from 'camino-common/src/roles'
+import { User, isAdministration, isEntrepriseOrBureauDEtude, isSuper } from 'camino-common/src/roles'
 import { entreprisesKey, userKey } from '@/moi'
 import { Entreprise } from 'camino-common/src/entreprise'
 
@@ -13,7 +13,7 @@ export const Dashboard = defineComponent({
     const entreprises = inject(entreprisesKey, ref([]))
 
     onMounted(async () => {
-      if (!isEntrepriseOrBureauDEtude(user) && !isAdministration(user)) {
+      if (!isEntrepriseOrBureauDEtude(user) && !isAdministration(user) && !isSuper(user)) {
         router.replace({ name: 'titres' })
       }
     })
@@ -40,6 +40,14 @@ const PureDashboard: FunctionalComponent<{ user: User; entreprises: Entreprise[]
     })
 
     return <PureAdministrationDashboard apiClient={dashboardApiClient} user={props.user} entreprises={props.entreprises} />
+  } else if (isSuper(props.user)) {
+    const PureSuperDashboard = defineAsyncComponent(async () => {
+      const { PureSuperDashboard } = await import('@/components/dashboard/pure-super-dashboard')
+
+      return PureSuperDashboard
+    })
+
+    return <PureSuperDashboard apiClient={dashboardApiClient} user={props.user} />
   }
 
   return null

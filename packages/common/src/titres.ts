@@ -12,7 +12,7 @@ import { TitreId, titreIdValidator, titreSlugValidator } from './validators/titr
 import { isNotNullNorUndefined, isNotNullNorUndefinedNorEmpty } from './typescript-tools'
 import { EntrepriseId, entrepriseIdValidator } from './entreprise'
 import { isFondamentalesStatutOk } from './static/etapesStatuts'
-import { ETAPE_IS_NOT_BROUILLON, etapeIdValidator } from './etape'
+import { ETAPE_IS_NOT_BROUILLON, etapeIdValidator, etapeSlugValidator } from './etape'
 import { isEntrepriseOrBureauDEtude, User } from './roles'
 
 const commonTitreValidator = z.object({
@@ -80,6 +80,19 @@ export const editableTitreValidator = commonTitreValidator.pick({
   nom: true,
   references: true,
 })
+
+export const superTitreValidator = z.object({
+  titre_nom: z.string(),
+  titre_slug: titreSlugValidator,
+  titre_type_id: titreTypeIdValidator,
+  titre_statut_id: titreStatutIdValidator,
+  demarche_type_id: demarcheTypeIdValidator,
+  demarche_slug: demarcheSlugValidator,
+  etape_type_id: etapeTypeIdValidator,
+  etape_slug: etapeSlugValidator,
+  etape_date: caminoDateValidator,
+})
+export type SuperTitre = z.infer<typeof superTitreValidator>
 
 export const titreAdministrationValidator = commonTitreValidator.omit({ administrations_locales: true }).extend({
   derniereEtape: z.object({ etapeTypeId: etapeTypeIdValidator, date: caminoDateValidator }).nullable(),
