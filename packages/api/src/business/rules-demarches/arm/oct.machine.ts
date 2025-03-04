@@ -2,12 +2,12 @@ import { assign, setup } from 'xstate'
 import { IContenu } from '../../../types'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, demarcheDateMiseAJourTous, Etape, getDemarcheDateFin, globalGuards, tags } from '../machine-common'
+import { CaminoCommonContext, CaminoMachineDateFin, CaminoMachineDateFinInfini, DBEtat, demarcheDateMiseAJourTous, Etape, getDemarcheDateFin, globalGuards, tags } from '../machine-common'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate, dateAddMonths } from 'camino-common/src/date'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { isNotNullNorUndefined, isNullOrUndefined } from 'camino-common/src/typescript-tools'
 // FIXME gérer les dates de fin pour les avenants
 type FaireDemandeEvent = {
   mecanise: boolean
@@ -909,20 +909,43 @@ const armOctMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId
           FAIRE_AVENANT_ARM: {
             target: 'notificationAvenantARMAFaire',
             actions: assign({
-              demarcheDates: ({ context, event }) => ({
-                debut: isNotNullNorUndefined(event.dateDebut)
-                  ? {
+              demarcheDates: ({ context, event }) => {
+                if (isNotNullNorUndefined(event.duree) && event.duree !== 0 && isNullOrUndefined(event.dateFin) && isNotNullNorUndefined(event.dateDebut)) {
+                  return {
+                    debut: {
                       dateDebut: event.dateDebut,
                       dateEtape: null,
-                    }
-                  : context.demarcheDates.debut,
-                // si il y'a une durée il faut la rajouter à la date de l'étape pour ne pas fausser le calcul
-                fin:
-                  isNotNullNorUndefined(event.duree) && event.duree !== 0
-                    ? { dateFin: dateAddMonths(event.date, event.duree), duree: null }
-                    : getDemarcheDateFin(context.demarcheTypeId, context.demarcheDates.fin, event),
-                effet: null,
-              }),
+                    },
+                    fin: { dateFin: null, duree: event.duree },
+                    effet: null,
+                  }
+                }
+                let dateFin: CaminoMachineDateFin | CaminoMachineDateFinInfini = { dateFin: null, duree: null }
+                if (
+                  isNotNullNorUndefined(event.duree) &&
+                  event.duree !== 0 &&
+                  isNullOrUndefined(event.dateFin) &&
+                  isNotNullNorUndefined(context.demarcheDates.fin.dateFin) &&
+                  context.demarcheDates.fin.dateFin !== 'TITRE_INFINI'
+                ) {
+                  dateFin = { dateFin: dateAddMonths(context.demarcheDates.fin.dateFin, event.duree), duree: null }
+                } else if (isNotNullNorUndefined(event.duree) && event.duree !== 0 && isNullOrUndefined(event.dateFin) && isNotNullNorUndefined(context.demarcheDates.fin.duree)) {
+                  dateFin = { dateFin: null, duree: event.duree + context.demarcheDates.fin.duree }
+                } else {
+                  dateFin = getDemarcheDateFin(context.demarcheTypeId, context.demarcheDates.fin, event)
+                }
+                return {
+                  debut: isNotNullNorUndefined(event.dateDebut)
+                    ? {
+                        dateDebut: event.dateDebut,
+                        dateEtape: null,
+                      }
+                    : context.demarcheDates.debut,
+                  // si il y'a une durée il faut la rajouter à la date de l'étape pour ne pas fausser le calcul
+                  fin: dateFin,
+                  effet: null,
+                }
+              },
             }),
           },
         },

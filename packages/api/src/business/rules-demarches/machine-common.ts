@@ -127,7 +127,7 @@ export const getDemarcheDateDebut = (demarcheTypeId: DemarcheTypeId, oldDateDebu
 
   return { dateDebut: null, dateEtape: oldDateDebut.dateEtape ?? event.date }
 }
-type CaminoMachineDateFinInfini = { dateFin: 'TITRE_INFINI'; duree: null }
+export type CaminoMachineDateFinInfini = { dateFin: 'TITRE_INFINI'; duree: null }
 export type CaminoMachineDateFin = { dateFin: CaminoDate; duree: null } | { dateFin: null; duree: number } | { dateFin: null; duree: null }
 export const getDemarcheDateFin = (
   demarcheTypeId: DemarcheTypeId,
