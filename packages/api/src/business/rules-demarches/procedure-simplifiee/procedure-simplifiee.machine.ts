@@ -1,12 +1,21 @@
 import { and, assign, not, setup } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, globalGuards, demarcheDateSuiteAClassementSansSuiteOuDesistement, demarcheDateMiseAJourTous, demarcheDateMiseAJourDemande, demarcheDateMiseAJourRejet, demarcheDateMiseAJourAbrogation } from '../machine-common'
+import {
+  CaminoCommonContext,
+  DBEtat,
+  globalGuards,
+  demarcheDateSuiteAClassementSansSuiteOuDesistement,
+  demarcheDateMiseAJourTous,
+  demarcheDateMiseAJourDemande,
+  demarcheDateMiseAJourRejet,
+  demarcheDateMiseAJourAbrogation,
+} from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { CaminoDate, isBefore, toCaminoDate } from 'camino-common/src/date'
 import { ETAPES_STATUTS, EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DemarcheTypeId  } from 'camino-common/src/static/demarchesTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 
 type SaisirInformationHistoriqueIncomplete = {
   date: CaminoDate
@@ -193,7 +202,7 @@ const procedureSimplifieeMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: D
             visibilite: 'publique',
             demarcheStatut: DemarchesStatutsIds.Accepte,
             demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event),
-            }),
+          }),
         },
       ],
       PUBLIER_DECISION_ACCEPTEE_AU_JORF: {
@@ -245,17 +254,17 @@ const procedureSimplifieeMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: D
         guard: 'isDemarcheStatutEnInstruction',
         target: '.finDeMachine',
         actions: assign({
-            demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
-            demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
-          }),
+          demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+          demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
+        }),
       },
       DESISTER_PAR_LE_DEMANDEUR: {
         guard: 'isDemarcheStatutEnInstruction',
         target: '.finDeMachine',
         actions: assign({
-            demarcheStatut: DemarchesStatutsIds.Desiste,
-            demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
-          }),
+          demarcheStatut: DemarchesStatutsIds.Desiste,
+          demarcheDates: ({ context, event }) => demarcheDateSuiteAClassementSansSuiteOuDesistement(context, event),
+        }),
       },
       DEMANDER_INFORMATION: {
         guard: 'isDemarcheStatutEnInstruction',
@@ -324,7 +333,7 @@ const procedureSimplifieeMachine = (_titreTypeId: TitreTypeId, demarcheTypeId: D
               actions: assign({
                 visibilite: 'publique',
                 demarcheStatut: DemarchesStatutsIds.Accepte,
-                demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event)
+                demarcheDates: ({ context, event }) => demarcheDateMiseAJourTous(context, event),
               }),
               target: 'publicationAuRecueilDesActesAdministratifsOupublicationAuJORFAFaire',
             },

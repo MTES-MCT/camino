@@ -57,7 +57,7 @@ type EventWithDate = {
   date: CaminoDate
 }
 
-export const demarcheDateMiseAJourAbrogation =  (context: CaminoCommonContext, event: EventWithDate): CaminoCommonContextDemarcheDates => ({
+export const demarcheDateMiseAJourAbrogation = (context: CaminoCommonContext, event: EventWithDate): CaminoCommonContextDemarcheDates => ({
   debut: context.demarcheDates.debut,
   fin: isDemarcheTypeWithPhase(context.demarcheTypeId) ? { dateFin: event.date, duree: null } : context.demarcheDates.fin,
   effet: context.demarcheDates.effet,
