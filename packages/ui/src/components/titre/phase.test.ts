@@ -5,6 +5,62 @@ import { demarcheIdValidator, demarcheSlugValidator } from 'camino-common/src/de
 import { TitreGetDemarche } from 'camino-common/src/titres'
 import { ETAPE_IS_NOT_BROUILLON, etapeIdValidator, etapeSlugValidator } from 'camino-common/src/etape'
 
+test('phase en erreur', () => {
+  const demarches: TitreGetDemarche[] = [
+    {
+      id: demarcheIdValidator.parse('idMut'),
+      slug: demarcheSlugValidator.parse('slug-mut'),
+      description: null,
+      etapes: [],
+      demarche_type_id: 'mut',
+      demarche_statut_id: 'acp',
+      demarche_date_debut: null,
+      demarche_date_fin: null,
+      ordre: 1,
+    },
+    {
+      id: demarcheIdValidator.parse('idDemPro'),
+      slug: demarcheSlugValidator.parse('dem-slug-pro'),
+      description: null,
+      etapes: [],
+      demarche_type_id: 'pro',
+      demarche_statut_id: 'acp',
+      demarche_date_debut: null,
+      demarche_date_fin: null,
+      ordre: 2,
+    },
+  ]
+  const actual = phaseWithAlterations(demarches, toCaminoDate('2024-07-11'))
+  expect(actual).toMatchInlineSnapshot(`
+  {
+    "demarches": [
+      {
+        "demarche_date_debut": null,
+        "demarche_date_fin": null,
+        "demarche_statut_id": "acp",
+        "demarche_type_id": "mut",
+        "description": null,
+        "etapes": [],
+        "id": "idMut",
+        "ordre": 1,
+        "slug": "slug-mut",
+      },
+      {
+        "demarche_date_debut": null,
+        "demarche_date_fin": null,
+        "demarche_statut_id": "acp",
+        "demarche_type_id": "pro",
+        "description": null,
+        "etapes": [],
+        "id": "idDemPro",
+        "ordre": 2,
+        "slug": "dem-slug-pro",
+      },
+    ],
+    "erreur": "plusieurs démarches sans phase",
+  }
+`)
+})
 test('phase acceptée et publiée', () => {
   const demarches: TitreGetDemarche[] = [
     {
@@ -63,7 +119,6 @@ test('phase acceptée et publiée', () => {
     },
   ]
   const actual = phaseWithAlterations(demarches, toCaminoDate('2024-07-11'))
-  expect(actual[0]).toHaveLength(2)
   expect(actual).toMatchInlineSnapshot(`
     [
       [

@@ -3,6 +3,7 @@ import { demarcheSlugValidator } from 'camino-common/src/demarche'
 import { toCaminoDate } from 'camino-common/src/date'
 import { Phase, TitreTimeline } from './titre-timeline'
 import { titreSlugValidator } from 'camino-common/src/validators/titres'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 
 const meta: Meta = {
   title: 'Components/Titre/Timeline',
@@ -256,6 +257,22 @@ export const OneDemarcheNoPhase: StoryFn = () => (
     <TitreTimeline
       titreSlug={titreSlugValidator.parse('slug-titre')}
       phasesWithAlterations={[[{ slug: demarcheSlugValidator.parse('slug-demarche11'), demarche_type_id: 'pr2', demarche_date_debut: null }]]}
+      currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
+    />
+  </div>
+)
+
+export const MultipleDemarcheNoPhase: StoryFn = () => (
+  <div>
+    <TitreTimeline
+      titreSlug={titreSlugValidator.parse('slug-titre')}
+      phasesWithAlterations={{
+        erreur: 'plusieurs démarches sans phase',
+        demarches: [
+          { slug: demarcheSlugValidator.parse('slug-id1'), demarche_type_id: DEMARCHES_TYPES_IDS.Octroi },
+          { slug: demarcheSlugValidator.parse('slug-id2'), demarche_type_id: DEMARCHES_TYPES_IDS.Prolongation },
+        ],
+      }}
       currentDemarcheSlug={demarcheSlugValidator.parse('slug-demarche2')}
     />
   </div>

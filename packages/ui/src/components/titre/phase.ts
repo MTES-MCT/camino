@@ -14,7 +14,9 @@ type PhaseWithDateDebut = OmitDistributive<TitreGetDemarche, 'demarche_date_debu
 
 type DemarcheAlteration = TitreGetDemarche & { date_etape_decision_ok: CaminoDate; events: TitreTimelineEvents[] }
 
-export type PhaseWithAlterations = [PhaseWithDateDebut, ...DemarcheAlteration[]][] | [[OmitDistributive<TitreGetDemarche, 'demarche_date_debut'> & { demarche_date_debut: null }]]
+const erreurPlusieursDemarches = 'plusieurs démarches sans phase' as const
+export type PhaseErreurs = { erreur: string; demarches: Pick<TitreGetDemarche, 'slug' | 'demarche_type_id'>[] }
+export type PhaseWithAlterations = [PhaseWithDateDebut, ...DemarcheAlteration[]][] | [[OmitDistributive<TitreGetDemarche, 'demarche_date_debut'> & { demarche_date_debut: null }]] | PhaseErreurs
 export const phaseWithAlterations = (demarches: TitreGetDemarche[], currentDate: CaminoDate): PhaseWithAlterations => {
   if (isNullOrUndefinedOrEmpty(demarches)) {
     return []
@@ -27,7 +29,10 @@ export const phaseWithAlterations = (demarches: TitreGetDemarche[], currentDate:
   const demarchesUsed: DemarcheSlug[] = simplePhases.map(({ slug }) => slug)
   if (isNullOrUndefinedOrEmpty(simplePhases)) {
     if (demarches.length > 1) {
-      console.error('Le titre a plusieurs démarches sans phase')
+      return {
+        erreur: erreurPlusieursDemarches,
+        demarches,
+      }
     }
 
     return [[{ ...demarches[0], demarche_date_debut: null }]]

@@ -11,13 +11,15 @@ import { TitreSlug } from 'camino-common/src/validators/titres'
 import { TravauxIcone } from './travaux-icone'
 import { DsfrSeparator } from '../_ui/dsfr-separator'
 import { capitalize } from 'camino-common/src/strings'
+import { PhaseErreurs } from './phase'
+import { Alert } from '../_ui/alert'
 
 type NoPhase = [[Pick<PhaseWithDateDebut, 'slug' | 'demarche_type_id'> & { demarche_date_debut: null }]]
 export type Phase = [PhaseWithDateDebut, ...DemarcheAlteration[]][]
 type TitreTimelineEvents = Pick<TitreGetDemarche, 'slug' | 'demarche_type_id'> & { first_etape_date: CaminoDate | null }
 type Props = {
   titreSlug: TitreSlug
-  phasesWithAlterations: Phase | NoPhase
+  phasesWithAlterations: Phase | NoPhase | PhaseErreurs
   currentDemarcheSlug: DemarcheSlug
   class?: HTMLAttributes['class']
 }
@@ -39,6 +41,33 @@ const isNoPhase = (phase: Phase | NoPhase): phase is NoPhase => {
 const minWidth = 200
 
 export const TitreTimeline: FunctionalComponent<Props> = props => {
+  if ('erreur' in props.phasesWithAlterations) {
+    return (
+      <div>
+        <h2>Démarches</h2>
+        <Alert
+          type="warning"
+          title={'Plusieurs démarches sans phase'}
+          description={
+            <>
+              Nous affichons toutes les démarches en mode dégradé, normalement, on ne peut avoir plusieurs démarches que si au moins l'une d'entre elle a une phase.
+              <br />
+              <strong>Il faudrait très probablement que l'Octroi aille jusqu'au bout avant de créer d'autres démarches.</strong>
+            </>
+          }
+        />
+        <ul>
+          {props.phasesWithAlterations.demarches.map(demarche => (
+            <li>
+              <CaminoRouterLink isDisabled={false} to={{ name: 'titre', params: { id: props.titreSlug }, query: { demarcheSlug: demarche.slug } }} title={demarche.demarche_type_id}>
+                {capitalize(DemarchesTypes[demarche.demarche_type_id].nom)}
+              </CaminoRouterLink>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
   if (props.phasesWithAlterations.length === 0 || isNoPhase(props.phasesWithAlterations)) {
     return null
   }
@@ -154,7 +183,7 @@ export const TitreTimeline: FunctionalComponent<Props> = props => {
                         </Fragment>
                       ))}
                     </div>
-                    {index !== props.phasesWithAlterations.length - 1 ? <div style={{ border: '2px solid black' }}></div> : null}
+                    {!('erreur' in props.phasesWithAlterations) && index !== props.phasesWithAlterations.length - 1 ? <div style={{ border: '2px solid black' }}></div> : null}
                   </Fragment>
                 ))}
               </div>
